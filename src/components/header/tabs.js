@@ -14,7 +14,6 @@ import rAllocationLogo from '../../assets/img/configuration/resource-allocation.
 import tourLogo from '../../assets/img/help/tour.png';
 import aboutLogo from '../../assets/img/help/about.png';
 import ModalComponet from '../modal';
-import UploadCloud from '../upload';
 
 export const tabs = [
   {
@@ -23,7 +22,6 @@ export const tabs = [
       {
         logo: loudCloudLogo,
         label: 'Load Cloud', 
-        component: <ModalComponet title={'Load Cloud'}/>
       },
       {
         logo: saveCloudLogo,
@@ -41,37 +39,58 @@ export const tabs = [
       {
         logo: cropBoxLogo,
         label: 'Crop Box Filter',
-        component: <ModalComponet title={'Crop Box Filter'}/>
+        component: <ModalComponet 
+        title={'Crop Box Filter'} 
+        labels={['Starting Point:', 'Ending Point:']} 
+        inputs={'number'}/>
       },
       {
         logo: voxelGridLogo,
         label: 'Voxel Grid Filter',
-        component: <ModalComponet title={'Voxel Grid Filter'}/>
+        component: <ModalComponet 
+        title={'Voxel Grid Filter'} 
+        labels={['Leaf Size:', 'Leaf Size:']} 
+        inputs={'number'}/>
       },
       {
         logo: sRemovalLogo,
         label: 'Statistical Removal',
-        component: <ModalComponet title={'Statistical Removal'}/>
+        component: <ModalComponet 
+        title={'Statistical Removal'} 
+        labels={['Mean:', 'Standard Deviation:']} 
+        inputs={'number'}/>
       },
       {
         logo: nEstimationLogo,
         label: 'Normal Estimation',
-        component: <ModalComponet title={'Normal Estimation'}/>
+        component: <ModalComponet 
+        title={'Normal Estimation'} 
+        labels={['K:', 'Radius:']} 
+        inputs={'number'}/>
       },
       {
         logo: reescaleLogo,
         label: 'Reescale',
-        component: <ModalComponet title={'Reescale'}/>
+        component: <ModalComponet 
+        title={'Reescale'} 
+        labels={['Scale:']} 
+        inputs={'number'}/>
       },
       {
         logo: centralizationLogo,
         label: 'Centralization',
-        component: <ModalComponet title={'Centralization'}/>
+        component: <ModalComponet 
+        title={'Centralization'} 
+        labels={['Centralize:']} 
+        inputs={'boolean'}/>
       },
       {
         logo: alignmentLogo,
         label: 'Alignment',
-        component: <ModalComponet title={'Alignment'}/>
+        component: <ModalComponet 
+        title={'Alignment'} 
+        labels={['Align:']} 
+        inputs={'boolean'}/>
       }
     ]     
   },

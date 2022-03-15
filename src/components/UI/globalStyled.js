@@ -19,5 +19,4 @@ export const StyledLink = styled(Link)`
   color: #000;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.7rem;
-  text-decoration: none;
 `;

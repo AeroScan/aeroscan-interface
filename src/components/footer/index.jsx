@@ -4,7 +4,7 @@ import { Container } from './style';
 
 const Footer = () => {
 
-    const[status, setStatus] = useState("Nuvem carregada");
+    const[status, setStatus] = useState("Started");
 
     const [planes, setPlanes] = useState(0);
     const [spheres, setSpheres] = useState(0);

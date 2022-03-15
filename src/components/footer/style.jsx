@@ -31,7 +31,9 @@ export const Container = styled.footer`
     }
 
     span{
-        width: 12%;
+        text-align: right;
+        padding-right: 30px;
+        width: 20%;
 
         strong{
             font-weight: 600;

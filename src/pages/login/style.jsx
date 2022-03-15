@@ -90,7 +90,7 @@ export const Link = styled(StyledLink)`
     font-weight: 400;
     margin-top: 20px;
     text-decoration: underline;
-
+    
     &:visited{
         color: #FDC82F;
     }
