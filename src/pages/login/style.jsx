@@ -46,7 +46,7 @@ export const Container = styled.div`
             height: 42px;        
             margin-top: 28px;
             text-align: center;
-            width: 65%;
+            width: 75%;
 
             &::placeholder{
                 color: #9b9b9b;

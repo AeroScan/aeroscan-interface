@@ -14,7 +14,7 @@ const Viewer = () => {
 
         viewer.setEDLEnabled(false);
         viewer.setFOV(60);
-        viewer.setPointBudget(10_000_000);
+        viewer.setPointBudget(1 * 1000 * 1000);
         viewer.loadSettingsFromURL();
 
         viewer.loadGUI(() => {

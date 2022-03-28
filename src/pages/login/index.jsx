@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Link } from './style';
 import logo from '../../assets/img/logo.png';
 import Loading from '../../components/loading/indexs';
+import md5 from 'md5';
 import { SaveToken } from '../../services/util';
 
 const Login = () => {
@@ -15,17 +16,24 @@ const Login = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
+
         setTimeout(() => {
-            if(userName === "admin" && password === "123"){
-                SaveToken();
-                window.open("/","_self");
-                setLoading(false);
+            if(userName.includes("@")){
+                const userNameHash = md5(userName.split('@')[0]);
+                const correctPassword = `${userNameHash.slice(0, 5)}${userNameHash.slice(userNameHash.length - 5, userNameHash.length)}`;
+                if(password === correctPassword){
+                    SaveToken(userName);
+                    window.open("/","_self");
+                    setLoading(false);
+                }else {  
+                    setError(true);
+                    setLoading(false);
+                }
             }else{
                 setError(true);
                 setLoading(false);
             }
-
-        }, 5000);
+        }, 1000);
     }
 
     return(
@@ -57,7 +65,7 @@ const Login = () => {
                     }
                 </button>
                 {error ? <span>Credenciais Inválidas</span> : <></>}
-                <Link to='/'>Esqueceu sua senha?</Link>
+                {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>
     );

@@ -32,7 +32,7 @@ export const Container = styled.footer`
 
     span{
         text-align: right;
-        padding-right: 30px;
+        padding-right: 50px;
         width: 20%;
 
         strong{

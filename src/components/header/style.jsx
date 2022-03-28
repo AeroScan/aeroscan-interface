@@ -13,7 +13,7 @@ export const Container = styled.nav`
         cursor: pointer;
         height: 6vh;
         text-align: center;
-        width: 20%;
+        width: ${props => 100 / props.tabLength}%;
     }
 
     button.active{
