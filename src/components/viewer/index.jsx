@@ -36,7 +36,7 @@ const Viewer = () => {
             e.pointcloud.position.z += 4;
             viewer.fitToScreen();
         }, error => console.err(`ERROR: ${error}`));
-    },[]);
+    }, []);
 
     return(
         <Wrapper id="potree-root">

@@ -35,7 +35,7 @@ export const Container = styled.div`
         width: 100%;
     }
 
-    div.label-container{
+    div.container{
         display: flex;
         margin: 0 auto 20px;
         text-align: center;
@@ -51,6 +51,7 @@ export const Container = styled.div`
             border: none;
             border-radius: 5px;
             box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
+            height: 3.5vh;
             margin-left: 10px; 
             padding: 5px;
             width: 50%;
@@ -68,8 +69,8 @@ export const Container = styled.div`
             padding: 5px;
             width: 50%;
                 
-            -webkit-appearance: none;
             -moz-appearance: none;
+            -webkit-appearance: none;
         }
     }
 

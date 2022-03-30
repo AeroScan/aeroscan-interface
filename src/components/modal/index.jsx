@@ -2,27 +2,27 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import md5 from 'md5';
 import { customStyles, Container, Close, Button } from './style';
-
 import * as ModalActions from './actions';
+import $ from 'jquery';
 
 
-const ModalComponet = ({ title, labels, inputs, buttonLabel, submitCode, placeholder }) => {
+const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
 
     const [modalIsOpen, setIsOpen] = useState(true);
     const [selectField, setSelectField] = useState("");
 
-    const [firstInput, setFirstInput] = useState("");
-    const [secondInput, setSecondInput] = useState("");
-
     const handleSubmit = () => {
+        var values = $("input[name='parameters[]']")
+            .map(function(){return $(this).val();}).get();
+        
         switch (submitCode) {
             case ModalActions.GENERATE_PASSWORD:
-                if(firstInput.includes("@")){
-                    const emailHash = md5(firstInput.split('@')[0]);
+                if(values[0]?.includes("@")){
+                    const emailHash = md5(values[0].split('@')[0]);
                     const password = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
-                    setSecondInput(password);
+                    document.getElementById("teste").value = password;
                 }else{
-                    console.log("apresenta um erro na tela")
+                    console.log("apresenta um erro na tela");
                 }
                 break;
             case ModalActions.CENTRALIZATION:
@@ -51,23 +51,26 @@ const ModalComponet = ({ title, labels, inputs, buttonLabel, submitCode, placeho
             <Container>
                 <Close onClick={closeModal}/>
                 <h1>{title}</h1>
-   
-                {labels.map((element, index) => (
-                    <div className="label-container">
-                        <label htmlFor={element}>{element}</label>
-                        {inputs === 'number' ?
-                            <input
-                                id={element}
-                                value={index === 0 ? firstInput : secondInput}
-                                onChange={event => index === 0 ? setFirstInput(event.target.value) : setSecondInput(event.target.value)}
-                                readOnly={element === "Password"}
-                                placeholder={placeholder}
-                            />
+                {content?.map((element, contentIndex) => (
+                    <div className="container" key={contentIndex}>
+                        <label htmlFor={element.label}>{element.label}</label>
+                        {element?.inputType === 'text' ?
+                            element.input.map((values, inputIndex) => (
+                                <input
+                                    id={values}
+                                    type={element.inputType}
+                                    key={inputIndex}
+                                    name='parameters[]'
+                                    readOnly={values === ''}
+                                    placeholder={values}
+                                />
+                            ))
                         :
                             <select 
-                            aria-label="boolean" 
-                            value={selectField}
-                            onChange={event => setSelectField(event.target.value)}>
+                                aria-label="boolean" 
+                                value={selectField}
+                                onChange={event => setSelectField(event.target.value)}
+                            >
                                 <option value="" hidden>Select</option>
                                 <option value="true">True</option>
                                 <option value="false">False</option>
@@ -76,9 +79,7 @@ const ModalComponet = ({ title, labels, inputs, buttonLabel, submitCode, placeho
                     </div>
                 ))}
                 <div className="buttons-container">
-                    <Button
-                        onClick={handleSubmit}
-                    >{buttonLabel}</Button>
+                    <Button onClick={handleSubmit}>{buttonLabel}</Button>
                     <Button cancel onClick={closeModal}>Cancel</Button>
                 </div>
             </Container>

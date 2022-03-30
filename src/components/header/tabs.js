@@ -43,9 +43,18 @@ export const tabs = [
         label: 'Crop Box Filter',
         component: <ModalComponet 
           title={'Crop Box Filter'} 
-          labels={['Starting Point:', 'Ending Point:']} 
-          inputs={'number'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Starting Point:',
+              input: ['x', 'y', 'z'],
+              inputType: 'text'
+            },
+            {
+              label: 'Ending Point:',
+              input: ['x', 'y', 'z'],
+              inputType: 'text'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.CROP_BOX}
         />
@@ -55,9 +64,18 @@ export const tabs = [
         label: 'Voxel Grid Filter',
         component: <ModalComponet 
           title={'Voxel Grid Filter'} 
-          labels={['Leaf Size:', 'Leaf Size:']} 
-          inputs={'number'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Leaf Size:',
+              input: ['x', 'y', 'z'],
+              inputType: 'text'
+            },
+            {
+              label: 'Leaf Size:',
+              input: ['float'],
+              inputType: 'text'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.VOXEL_GRID}
         />
@@ -68,8 +86,18 @@ export const tabs = [
         component: <ModalComponet 
           title={'Statistical Removal'} 
           labels={['Mean:', 'Standard Deviation:']} 
-          inputs={'number'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Mean:',
+              input: ['float'],
+              inputType: 'text'
+            },
+            {
+              label: 'Standard Deviation:',
+              input: ['float'],
+              inputType: 'text'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.STATISTICAL_REMOVAL}
         />
@@ -79,9 +107,18 @@ export const tabs = [
         label: 'Normal Estimation',
         component: <ModalComponet 
           title={'Normal Estimation'} 
-          labels={['K:', 'Radius:']} 
-          inputs={'number'}
-          placeholder={''}
+          content={[
+            {
+              label: 'K:',
+              input: ['k'],
+              inputType: 'text'
+            },
+            {
+              label: 'Radius:',
+              input: ['float'],
+              inputType: 'text'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.NORMAL_ESTIMATION}
         />
@@ -92,8 +129,13 @@ export const tabs = [
         component: <ModalComponet 
           title={'Reescale'} 
           labels={['Scale:']} 
-          inputs={'number'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Scale:',
+              input: ['float'],
+              inputType: 'text'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.REESCALE}
         />
@@ -104,8 +146,12 @@ export const tabs = [
         component: <ModalComponet 
           title={'Centralization'} 
           labels={['Centralize:']} 
-          inputs={'boolean'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Centralize:',
+              inputType: 'select'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.CENTRALIZATION}
         />
@@ -115,9 +161,12 @@ export const tabs = [
         label: 'Alignment',
         component: <ModalComponet 
           title={'Alignment'} 
-          labels={['Align:']} 
-          inputs={'boolean'}
-          placeholder={''}
+          content={[
+            {
+              label: 'Align:',
+              inputType: 'select'
+            }
+          ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.ALIGNMENT}
         />
@@ -170,7 +219,19 @@ export const tabs = [
         component: <ModalComponet 
         title={'Generate Password'} 
         labels={['Email', 'Password']} 
-        inputs={'number'}
+        inputs={'text'}
+        content={[
+          {
+            label: 'E-mail:',
+            input: ['Type your e-mail'],
+            inputType: 'text'
+          },
+          {
+            label: 'Password:',
+            input: ['teste'],
+            inputType: 'text'
+          }
+        ]}
         buttonLabel={'Generate'}
         submitCode={ModalActions.GENERATE_PASSWORD}
         />
