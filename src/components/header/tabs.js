@@ -228,7 +228,7 @@ export const tabs = [
           },
           {
             label: 'Password:',
-            input: ['teste'],
+            input: ['password'],
             inputType: 'text'
           }
         ]}

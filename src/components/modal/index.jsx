@@ -20,7 +20,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                 if(values[0]?.includes("@")){
                     const emailHash = md5(values[0].split('@')[0]);
                     const password = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
-                    document.getElementById("teste").value = password;
+                    document.getElementById("password").value = password;
                 }else{
                     console.log("apresenta um erro na tela");
                 }
@@ -62,7 +62,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                                     key={inputIndex}
                                     name='parameters[]'
                                     readOnly={values === ''}
-                                    placeholder={values}
+                                    placeholder={element.label !== 'Password:' && values}
                                 />
                             ))
                         :
