@@ -4,10 +4,9 @@ import { Link } from "react-router-dom";
 
 export const GlobalStyled = createGlobalStyle`
     *{
-      
       box-sizing: border-box;
       font-family: 'Montserrat', sans-serif;
-      font-size: 16px;
+      font-size: 62.5%;
       font-weight: 500;
       margin: 0;
       padding: 0;

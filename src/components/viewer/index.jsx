@@ -23,19 +23,19 @@ const Viewer = () => {
             viewer.toggleSidebar();
         });
 
-        const url = `pointclouds/page/metadata.json`;
-        // Load and add point cloud to scene
-        Potree.loadPointCloud(url).then(e => {
-            viewer.scene.addPointCloud(e.pointcloud);
-            const { material } = e.pointcloud;
-            material.size = 1;
-            material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+        // const url = `pointclouds/page/metadata.json`;
+        // // Load and add point cloud to scene
+        // Potree.loadPointCloud(url).then(e => {
+        //     viewer.scene.addPointCloud(e.pointcloud);
+        //     const { material } = e.pointcloud;
+        //     material.size = 1;
+        //     material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
 
-            e.pointcloud.position.x += 3;
-            e.pointcloud.position.y -= 3;
-            e.pointcloud.position.z += 4;
-            viewer.fitToScreen();
-        }, error => console.err(`ERROR: ${error}`));
+        //     e.pointcloud.position.x += 3;
+        //     e.pointcloud.position.y -= 3;
+        //     e.pointcloud.position.z += 4;
+        //     viewer.fitToScreen();
+        // }, error => console.err(`ERROR: ${error}`));
     }, []);
 
     return(

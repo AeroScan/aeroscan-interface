@@ -45,11 +45,13 @@ export const tabs = [
           title={'Crop Box Filter'} 
           content={[
             {
+              id: 'startingPoint',
               label: 'Starting Point:',
               input: ['x', 'y', 'z'],
               inputType: 'text'
             },
             {
+              id: 'endingPoint',
               label: 'Ending Point:',
               input: ['x', 'y', 'z'],
               inputType: 'text'
@@ -66,11 +68,13 @@ export const tabs = [
           title={'Voxel Grid Filter'} 
           content={[
             {
+              id: 'leafSize',
               label: 'Leaf Size:',
               input: ['x', 'y', 'z'],
               inputType: 'text'
             },
             {
+              id: 'leafSize',
               label: 'Leaf Size:',
               input: ['float'],
               inputType: 'text'
@@ -88,11 +92,13 @@ export const tabs = [
           labels={['Mean:', 'Standard Deviation:']} 
           content={[
             {
+              id: 'mean',
               label: 'Mean:',
               input: ['float'],
               inputType: 'text'
             },
             {
+              id: 'standardDeviation',
               label: 'Standard Deviation:',
               input: ['float'],
               inputType: 'text'
@@ -109,11 +115,13 @@ export const tabs = [
           title={'Normal Estimation'} 
           content={[
             {
+              id: 'k',
               label: 'K:',
               input: ['k'],
               inputType: 'text'
             },
             {
+              id: 'radius',
               label: 'Radius:',
               input: ['float'],
               inputType: 'text'
@@ -131,6 +139,7 @@ export const tabs = [
           labels={['Scale:']} 
           content={[
             {
+              id: 'scale',
               label: 'Scale:',
               input: ['float'],
               inputType: 'text'
@@ -148,6 +157,7 @@ export const tabs = [
           labels={['Centralize:']} 
           content={[
             {
+              id: 'centralize',
               label: 'Centralize:',
               inputType: 'select'
             }
@@ -163,6 +173,7 @@ export const tabs = [
           title={'Alignment'} 
           content={[
             {
+              id: 'align',
               label: 'Align:',
               inputType: 'select'
             }
@@ -222,13 +233,16 @@ export const tabs = [
         inputs={'text'}
         content={[
           {
+            id: 'email',
             label: 'E-mail:',
             input: ['Type your e-mail'],
-            inputType: 'text'
+            inputType: 'text',
+            errorMessage: 'E-mail inválido'
           },
           {
+            id: 'password',
             label: 'Password:',
-            input: ['password'],
+            input: [''],
             inputType: 'text'
           }
         ]}

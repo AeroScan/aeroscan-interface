@@ -11,9 +11,9 @@ export const Container = styled.div`
     width: 100%;
 
     img{
-        height: 500px;
-        padding: 0 100px;
-        width: 700px;
+        height: 50rem;
+        padding: 0 10rem;
+        width: 70rem;
     }
 
     form{
@@ -30,7 +30,7 @@ export const Container = styled.div`
         
         h1{
             color: #685d54;
-            font-size: 24px;
+            font-size: 2.4rem;
             font-weight: 900;
             margin-bottom: 20px;
             margin-top: 20px;
@@ -42,7 +42,7 @@ export const Container = styled.div`
             border-radius: 15px;
             color: #675c53;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 1.8rem;
             height: 42px;        
             margin-top: 28px;
             text-align: center;
@@ -58,27 +58,21 @@ export const Container = styled.div`
         }
 
         button{
-            
             background-color: #008542;
             border: none;
             border-radius: 30px;
             color: #ffff;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 1.8rem;
             font-weight: 600;
             height: 42px;
             margin: 48px 0 10px;
             width: 200px;
-
-            div{
-                margin: auto;
-                width: 100%;
-            }
         }
 
         span{
             color: red;
-            font-size: 14px;
+            font-size: 1.4rem;
         }
     }
 

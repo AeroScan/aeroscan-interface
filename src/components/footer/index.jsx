@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import MyContext from '../../context';
+import React, { useContext, useState } from 'react';
+import { GlobalContext } from '../../context';
 import { Container } from './style';
 // import { legendItems } from './labels'
 
@@ -7,10 +7,10 @@ const Footer = () => {
 
     const[status, setStatus] = useState("Started");
 
-    const {planes, setPlanes} = useContext(MyContext);
-    const {spheres, setSpheres} = useContext(MyContext);
-    const {cylinders, setCylinders} = useContext(MyContext);
-    const {cones, setCones} = useContext(MyContext);
+    const {planes, setPlanes} = useContext(GlobalContext);
+    const {spheres, setSpheres} = useContext(GlobalContext);
+    const {cylinders, setCylinders} = useContext(GlobalContext);
+    const {cones, setCones} = useContext(GlobalContext);
 
     const legendItems = [
         {

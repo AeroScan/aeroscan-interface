@@ -11,6 +11,7 @@ export const Container = styled.nav`
         background: #D2CFCD;
         border: 1px solid #000; 
         cursor: pointer;
+        font-size: 1.6rem;
         height: 6vh;
         text-align: center;
         width: ${props => 100 / props.tabLength}%;
@@ -29,10 +30,20 @@ export const Container = styled.nav`
         width: 100%;  
 
         li{
-            list-style: none;
             cursor: pointer;
-            margin: auto 18px;
+            list-style: none;
+            margin: auto 1.8rem;
             width: 6%;
+
+            img{
+                height: 4rem;
+                margin: 0.5rem 0;
+                width: 4rem;
+            }
+
+            p{
+                font-size: 1.6rem;
+            }
 
         }
     }

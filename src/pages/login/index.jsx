@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Link } from './style';
 import logo from '../../assets/img/logo.png';
-import Loading from '../../components/loading/indexs';
+import Loading from '../../components/loading/index';
 import md5 from 'md5';
 import { SaveToken } from '../../services/util';
 
@@ -56,15 +56,9 @@ const Login = () => {
                     onChange={(event) => setPassword(event.target.value)} 
                 />
                 <button type='submit'>
-                    {loading ?
-                        <div>
-                            <Loading/>
-                        </div>
-                    :
-                        "Acessar"
-                    }
+                    {loading ? <Loading height={'25px'} width={'25px'} /> : 'Acessar'}
                 </button>
-                {error ? <span>Credenciais Inválidas</span> : <></>}
+                <span>{error && 'Credenciais Inválidas'}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>

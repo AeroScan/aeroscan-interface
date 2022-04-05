@@ -27,7 +27,7 @@ export const Container = styled.div`
     
     h1{
         border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-        font-size: 20px;
+        font-size: 2rem;
         font-weight: 600;
         margin-bottom: 40px;
         padding-bottom: 20px;
@@ -36,21 +36,23 @@ export const Container = styled.div`
     }
 
     div.container{
+        align-items: center;
         display: flex;
         margin: 0 auto 20px;
         text-align: center;
         width: 60%;
 
         label{
-            font-size: 18px;
+            font-size: 1.8rem;
             text-align: right;
-            width: 40%;
+            width: 30%;
         }
         
         input{
             border: none;
             border-radius: 5px;
             box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
+            font-size: 1.6rem;
             height: 3.5vh;
             margin-left: 10px; 
             padding: 5px;
@@ -65,12 +67,31 @@ export const Container = styled.div`
             border-radius: 5px;
             box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
             cursor: pointer;
+            font-size: 1.8rem;
             margin-left: 10px; 
             padding: 5px;
             width: 50%;
                 
             -moz-appearance: none;
             -webkit-appearance: none;
+
+            option{
+                font-size: 1.8rem;
+            }
+        }
+
+        img{
+            height: 1.5rem;
+            margin-left: 10px;
+            width: 1.5rem;
+
+            &:hover{
+                cursor: pointer;
+            }
+        }
+
+        span{
+            width: 100%;
         }
     }
 
@@ -85,10 +106,13 @@ export const Container = styled.div`
 export const Button = styled.button`
     background: ${props => props.cancel ? '#FF0000' : '#626567'};
     border: none;
-    border-radius: 5px;
+    border-radius: 2rem;
+    box-sizing: border-box;
     color: #FFF;
     cursor: pointer;
-    padding: 8px 10px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 10px 0;
     width: 35%;
 
     &:hover{
