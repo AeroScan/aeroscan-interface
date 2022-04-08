@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { GlobalContext } from '../../context';
 import { Container } from './style';
 import { tabs } from './tabs';
 import { render } from '@testing-library/react';
 import { RemoveToken, RetrieveToken } from '../../services/util';
+import { LoadCloud } from '../../services/api';
+import OverlayLoading from '../loading/overlay';
 
 const Header = () => {
-
+    const { setCloudFolderName } = useContext(GlobalContext);
+    const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
     const [activeTab, setActiveTab] = useState(0);
 
     const[tab, setTab] = useState([]);
@@ -27,13 +31,22 @@ const Header = () => {
         })
     }, [tab, activeTab]);
 
+    const handleLoadCloud = async () => {
+        setGlobalLoading(true);
+        const folderName = await LoadCloud();
+        setCloudFolderName(`clouds/${folderName}/metadata.json`);
+        setGlobalLoading(false);
+    }
+
     const handleActions = (element) => {
         // console.log(element)
         switch(element.label){
             case "Logout":
                 RemoveToken();
-
+                break;
             case "Load Cloud":
+                handleLoadCloud();
+                break;
             case "Save Cloud":
             case "Save Results":  
             default:
@@ -44,6 +57,7 @@ const Header = () => {
     
     return(
         <Container tabLength={tab.length}>
+            {globalLoading && <OverlayLoading />}
             {tab.map((element, index) => (
                 <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)}>
                     {element.name}

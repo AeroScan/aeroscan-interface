@@ -10,8 +10,18 @@ const AppContext = ({ children }) => {
   const [cylinders, setCylinders] = useState(0);
   const [cones, setCones] = useState(0);
 
+  const [cloudFolderName, setCloudFolderName] = useState("");
+  const [globalLoading, setGlobalLoading] = useState(false);
+
   return (
-    <GlobalContext.Provider value={{ planes, setPlanes, spheres, setSpheres, cylinders, setCylinders, cones, setCones }}>
+    <GlobalContext.Provider value={{
+      planes, setPlanes,
+      spheres, setSpheres,
+      cylinders, setCylinders,
+      cones, setCones,
+      cloudFolderName, setCloudFolderName,
+      globalLoading, setGlobalLoading,
+    }}>
         {children}
     </GlobalContext.Provider>
   );
