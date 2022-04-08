@@ -34,7 +34,7 @@ const Header = () => {
     const handleLoadCloud = async () => {
         setGlobalLoading(true);
         const folderName = await LoadCloud();
-        setCloudFolderName(`clouds/${folderName}/metadata.json`);
+        setCloudFolderName(`cloud/${folderName}/metadata.json`);
         setGlobalLoading(false);
     }
 
