@@ -211,10 +211,10 @@ export const tabs = [
   {
     name: 'Help',
     procedures: [
-      {
-        logo: tourLogo,
-        label: 'Interface Tour'    
-      },
+      // {
+      //   logo: tourLogo,
+      //   label: 'Interface Tour'    
+      // },
       {
         logo: aboutLogo,
         label: 'About Software'
