@@ -10,6 +10,8 @@ import OverlayLoading from '../loading/overlay';
 const Header = () => {
     const { setCloudFolderName } = useContext(GlobalContext);
     const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
+    const { setApplicationStatus } = useContext(GlobalContext);
+
     const [activeTab, setActiveTab] = useState(0);
 
     const[tab, setTab] = useState([]);
@@ -32,10 +34,12 @@ const Header = () => {
     }, [tab, activeTab]);
 
     const handleLoadCloud = async () => {
+        setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
         const folderName = await LoadCloud();
         setCloudFolderName(`cloud/${folderName}/metadata.json`);
         setGlobalLoading(false);
+        setApplicationStatus("Cloud loaded");
     }
 
     const handleActions = (element) => {
