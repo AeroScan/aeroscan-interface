@@ -13,7 +13,7 @@ const Tooltip = ({ position, text, background }) => {
                 onMouseLeave={() => setIsHovered(false)}
                 ref={targetRef}
             >
-                <img src={questionIcon} alt="" />
+                <img src={questionIcon} alt={'Tooltip'} />
             </TooltipTarget>
             {isHovered && (
                 <CenterContainer position={position}>

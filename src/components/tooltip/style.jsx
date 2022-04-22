@@ -11,6 +11,16 @@ export const TooltipTarget = styled.button`
     font-size: inherit;
     margin: -1px;
     padding: 5px;
+
+    img{
+        height: 15px;
+        margin-left: 10px;
+        width: 15px;
+
+        &:hover{
+            cursor: pointer;
+        }
+    }
 `;
 
 export const CenterContainer = styled.div`
@@ -38,15 +48,14 @@ export const CenterContainer = styled.div`
                     right: calc(100% + 5px);
                     top: 50%;
                     width: 100%;
-                    width: max-content;
                 `;
             case "right":
                 return css`
                     left: calc(100% + 5px);
                     margin-left: 0;
                     top: 50%;
-                    width: 100%;
-                    width: max-content;
+                    width: fit-content;
+                    min-width: 180px;
                 `;
             default:
                 return css`
@@ -65,27 +74,16 @@ const fadeIn = keyframes`
     }
 `;
 
-export const TooltipBox = styled.span`
+export const TooltipBox = styled.p`
     animation: ${fadeIn} 400ms linear;
     background-color: #${(props) => props.background};  
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #FFFFFF;
-    text-align: center;
+    text-align: left;
     border-radius: 5px;
     font-size: 1.25rem;
     padding: 10px 8px;
     position: relative;
-
-    ${({ position }) => {
-        switch (position) {
-            case "right":
-                return css`
-                    color: #FFFFFF;
-                `;
-            default:
-                return css``;
-        }
-    }}
   
     &:after{
         border-color: #${(props) => props.background} transparent transparent transparent;

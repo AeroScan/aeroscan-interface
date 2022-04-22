@@ -48,13 +48,17 @@ export const tabs = [
               id: 'startingPoint',
               label: 'Starting Point:',
               input: ['x', 'y', 'z'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'These fields set the minimum coordinates.',
+              errorMessage: 'Invalid Fields'
             },
             {
               id: 'endingPoint',
               label: 'Ending Point:',
               input: ['x', 'y', 'z'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'These fields set the maximum coordinates.',
+              errorMessage: 'Invalid Fields'
             }
           ]}
           buttonLabel={'Process'}
@@ -67,17 +71,20 @@ export const tabs = [
         component: <ModalComponet 
           title={'Voxel Grid Filter'} 
           content={[
-            {
-              id: 'leafSize',
-              label: 'Leaf Size:',
-              input: ['x', 'y', 'z'],
-              inputType: 'text'
-            },
+            // {
+            //   id: 'leafSize',
+            //   label: 'Leaf Size:',
+            //   input: ['x', 'y', 'z'],
+            //   inputType: 'text',
+            //   tooltipMessage: 'These fields set the minimum distance between neighboring points in the cloud equally'
+            // },
             {
               id: 'leafSize',
               label: 'Leaf Size:',
               input: ['float'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'This field set the minimum distance between neighboring points in the cloud equally.',
+              errorMessage: 'Invalid Field'
             }
           ]}
           buttonLabel={'Process'}
@@ -95,13 +102,17 @@ export const tabs = [
               id: 'mean',
               label: 'Mean:',
               input: ['float'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'This field set the average.',
+              errorMessage: 'Invalid Field'
             },
             {
               id: 'standardDeviation',
               label: 'Standard Deviation:',
               input: ['float'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'This field set the standard deviation.',
+              errorMessage: 'Invalid Field'
             }
           ]}
           buttonLabel={'Process'}
@@ -118,14 +129,17 @@ export const tabs = [
               id: 'k',
               label: 'K:',
               input: ['k'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'This field estimates a normal to the surface around each point.',
+              errorMessage: 'Invalid Field'
             },
-            {
-              id: 'radius',
-              label: 'Radius:',
-              input: ['float'],
-              inputType: 'text'
-            }
+            // {
+            //   id: 'radius',
+            //   label: 'Radius:',
+            //   input: ['float'],
+            //   inputType: 'text',
+            //   tooltipMessage: 'This field set the'
+            // }
           ]}
           buttonLabel={'Process'}
           submitCode={ModalActions.NORMAL_ESTIMATION}
@@ -142,7 +156,9 @@ export const tabs = [
               id: 'scale',
               label: 'Scale:',
               input: ['float'],
-              inputType: 'text'
+              inputType: 'text',
+              tooltipMessage: 'This field update the scale of all cloud points.',
+              errorMessage: 'Invalid Field'
             }
           ]}
           buttonLabel={'Process'}
@@ -159,7 +175,9 @@ export const tabs = [
             {
               id: 'centralize',
               label: 'Centralize:',
-              inputType: 'select'
+              inputType: 'select',
+              tooltipMessage: 'The select set the centralization.',
+              errorMessage: 'Invalid Field'
             }
           ]}
           buttonLabel={'Process'}
@@ -175,7 +193,9 @@ export const tabs = [
             {
               id: 'align',
               label: 'Align:',
-              inputType: 'select'
+              inputType: 'select',
+              tooltipMessage: 'The select set the alignment.',
+              errorMessage: 'Invalid Field'
             }
           ]}
           buttonLabel={'Process'}
@@ -189,7 +209,54 @@ export const tabs = [
     procedures: [
       {
         logo: ransacLogo,
-        label: 'Efficient Ransac'
+        label: 'Efficient Ransac',
+        component: <ModalComponet 
+          title={'Alignment'} 
+          content={[
+            {
+              id: 'scale',
+              label: 'Probability:',
+              input: ['float'],
+              inputType: 'text',
+              tooltipMessage: 'This field set the method stop condition, probability of losing the largest primitive at each iteration.',
+              errorMessage: 'Invalid Field'
+            },
+            {
+              id: 'scale',
+              label: 'Min Points:',
+              input: [''],
+              inputType: 'text',
+              tooltipMessage: 'This field set the minimum number of points for a sample to be considered a possible individual primitive.',
+              errorMessage: 'Invalid Field'
+            },
+            {
+              id: 'scale',
+              label: 'Cluster Epsilon:',
+              input: [''],
+              inputType: 'text',
+              tooltipMessage: 'This field set the distance used for two neighboring points to be considered adjacent or not.',
+              errorMessage: 'Invalid Field'
+            },
+            {
+              id: 'scale',
+              label: 'Epsilon:',
+              input: [''],
+              inputType: 'text',
+              tooltipMessage: 'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.',
+              errorMessage: 'Invalid Field'
+            },
+            {
+              id: 'scale',
+              label: 'Normal Threshold:',
+              input: ['K'],
+              inputType: 'text',
+              tooltipMessage: 'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.',
+              errorMessage: 'Invalid Field'
+            }
+          ]}
+          buttonLabel={'Process'}
+          submitCode={ModalActions.ALIGNMENT}
+        />
       }
     ]    
   },
@@ -237,13 +304,15 @@ export const tabs = [
             label: 'E-mail:',
             input: ['Type your e-mail'],
             inputType: 'text',
-            errorMessage: 'E-mail inválido'
+            tooltipMessage: 'This field generate a password through the e-mail.',
+            errorMessage: 'Invalid Email'
           },
           {
             id: 'password',
             label: 'Password:',
             input: [''],
-            inputType: 'text'
+            inputType: 'text',
+            tooltipMessage: 'This field show the password generated by md5.'
           }
         ]}
         buttonLabel={'Generate'}

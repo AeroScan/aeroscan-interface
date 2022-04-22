@@ -35,63 +35,69 @@ export const Container = styled.div`
         width: 100%;
     }
 
-    div.container{
-        align-items: center;
-        display: flex;
-        margin: 0 auto 20px;
-        text-align: center;
-        width: 60%;
+    form{
 
-        label{
-            font-size: 1.8rem;
-            text-align: right;
-            width: 30%;
-        }
-        
-        input{
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
-            font-size: 1.6rem;
-            height: 3.5vh;
-            margin-left: 10px; 
-            padding: 5px;
-            width: 50%;
-        }
+        width: 100%;
 
-        select{
-            appearance: none;
-            background: url(${select}) no-repeat 95% center #FFF;
-            background-size: 12px;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
-            cursor: pointer;
-            font-size: 1.8rem;
-            margin-left: 10px; 
-            padding: 5px;
-            width: 50%;
-                
-            -moz-appearance: none;
-            -webkit-appearance: none;
+        div.container{
+            align-items: center;
+            display: flex;
+            margin: 30px 100px 5px;
+            text-align: center;
+            width: 60%;
 
-            option{
+            label{
                 font-size: 1.8rem;
+                text-align: right;
+                width: 30%;
             }
-        }
+            
+            input{
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
+                font-size: 1.6rem;
+                height: 3.5vh;
+                margin-left: 10px; 
+                padding: 5px;
+                width: 50%;
+            }
 
-        img{
-            height: 1.5rem;
-            margin-left: 10px;
-            width: 1.5rem;
-
-            &:hover{
+            select{
+                appearance: none;
+                background: url(${select}) no-repeat 95% center #FFF;
+                background-size: 12px;
+                border: none;
+                border-radius: 5px;
+                box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);
                 cursor: pointer;
+                font-size: 1.8rem;
+                margin-left: 10px; 
+                padding: 5px;
+                width: 50%;
+                    
+                -moz-appearance: none;
+                -webkit-appearance: none;
+
+                option{
+                    font-size: 1.8rem;
+                }
+            }
+
+            img{
+                height: 15px;
+                margin-left: 10px;
+                width: 15px;
+
+                &:hover{
+                    cursor: pointer;
+                }
             }
         }
 
         span{
-            width: 100%;
+            color: red;
+            font-size: 1.4rem;
         }
     }
 
