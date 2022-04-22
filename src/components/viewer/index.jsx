@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { GlobalContext } from '../../context';
-import { Wrapper, AxisWrapper, AxisImg } from './style';
+import { Wrapper } from './style';
 import $ from 'jquery';
-
 import srcAxis from '../../assets/img/viewer/axis.png';
 
 const Viewer = () => {
@@ -75,9 +74,9 @@ const Viewer = () => {
 
     return(
         <Wrapper id="potree-root">
-            <AxisWrapper id="axis-viewer">
-                <AxisImg src={srcAxis} alt="Axis viewer" />
-            </AxisWrapper>
+            <div className="axis-viewer">
+                <img src={srcAxis} alt="Axis viewer" />
+            </div>
             <div ref={potree_render_area} id="potree_render_area" />
             <div id="potree_sidebar_container" />
         </Wrapper>
