@@ -4,13 +4,12 @@ import { Container } from './style';
 // import { legendItems } from './labels'
 
 const Footer = () => {
+    const { applicationStatus } = useContext(GlobalContext);
 
-    const[status, setStatus] = useState("Started");
-
-    const {planes, setPlanes} = useContext(GlobalContext);
-    const {spheres, setSpheres} = useContext(GlobalContext);
-    const {cylinders, setCylinders} = useContext(GlobalContext);
-    const {cones, setCones} = useContext(GlobalContext);
+    const { planes } = useContext(GlobalContext);
+    const { spheres } = useContext(GlobalContext);
+    const { cylinders } = useContext(GlobalContext);
+    const { cones } = useContext(GlobalContext);
 
     const legendItems = [
         {
@@ -42,7 +41,7 @@ const Footer = () => {
                     <p key={index} style={{ color: element.color }}>{element.value} {element.label}</p>
                 ))}
             </div>
-            <span><strong>Status:</strong> {status}</span>
+            <span><strong>Status:</strong> {applicationStatus}</span>
         </Container>
     );
 }

@@ -4,7 +4,7 @@ import { SaveToken } from './util';
 
 export const api = axios.create(
     {
-        baseURL: '', 
+        baseURL: 'http://localhost:5619/', 
     }
 )
 
@@ -25,4 +25,11 @@ export const LoginApi = async(email, password) => {
     //     SaveToken(t(response, 'data.token').safeString)
     //     }
     // )
+}
+
+
+export const LoadCloud = async() => {
+    // const response = await api.get('/loadCloud');
+    // return response.data;
+    return 'abb5ae70-b77a-11ec-b909-0242ac120002';
 }

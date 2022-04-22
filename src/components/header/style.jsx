@@ -34,6 +34,17 @@ export const Container = styled.nav`
             list-style: none;
             margin: auto 1.8rem;
             width: 6%;
+            padding: 20px 0;
+            border-radius: 10px;
+            user-select: none;
+
+            &:hover{
+                background: #EFEEED;
+            }
+
+            &:active{
+                background: #675C53CC;
+            }
 
             img{
                 height: 4rem;
@@ -46,16 +57,5 @@ export const Container = styled.nav`
             }
 
         }
-    }
-    
+    }   
 `
-
-// &:hover{
-//     background: #EFEEED;
-// }
-
-// &:active{
-//     background: #675C53CC;
-// }
-
-// F5F5F5
