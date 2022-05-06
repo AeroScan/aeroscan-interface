@@ -1,18 +1,23 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { GlobalContext } from '../../context';
-import { Wrapper } from './style';
+import { Axes, Wrapper } from './style';
 import $ from 'jquery';
-import srcAxis from '../../assets/img/viewer/axis.png';
+import * as THREE from 'three';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const Viewer = () => {
     const { Potree } = window;
 
-    const [pageLoaded, setPageLoaded] = useState(false);
-    const [viewer, setViewer] = useState(null);
-    const [viewerConfigured, setViewerConfigured] = useState(false);
+    const [ pageLoaded, setPageLoaded ] = useState(false);
+    const [ viewer, setViewer ] = useState(null);
+    const [ viewerConfigured, setViewerConfigured ] = useState(false);
 
     const potree_render_area = useRef(null);
     const { cloudFolderName } = useContext(GlobalContext);
+
+    const potreeAxes = useRef(null);
+
+    const [ coordinates, setCoordinates ] = useState([]);
 
     useEffect(() => {
         if (Potree && !pageLoaded) {
@@ -20,10 +25,11 @@ const Viewer = () => {
             setViewer(new Potree.Viewer(viewerElem));
             setPageLoaded(true);
         }
-    }, [Potree, pageLoaded]);
+    }, [Potree, pageLoaded]);    
 
     useEffect(() => {
         if (viewer && !viewerConfigured) {
+
             viewer.setEDLEnabled(false);
             viewer.setFOV(60);
             viewer.setPointBudget(1 * 1000 * 1000);
@@ -35,26 +41,60 @@ const Viewer = () => {
                 viewer.toggleSidebar();
             });
 
-            viewer.addEventListener("update", () => {
-                // const direction = viewer.scene.view.direction.clone();
-                // direction.z = 0;
-                // direction.normalize();
-                // const p1 = camera.getWorldPosition(new Vector3());
-                // const p2 = p1.clone().add(direction);
-                // const projection = viewer.getProjection();
-                // const azimuth = Utils.computeAzimuth(p1, p2, projection);
-                // const pos = Utils.computeAzimuth(p2, p1, projection);
+            const scene = new THREE.Scene();
 
-                const camera = viewer.scene.getActiveCamera();
-                const axis = document.getElementById("axis-viewer");
-                if (axis) {
-                    axis.style.transform = `rotateX(${(camera.rotation.x)}rad) rotateY(${(camera.rotation.y)}rad) rotateZ(${camera.rotation.z}rad)`;
-                }
-            });
+            const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.01, 10000000 );
+            camera.position.set( 15, 20, 30 );
+            scene.add(camera)
+            
+            const renderer = new THREE.WebGLRenderer( { antialias: true } );
+            renderer.setClearColor( 0x000000, 0 );
+            potreeAxes.current.appendChild( renderer.domElement );
+            
+            const controls = new OrbitControls( camera, renderer.domElement );
+    
+            scene.add( new THREE.AxesHelper( 20 ) )        
+    
+            const animate = () => {
+                requestAnimationFrame( animate );
+                controls.update();
+                renderer.render( scene, camera );
+            }
+    
+            animate();
+            
+            setCoordinates(viewer.scene.getActiveCamera());
+
+            // const handleViewerAxes = () => {
+            //     const cameraP = viewer.scene.getActiveCamera();
+
+
+            //     camera.position.set( cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z );
+            //     scene.add(camera)
+
+            //     scene.add( new THREE.AxesHelper( 20 ) ) 
+
+            //     animate();
+                
+            //     // console.log(camera.rotation.x, camera.rotation.y, camera.rotation.z)
+            //     // axes.geometry.translate( cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z )
+
+            //     // axes.applyMatrix(new THREE.Matrix4().makeTranslation(cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z));
+            
+                    
+            //     // potreeAxes.style.transform = `rotateX(${(cameraP.rotation.x)}rad) rotateY(${(cameraP.rotation.y)}rad) rotateZ(${cameraP.rotation.z}rad)`;
+                
+            // }
+
+            // viewer.addEventListener("update", handleViewerAxes);
 
             setViewerConfigured(true);
         }
     }, [viewer, viewerConfigured]);
+
+    useEffect(() => {
+        console.log(coordinates)
+    }, [coordinates])
 
     useEffect(() => {
         if (cloudFolderName && Potree && viewerConfigured && viewer) {
@@ -74,9 +114,7 @@ const Viewer = () => {
 
     return(
         <Wrapper id="potree-root">
-            <div className="axis-viewer">
-                <img src={srcAxis} alt="Axis viewer" />
-            </div>
+            <Axes ref={potreeAxes} />
             <div ref={potree_render_area} id="potree_render_area" />
             <div id="potree_sidebar_container" />
         </Wrapper>

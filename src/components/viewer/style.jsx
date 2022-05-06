@@ -10,19 +10,14 @@ export const Wrapper = styled.div`
 
     *{
         font-size: 1.6rem;
-    }
-
-    div.axis-viewer{
-        right: 15px;
-        bottom: 30px;
-        width: 100px;
-        position: absolute;
-        z-index: 100;
-    }
-
-    img{
-        width: 100%;
-    }
+    }  
+`
+export const Axes = styled.div`
+    bottom: 10px;
+    position: absolute;
+    right: 0;
+    width: 10%;
+    z-index: 5;
 `
 
 // height: 675px;

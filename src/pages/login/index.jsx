@@ -43,22 +43,22 @@ const Login = () => {
                 <h1>Forneça suas Credenciais</h1>
                 <input 
                     type="text" 
-                    placeholder='nome de usuário' 
-                    aria-label='nome'
+                    placeholder='email' 
+                    aria-label='email'
                     value={userName}
                     onChange={(event) => setUserName(event.target.value)} 
                 />
                 <input 
                     type="password" 
-                    placeholder='senha' 
-                    aria-label='senha'
+                    placeholder='password' 
+                    aria-label='password'
                     value={password}
                     onChange={(event) => setPassword(event.target.value)} 
                 />
                 <button type='submit'>
                     {loading ? <Loading height={'25px'} width={'25px'} /> : 'Acessar'}
                 </button>
-                <span>{error && 'Credenciais Inválidas'}</span>
+                <span>{error && 'Invalid Credentials'}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>
