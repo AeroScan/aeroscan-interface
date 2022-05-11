@@ -23,7 +23,7 @@ const Viewer = () => {
         if (Potree && !pageLoaded) {
             const viewerElem = potree_render_area.current
             setViewer(new Potree.Viewer(viewerElem));
-            setPageLoaded(true);
+            //setPageLoaded(true);
         }
     }, [Potree, pageLoaded]);    
 
