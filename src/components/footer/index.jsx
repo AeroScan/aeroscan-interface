@@ -1,7 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { GlobalContext } from '../../context';
 import { Container } from './style';
-// import { legendItems } from './labels'
 
 const Footer = () => {
     const { applicationStatus } = useContext(GlobalContext);
@@ -34,7 +33,7 @@ const Footer = () => {
         }
     ];
 
-    return(
+    return (
         <Container>
             <div>
                 {legendItems.map((element, index) => (

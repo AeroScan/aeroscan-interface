@@ -6,7 +6,7 @@ const Tooltip = ({ position, text, background }) => {
     const [isHovered, setIsHovered] = useState(false);
     const targetRef = useRef(null);
 
-    return (  
+    return (
         <TooltipWrapper>
             <TooltipTarget
                 onMouseEnter={() => setIsHovered(true)}
@@ -25,5 +25,5 @@ const Tooltip = ({ position, text, background }) => {
         </TooltipWrapper>
     );
 }
- 
+
 export default Tooltip;

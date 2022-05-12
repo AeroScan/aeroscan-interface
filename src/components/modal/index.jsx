@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import Loading from '../loading/index';
 import Tooltip from '../tooltip';
@@ -16,26 +16,26 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
     const [loading, setLoading] = useState(false);
 
     const handleValidation = (inputValues) => {
-        if(inputValues.every(element => element === '')){
+        if (inputValues.every(element => element === '')) {
             setError(true);
         }
     }
 
     const handleSubmit = () => {
         var values = $("input[name='parameters[]']")
-            .map(function(){return $(this).val();}).get();
-        
+            .map(function () { return $(this).val(); }).get();
+
         switch (submitCode) {
             case ModalActions.GENERATE_PASSWORD:
                 setLoading(true);
                 setTimeout(() => {
-                    if(values[0]?.includes("@")){
+                    if (values[0]?.includes("@")) {
                         setError(false);
                         const emailHash = md5(values[0].split('@')[0]);
                         const password = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
                         document.getElementById("password").value = password;
                         setLoading(false);
-                    }else{
+                    } else {
                         console.log("apresenta um erro na tela");
                         setError(true);
                         setLoading(false);
@@ -107,7 +107,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
             ariaHideApp={false}
         >
             <Container>
-                <Close onClick={closeModal}/>
+                <Close onClick={closeModal} />
                 <h1>{title}</h1>
                 {content?.map((element, contentIndex) => (
                     <form key={contentIndex}>
@@ -125,11 +125,11 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                                         onFocus={() => setError(false)}
                                     />
                                 ))
-                            :
-                                <select 
-                                    aria-label="boolean" 
+                                :
+                                <select
+                                    aria-label="boolean"
                                     onChange={event => setSelectField(event.target.value)}
-                                    value={selectField}    
+                                    value={selectField}
                                 >
                                     <option value="" hidden>Select</option>
                                     <option value="true">True</option>
@@ -143,7 +143,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                 ))}
                 <div className="buttons-container">
                     <Button onClick={handleSubmit}>
-                        {loading ? <Loading  height={'20px'} width={'20px'}/> : buttonLabel}
+                        {loading ? <Loading height={'20px'} width={'20px'} /> : buttonLabel}
                     </Button>
                     <Button cancel onClick={closeModal}>Cancel</Button>
                 </div>
@@ -151,5 +151,5 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
         </Modal>
     );
 }
- 
+
 export default ModalComponet;

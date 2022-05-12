@@ -14,20 +14,20 @@ const Header = () => {
 
     const [activeTab, setActiveTab] = useState(0);
 
-    const[tab, setTab] = useState([]);
-    const[tabContent, setTabContent] = useState([]);
+    const [tab, setTab] = useState([]);
+    const [tabContent, setTabContent] = useState([]);
 
     useEffect(() => {
         if (RetrieveToken() !== "admin@aeroscan.com") {
             setTab(tabs.filter(element => element.name !== "Admin"));
-        }else{
+        } else {
             setTab(tabs);
         }
     }, []);
 
     useEffect(() => {
-        tab.map((element, index) => {
-            if(index === activeTab){
+        tab.forEach((element, index) => {
+            if (index === activeTab) {
                 setTabContent(element.procedures);
             }
         })
@@ -37,13 +37,13 @@ const Header = () => {
         setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
         const folderName = await LoadCloud();
-        setCloudFolderName(`cloud/${folderName}/metadata.json`);
+        setCloudFolderName(`http://localhost:5619/file/download/${folderName}/metadata.json`);
         setGlobalLoading(false);
         setApplicationStatus("Cloud loaded");
     }
 
     const handleActions = (element) => {
-        switch(element.label){
+        switch (element.label) {
             case "Logout":
                 RemoveToken();
                 break;
@@ -52,14 +52,14 @@ const Header = () => {
                 break;
             case "Save Cloud":
                 break;
-            case "Save Results":  
+            case "Save Results":
                 break;
             default:
                 render(element.component)
         }
     }
-    
-    return(
+
+    return (
         <Container tabLength={tab.length}>
             {globalLoading && <OverlayLoading />}
             {tab.map((element, index) => (
@@ -71,11 +71,11 @@ const Header = () => {
                 {tabContent.map((element, index) => (
                     <li key={index} onClick={() => handleActions(element)}>
                         <img src={element.logo} alt={element.label} />
-                        <p>{element.label}</p>  
+                        <p>{element.label}</p>
                     </li>
                 ))}
             </ul>
-        </Container>  
+        </Container>
     );
 }
 

@@ -1,6 +1,4 @@
 import axios from 'axios';
-import t from 'typy';
-import { SaveToken } from './util';
 
 export const api = axios.create(
     {
@@ -31,5 +29,5 @@ export const LoginApi = async(email, password) => {
 export const LoadCloud = async() => {
     // const response = await api.get('/loadCloud');
     // return response.data;
-    return 'abb5ae70-b77a-11ec-b909-0242ac120002';
+    return 'cloud';
 }
