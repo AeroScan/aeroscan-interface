@@ -17,7 +17,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
 
     const handleValidation = (inputValues) => {
         if(inputValues.every(element => element === '')){
-            setError(true)
+            setError(true);
         }
     }
 
@@ -48,49 +48,54 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
-                
+                break;
             case ModalActions.CROP_BOX:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
+                break;
             case ModalActions.NORMAL_ESTIMATION:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
+                break;
             case ModalActions.REESCALE:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
+                break;
             case ModalActions.VOXEL_GRID:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
+                break;
             case ModalActions.STATISTICAL_REMOVAL:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
+                break;
             case ModalActions.ALIGNMENT:
                 setLoading(true);
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
                 }, 2000)
-            default:
                 break;
+            default:
         }
     }
 
-    const closeModal = () =>{
+    const closeModal = () => {
         setIsOpen(false);
     }
 

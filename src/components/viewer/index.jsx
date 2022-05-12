@@ -62,8 +62,6 @@ const Viewer = () => {
             }
     
             animate();
-            
-            setCoordinates(viewer.scene.getActiveCamera());
 
             // const handleViewerAxes = () => {
             //     const cameraP = viewer.scene.getActiveCamera();

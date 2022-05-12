@@ -43,7 +43,6 @@ const Header = () => {
     }
 
     const handleActions = (element) => {
-        // console.log(element)
         switch(element.label){
             case "Logout":
                 RemoveToken();
@@ -52,10 +51,11 @@ const Header = () => {
                 handleLoadCloud();
                 break;
             case "Save Cloud":
+                break;
             case "Save Results":  
+                break;
             default:
                 render(element.component)
-                break;
         }
     }
     
