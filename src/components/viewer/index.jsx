@@ -17,8 +17,6 @@ const Viewer = () => {
 
     const potreeAxes = useRef(null);
 
-    const [ coordinates, setCoordinates ] = useState([]);
-
     useEffect(() => {
         if (Potree && !pageLoaded) {
             const viewerElem = potree_render_area.current
@@ -35,6 +33,8 @@ const Viewer = () => {
             viewer.setPointBudget(1 * 1000 * 1000);
             viewer.loadSettingsFromURL();
 
+
+            // ERRO
             viewer.loadGUI(() => {
                 viewer.setLanguage('en');
                 $("#menu_appearance").next().show();
@@ -91,10 +91,6 @@ const Viewer = () => {
             setViewerConfigured(true);
         }
     }, [viewer, viewerConfigured]);
-
-    useEffect(() => {
-        console.log(coordinates)
-    }, [coordinates])
 
     useEffect(() => {
         if (cloudFolderName && Potree && viewerConfigured && viewer) {
