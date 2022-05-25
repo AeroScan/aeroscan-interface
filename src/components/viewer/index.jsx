@@ -33,6 +33,26 @@ const Viewer = () => {
                 viewer.setLanguage('en');
                 $("#menu_appearance").next().show();
                 viewer.toggleSidebar();
+                viewer.setClassifications([
+                    {
+                        visible: true,
+                        name: 'plane',
+                        color: [1, 0, 0, 1],
+                    },
+                    {
+                        visible: true,
+                        name: 'cylinder',
+                        color: [0, 0, 1, 1],
+                    },{
+                        visible: true,
+                        name: 'sphere',
+                        color: [0, 1, 0, 1],
+                    },{
+                        visible: true,
+                        name: 'cone',
+                        color: [0, 1, 1, 1],
+                    },
+                ]);
             });
 
             setViewerConfigured(true);
