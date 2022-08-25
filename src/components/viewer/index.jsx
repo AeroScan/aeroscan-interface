@@ -30,7 +30,7 @@ const Viewer = () => {
 
             viewer.setEDLEnabled(false);
             viewer.setFOV(60);
-            viewer.setPointBudget(1 * 1000 * 1000);
+            viewer.setPointBudget(1*1000*1000);
             viewer.loadSettingsFromURL();
 
 
@@ -90,21 +90,21 @@ const Viewer = () => {
         }
     }, [viewer, viewerConfigured]);
 
-    useEffect(() => {
-        if (cloudFolderName && Potree && viewerConfigured && viewer) {
-            Potree.loadPointCloud(cloudFolderName).then(e => {
-                viewer.scene.addPointCloud(e.pointcloud);
-                const { material } = e.pointcloud;
-                material.size = 1;
-                material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+    // useEffect(() => {
+    //     if (cloudFolderName && Potree && viewerConfigured && viewer) {
+    //         Potree.loadPointCloud(cloudFolderName).then(e => {
+    //             viewer.scene.addPointCloud(e.pointcloud);
+    //             const { material } = e.pointcloud;
+    //             material.size = 1;
+    //             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
     
-                e.pointcloud.position.x += 3;
-                e.pointcloud.position.y -= 3;
-                e.pointcloud.position.z += 4;
-                viewer.fitToScreen();
-            }, error => console.err(`ERROR: ${error}`));
-        }
-    }, [cloudFolderName, Potree, viewerConfigured, viewer]);
+    //             e.pointcloud.position.x += 3;
+    //             e.pointcloud.position.y -= 3;
+    //             e.pointcloud.position.z += 4;
+    //             viewer.fitToScreen();
+    //         }, error => console.err(`ERROR: ${error}`));
+    //     }
+    // }, [cloudFolderName, Potree, viewerConfigured, viewer]);
 
     return(
         <Wrapper id="potree-root">
