@@ -54,6 +54,11 @@ const Header = () => {
                 break;
             case "Save Results":  
                 break;
+            case "Interface Tour":
+                setActiveTab(0)
+                render(element.component)
+                
+                break;
             default:
                 render(element.component)
         }

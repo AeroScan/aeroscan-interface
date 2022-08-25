@@ -15,6 +15,7 @@ import tourLogo from '../../assets/img/help/tour.png';
 import aboutLogo from '../../assets/img/help/about.png';
 import ModalComponet from '../modal';
 import * as ModalActions from '../modal/actions';
+import InterfaceTour from '../tour';
 
 
 export const tabs = [
@@ -278,10 +279,11 @@ export const tabs = [
   {
     name: 'Help',
     procedures: [
-      // {
-      //   logo: tourLogo,
-      //   label: 'Interface Tour'    
-      // },
+      {
+        logo: tourLogo,
+        label: 'Interface Tour',
+        component: <InterfaceTour/>    
+      },
       {
         logo: aboutLogo,
         label: 'About Software'

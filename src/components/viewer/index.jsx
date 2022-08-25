@@ -33,8 +33,6 @@ const Viewer = () => {
             viewer.setPointBudget(1*1000*1000);
             viewer.loadSettingsFromURL();
 
-
-            // ERRO
             viewer.loadGUI(() => {
                 viewer.setLanguage('en');
                 $("#menu_appearance").next().show();
@@ -44,8 +42,8 @@ const Viewer = () => {
             const scene = new THREE.Scene();
 
             const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.01, 10000000 );
-            camera.position.set( 15, 20, 30 );
-            scene.add(camera)
+            // camera.position.set( 15, 20, 30 );
+            // scene.add(camera)
             
             const renderer = new THREE.WebGLRenderer( { antialias: true } );
             renderer.setClearColor( 0x000000, 0 );
@@ -53,7 +51,7 @@ const Viewer = () => {
             
             const controls = new OrbitControls( camera, renderer.domElement );
     
-            scene.add( new THREE.AxesHelper( 20 ) )        
+            scene.add( new THREE.AxesHelper( 10000 ) )        
     
             const animate = () => {
                 requestAnimationFrame( animate );
@@ -63,48 +61,35 @@ const Viewer = () => {
     
             animate();
 
-            // const handleViewerAxes = () => {
-            //     const cameraP = viewer.scene.getActiveCamera();
+            const handleAxes = () => {
+                // console.log(Math.round(viewer.scene.getActiveCamera().position.x))
+                const coordinate = viewer.scene.getActiveCamera().position
+                camera.position.set(Math.round(coordinate.x), Math.round(coordinate.y), Math.round(coordinate.z));
+                scene.add(camera)
+            }
 
-
-            //     camera.position.set( cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z );
-            //     scene.add(camera)
-
-            //     scene.add( new THREE.AxesHelper( 20 ) ) 
-
-            //     animate();
-                
-            //     // console.log(camera.rotation.x, camera.rotation.y, camera.rotation.z)
-            //     // axes.geometry.translate( cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z )
-
-            //     // axes.applyMatrix(new THREE.Matrix4().makeTranslation(cameraP.rotation.x, cameraP.rotation.y, cameraP.rotation.z));
-            
-                    
-            //     // potreeAxes.style.transform = `rotateX(${(cameraP.rotation.x)}rad) rotateY(${(cameraP.rotation.y)}rad) rotateZ(${cameraP.rotation.z}rad)`;
-                
-            // }
-
-            // viewer.addEventListener("update", handleViewerAxes);
+            viewer.addEventListener("update", handleAxes);
 
             setViewerConfigured(true);
         }
     }, [viewer, viewerConfigured]);
 
-    // useEffect(() => {
-    //     if (cloudFolderName && Potree && viewerConfigured && viewer) {
-    //         Potree.loadPointCloud(cloudFolderName).then(e => {
-    //             viewer.scene.addPointCloud(e.pointcloud);
-    //             const { material } = e.pointcloud;
-    //             material.size = 1;
-    //             material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+    useEffect(() => {
+        // /AeroScan/Clouds/cloud/metadata.json
+        if (Potree && viewerConfigured && viewer) {
+            Potree.loadPointCloud("/AeroScan/Clouds/cloud/metadata.json").then(e => {
+                viewer.scene.addPointCloud(e.pointcloud);
+                const { material } = e.pointcloud;
+                material.size = 1;
+                material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
     
-    //             e.pointcloud.position.x += 3;
-    //             e.pointcloud.position.y -= 3;
-    //             e.pointcloud.position.z += 4;
-    //             viewer.fitToScreen();
-    //         }, error => console.err(`ERROR: ${error}`));
-    //     }
-    // }, [cloudFolderName, Potree, viewerConfigured, viewer]);
+                e.pointcloud.position.x += 3;
+                e.pointcloud.position.y -= 3;
+                e.pointcloud.position.z += 4;
+                viewer.fitToScreen();
+            }, error => console.err(`ERROR: ${error}`));
+        }
+    }, [cloudFolderName, Potree, viewerConfigured, viewer]);
 
     return(
         <Wrapper id="potree-root">
