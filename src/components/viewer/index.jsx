@@ -33,6 +33,8 @@ const Viewer = () => {
             viewer.setPointBudget(1*1000*1000);
             viewer.loadSettingsFromURL();
 
+            console.log(viewer)
+
             viewer.loadGUI(() => {
                 viewer.setLanguage('en');
                 $("#menu_appearance").next().show();
@@ -62,7 +64,7 @@ const Viewer = () => {
             animate();
 
             const handleAxes = () => {
-                // console.log(Math.round(viewer.scene.getActiveCamera().position.x))
+                // console.log(Math.round(viewer.scene.getActiveCamera().position.z))
                 const coordinate = viewer.scene.getActiveCamera().position
                 camera.position.set(Math.round(coordinate.x), Math.round(coordinate.y), Math.round(coordinate.z));
                 scene.add(camera)
@@ -94,8 +96,8 @@ const Viewer = () => {
     return(
         <Wrapper id="potree-root">
             <Axes ref={potreeAxes} />
-            <div ref={potree_render_area} id="potree_render_area" />
-            <div id="potree_sidebar_container" />
+            <div ref={potree_render_area} id="potree_render_area" data-tut="eighth-step"/>
+            <div id="potree_sidebar_container" data-tut="ninth-step"/>
         </Wrapper>
     );
 }

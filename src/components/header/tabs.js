@@ -21,6 +21,7 @@ import InterfaceTour from '../tour';
 export const tabs = [
   {
     name: 'Files',
+    step: 'second-step',
     procedures: [
       {
         logo: loudCloudLogo,
@@ -38,6 +39,7 @@ export const tabs = [
   },
   {
     name: 'Pre-Processing',
+    step: 'fourth-step',
     procedures: [
       {
         logo: cropBoxLogo,
@@ -207,6 +209,7 @@ export const tabs = [
   },
   {
     name: 'Processing',
+    step: 'fifth-step',
     procedures: [
       {
         logo: ransacLogo,
@@ -278,6 +281,7 @@ export const tabs = [
   // },
   {
     name: 'Help',
+    step: 'sixth-step',
     procedures: [
       {
         logo: tourLogo,
@@ -325,6 +329,7 @@ export const tabs = [
   },
   {
     name: 'Account',
+    step: 'seventh-step',
     procedures: [
       {
         logo: rAllocationLogo,

@@ -5,7 +5,7 @@ import { tabs } from './tabs';
 import { render } from '@testing-library/react';
 import { RemoveToken, RetrieveToken } from '../../services/util';
 import { LoadCloud } from '../../services/api';
-import OverlayLoading from '../loading/overlay';
+import OverlayLoading from '../overlay/overlay';
 
 const Header = () => {
     const { setCloudFolderName } = useContext(GlobalContext);
@@ -57,7 +57,6 @@ const Header = () => {
             case "Interface Tour":
                 setActiveTab(0)
                 render(element.component)
-                
                 break;
             default:
                 render(element.component)
@@ -68,13 +67,13 @@ const Header = () => {
         <Container tabLength={tab.length}>
             {globalLoading && <OverlayLoading />}
             {tab.map((element, index) => (
-                <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)}>
+                <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
                     {element.name}
                 </button>
             ))}
             <ul>
                 {tabContent.map((element, index) => (
-                    <li key={index} onClick={() => handleActions(element)}>
+                    <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
                         <img src={element.logo} alt={element.label} />
                         <p>{element.label}</p>  
                     </li>
