@@ -1,6 +1,4 @@
 import axios from 'axios';
-import t from 'typy';
-import { SaveToken } from './util';
 
 export const api = axios.create(
     {

@@ -47,7 +47,7 @@ export const CenterContainer = styled.div`
                     margin-right: 0;
                     right: calc(100% + 5px);
                     top: 50%;
-                    width: 100%;
+                    width: 150px;
                 `;
             case "right":
                 return css`

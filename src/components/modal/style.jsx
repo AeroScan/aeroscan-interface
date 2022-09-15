@@ -27,7 +27,7 @@ export const Container = styled.div`
     
     h1{
         border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 40px;
         padding-bottom: 20px;
@@ -42,14 +42,14 @@ export const Container = styled.div`
         div.container{
             align-items: center;
             display: flex;
-            margin: 30px 100px 5px;
+            margin: 30px auto 5px auto;
             text-align: center;
-            width: 60%;
+            width: 75%;
 
             label{
-                font-size: 1.8rem;
+                font-size: 1.35rem;
                 text-align: right;
-                width: 30%;
+                width: 50%;
             }
             
             input{
@@ -116,10 +116,9 @@ export const Button = styled.button`
     box-sizing: border-box;
     color: #FFF;
     cursor: pointer;
-    font-size: 1.6rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    padding: 10px 0;
-    width: 35%;
+    padding: 10px 15px;
 
     &:hover{
         background: ${props => props.cancel ? '#C0392B' : '#7B7D7D'};
@@ -133,9 +132,10 @@ export const Close = styled.button`
     background-size: cover;
     border: none;
     cursor: pointer;
-    height: 30px;
+    height: 20px;
+    margin-top: -10px;
     margin-right: 20px;
     position: absolute;
     right: 0;
-    width: 30px;
+    width: 20px;
 `

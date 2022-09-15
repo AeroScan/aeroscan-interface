@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import Loading from '../loading/index';
 import Tooltip from '../tooltip';
@@ -8,9 +8,7 @@ import $ from 'jquery';
 import { customStyles, Container, Close, Button } from './style';
 
 
-const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
-
-    const [modalIsOpen, setIsOpen] = useState(true);
+const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setGlobalLoading, setCylinders, setCones, setSpheres, setPlanes }) => {
     const [selectField, setSelectField] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -25,7 +23,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
         var values = $("input[name='parameters[]']")
             .map(function(){return $(this).val();}).get();
         
-        switch (submitCode) {
+        switch (modalContent.submitCode) {
             case ModalActions.GENERATE_PASSWORD:
                 setLoading(true);
                 setTimeout(() => {
@@ -36,7 +34,6 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                         document.getElementById("password").value = password;
                         setLoading(false);
                     }else{
-                        console.log("apresenta um erro na tela");
                         setError(true);
                         setLoading(false);
                     }
@@ -61,7 +58,9 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                 setTimeout(() => {
                     handleValidation(values);
                     setLoading(false);
-                }, 2000)
+                    setCloudFolderName('ne');
+                    setModalContent(null);
+                }, 5000)
                 break;
             case ModalActions.REESCALE:
                 setLoading(true);
@@ -91,25 +90,38 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                     setLoading(false);
                 }, 2000)
                 break;
+            case ModalActions.RANSAC:
+                setGlobalLoading(true);
+                setTimeout(() => {
+                    handleValidation(values);
+                    setGlobalLoading(false);
+                    setCloudFolderName('ransac/types');
+                    setCones(45);
+                    setCylinders(39);
+                    setPlanes(13);
+                    setSpheres(8);
+                    setModalContent(null);
+                }, 12000)
+                break;
             default:
         }
     }
 
     const closeModal = () => {
-        setIsOpen(false);
+        setModalContent(null);
     }
 
     return (
         <Modal
-            isOpen={modalIsOpen}
+            isOpen={modalContent !== null}
             onRequestClose={closeModal}
             style={customStyles}
             ariaHideApp={false}
         >
             <Container>
                 <Close onClick={closeModal}/>
-                <h1>{title}</h1>
-                {content?.map((element, contentIndex) => (
+                <h1>{modalContent.title}</h1>
+                {modalContent.content?.map((element, contentIndex) => (
                     <form key={contentIndex}>
                         <div className='container'>
                             <label htmlFor={element.label}>{element.label}</label>
@@ -136,14 +148,14 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                                     <option value="false">False</option>
                                 </select>
                             }
-                            <Tooltip text={element.tooltipMessage} position={'right'} background={'393e46'} />
+                            <Tooltip text={element.tooltipMessage} position={'left'} background={'393e46'} />
                         </div>
                         <span>{error && element.errorMessage}</span>
                     </form>
                 ))}
                 <div className="buttons-container">
                     <Button onClick={handleSubmit}>
-                        {loading ? <Loading  height={'20px'} width={'20px'}/> : buttonLabel}
+                        {loading ? <Loading  height={'20px'} width={'20px'}/> : modalContent.buttonLabel}
                     </Button>
                     <Button cancel onClick={closeModal}>Cancel</Button>
                 </div>

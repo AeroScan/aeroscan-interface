@@ -6,3 +6,4 @@ export const REESCALE = "REESCALE";
 export const CENTRALIZATION = "CENTRALIZATION";
 export const ALIGNMENT = "ALIGNMENT";
 export const GENERATE_PASSWORD = "GENERATE_PASSWORD";
+export const RANSAC = "RANSAC";
