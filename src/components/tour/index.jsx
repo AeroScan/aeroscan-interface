@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Tour from 'reactour'
-import { Text, StepButton } from './style';
+import { StepButton } from './style';
 
 // 'guide' link para o manual
 
@@ -28,7 +28,7 @@ const tourConfig = [
           already know the functions that each tab present, you can go straight to step 7 
           by clicking the button below.
         </p>
-        <StepButton onClick={() => goTo(7)}> Step 7 </StepButton>
+        <StepButton style={{ textAlign: 'center' }} onClick={() => goTo(7)}> Step 7 </StepButton>
       </div>
     )
   },

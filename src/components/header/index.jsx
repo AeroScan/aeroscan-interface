@@ -8,7 +8,6 @@ import ModalComponet from '../modal';
 
 import loudCloudLogo from '../../assets/img/archives/load-cloud.png';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.png';
-import saveResultsLogo from '../../assets/img/archives/save-results.png';
 import cropBoxLogo from '../../assets/img/pre-processing/crop-box.png';
 import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.png';
 import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.png';
@@ -22,6 +21,7 @@ import tourLogo from '../../assets/img/help/tour.png';
 import aboutLogo from '../../assets/img/help/about.png';
 import * as ModalActions from '../modal/actions';
 import InterfaceTour from '../tour';
+import { LoadCloud } from '../../services/api';
 
 const Header = () => {
     const tabs = [
@@ -29,18 +29,18 @@ const Header = () => {
             name: 'Files',
             step: 'second-step',
             procedures: [
-            {
-                logo: loudCloudLogo,
-                label: 'Load Cloud', 
-            },
-            {
-                logo: saveCloudLogo,
-                label: 'Save Cloud'
-            },
-            {
-                logo: saveResultsLogo,
-                label: 'Save Results'
-            }
+                {
+                    logo: loudCloudLogo,
+                    label: 'Load Cloud', 
+                },
+                {
+                    logo: saveCloudLogo,
+                    label: 'Save Cloud'
+                },
+                // {
+                //     logo: saveResultsLogo,
+                //     label: 'Save Results'
+                // }
             ]
         },
         {
@@ -164,16 +164,6 @@ const Header = () => {
                     label: 'Centralization',
                     component: { 
                         title: 'Centralization',
-                        labels: ['Centralize:'],
-                        content: [
-                            {
-                                id: 'centralize',
-                                label: 'Centralize:',
-                                inputType: 'select',
-                                tooltipMessage: 'The select set the centralization.',
-                                errorMessage: 'Invalid Field',
-                            }
-                        ],
                         buttonLabel: 'Process',
                         submitCode: ModalActions.CENTRALIZATION,
                     },
@@ -353,11 +343,21 @@ const Header = () => {
     const handleLoadCloud = async () => {
         setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
-        setTimeout(() => {
-            setCloudFolderName('original')
+        try {
+            const folderName = await LoadCloud();
+            if (!folderName) {
+                setApplicationStatus("Failed to load cloud");
+                setCloudFolderName('');
+            } else {
+                setApplicationStatus("Cloud loaded");
+                setCloudFolderName(folderName);
+            }
             setGlobalLoading(false);
-            setApplicationStatus("Cloud loaded");
-        }, 10000);
+        } catch (error) {
+            setApplicationStatus("Failed to load cloud");
+            setCloudFolderName('');
+            setGlobalLoading(false);
+        }
     }
 
     const handleActions = (element) => {

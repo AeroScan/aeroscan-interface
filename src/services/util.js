@@ -6,4 +6,3 @@ export const RemoveToken = () => {
     localStorage.removeItem("user_token");
     window.location.reload();
 }
-
