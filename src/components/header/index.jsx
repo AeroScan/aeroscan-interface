@@ -8,6 +8,7 @@ import ModalComponet from '../modal';
 
 import loudCloudLogo from '../../assets/img/archives/load-cloud.png';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.png';
+import saveResultsLogo from '../../assets/img/archives/save-results.png';
 import cropBoxLogo from '../../assets/img/pre-processing/crop-box.png';
 import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.png';
 import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.png';
@@ -21,7 +22,7 @@ import tourLogo from '../../assets/img/help/tour.png';
 import aboutLogo from '../../assets/img/help/about.png';
 import * as ModalActions from '../modal/actions';
 import InterfaceTour from '../tour';
-import { LoadCloud } from '../../services/api';
+import { LoadCloud, SaveCloud } from '../../services/api';
 
 const Header = () => {
     const tabs = [
@@ -37,10 +38,10 @@ const Header = () => {
                     logo: saveCloudLogo,
                     label: 'Save Cloud'
                 },
-                // {
-                //     logo: saveResultsLogo,
-                //     label: 'Save Results'
-                // }
+                {
+                    logo: saveResultsLogo,
+                    label: 'Save CAD'
+                }
             ]
         },
         {
@@ -348,15 +349,38 @@ const Header = () => {
             if (!folderName) {
                 setApplicationStatus("Failed to load cloud");
                 setCloudFolderName('');
-            } else {
-                setApplicationStatus("Cloud loaded");
-                setCloudFolderName(folderName);
+                setGlobalLoading(false);
+                return;
             }
+            setApplicationStatus("Cloud loaded");
+            setCloudFolderName(folderName);
             setGlobalLoading(false);
+            return;
         } catch (error) {
             setApplicationStatus("Failed to load cloud");
             setCloudFolderName('');
             setGlobalLoading(false);
+            return;
+        }
+    }
+
+    const handleSaveCloud = async () => {
+        setApplicationStatus("Saving cloud...");
+        setGlobalLoading(true);
+        try {
+            const result = await SaveCloud();
+            if (!result) {
+                setApplicationStatus("Failed to save cloud");
+                setGlobalLoading(false);
+                return;
+            }
+            setApplicationStatus("Cloud saved");
+            setGlobalLoading(false);
+            return;
+        } catch (error) {
+            setApplicationStatus("Failed to save cloud");
+            setGlobalLoading(false);
+            return;
         }
     }
 
@@ -369,8 +393,9 @@ const Header = () => {
                 handleLoadCloud();
                 break;
             case "Save Cloud":
+                handleSaveCloud();
                 break;
-            case "Save Results":  
+            case "Save CAD":
                 break;
             case "Interface Tour":
                 setActiveTab(0)

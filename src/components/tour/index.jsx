@@ -15,7 +15,7 @@ const tourConfig = [
       <p style={{fontSize: "1.6rem"}}>
         So right here you have the tabs where you can navigate through it. Starting with 
         the files tab, here you will find the functionalities of: <br/> ● Load Cloud <br/> 
-        ● Save Cloud <br/> ● Save Results <br/>
+        ● Save Cloud <br/> ● Save CAD <br/>
       </p>
     )
   },

@@ -85,7 +85,9 @@ const Viewer = () => {
 
     useEffect(() => {
         if (Potree && viewerConfigured && viewer) {
-            Potree.loadPointCloud(`clouds/${cloudFolderName}/metadata.json`).then(e => {
+            Potree.loadPointCloud(`http://localhost:5619/file/download/${cloudFolderName}/metadata.json`).then(e => {
+                viewer.scene.scenePointCloud.remove(viewer.scene.pointclouds[0]);
+			    viewer.scene.pointclouds.pop();
                 viewer.scene.addPointCloud(e.pointcloud);
                 const { material } = e.pointcloud;
                 material.size = 1;
