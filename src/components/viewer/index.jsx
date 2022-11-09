@@ -8,6 +8,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 const Viewer = () => {
     const { Potree } = window;
 
+    const [pageLoaded, setPageLoaded] = useState(false);
     const [ viewer, setViewer ] = useState(null);
     const [ viewerConfigured, setViewerConfigured ] = useState(false);
 
@@ -17,11 +18,12 @@ const Viewer = () => {
     const potreeAxes = useRef(null);
 
     useEffect(() => {
-        if (Potree) {
+        if (Potree && !pageLoaded) {
             const viewerElem = potree_render_area.current
             setViewer(new Potree.Viewer(viewerElem));
+            setPageLoaded(true);
         }
-    }, [Potree]);
+    }, [Potree, pageLoaded]);
 
     useEffect(() => {
         if (viewer && !viewerConfigured) {
@@ -37,6 +39,11 @@ const Viewer = () => {
                 viewer.setClassifications([
                     {
                         visible: true,
+                        name: 'unlabeled',
+                        color: [0, 0, 0, 1]
+                    },
+                    {
+                        visible: true,
                         name: 'plane',
                         color: [1, 0, 0, 1],
                     },
@@ -46,13 +53,13 @@ const Viewer = () => {
                         color: [0, 0, 1, 1],
                     },{
                         visible: true,
-                        name: 'sphere',
-                        color: [0, 1, 0, 1],
+                        name: 'cone',
+                        color: [1, 1, 0, 1],
                     },{
                         visible: true,
-                        name: 'cone',
-                        color: [0, 1, 1, 1],
-                    },
+                        name: 'sphere',
+                        color: [0, 0.5, 0, 1],
+                    }
                 ]);
             });
 
@@ -84,8 +91,9 @@ const Viewer = () => {
     }, [viewer, viewerConfigured]);
 
     useEffect(() => {
-        if (Potree && viewerConfigured && viewer) {
-            Potree.loadPointCloud(`http://localhost:5619/file/download/${cloudFolderName}/metadata.json`).then(e => {
+        if (cloudFolderName && Potree && viewerConfigured && viewer) {
+            //Potree.loadPointCloud(`http://localhost:5619/file/download/${cloudFolderName}/output/metadata.json`).then(e => {
+            Potree.loadPointCloud(`http://localhost/clouds/${cloudFolderName}/metadata.json`).then(e => {
                 viewer.scene.scenePointCloud.remove(viewer.scene.pointclouds[0]);
 			    viewer.scene.pointclouds.pop();
                 viewer.scene.addPointCloud(e.pointcloud);

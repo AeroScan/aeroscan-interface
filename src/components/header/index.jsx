@@ -22,7 +22,7 @@ import tourLogo from '../../assets/img/help/tour.png';
 import aboutLogo from '../../assets/img/help/about.png';
 import * as ModalActions from '../modal/actions';
 import InterfaceTour from '../tour';
-import { LoadCloud, SaveCloud } from '../../services/api';
+import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 
 const Header = () => {
     const tabs = [
@@ -384,6 +384,26 @@ const Header = () => {
         }
     }
 
+    const handleGenerateCad = async () => {
+        setApplicationStatus("Generating cad...");
+        setGlobalLoading(true);
+        try {
+            const result = await GenerateCad();
+            if (!result) {
+                setApplicationStatus("Failed to generate cad");
+                setGlobalLoading(false);
+                return;
+            }
+            setApplicationStatus("Cad saved");
+            setGlobalLoading(false);
+            return;
+        } catch (error) {
+            setApplicationStatus("Failed to save cad");
+            setGlobalLoading(false);
+            return;
+        }
+    }
+
     const handleActions = (element) => {
         switch(element.label){
             case "Logout":
@@ -396,7 +416,7 @@ const Header = () => {
                 handleSaveCloud();
                 break;
             case "Save CAD":
-                break;
+                handleGenerateCad();
             case "Interface Tour":
                 setActiveTab(0)
                 render(element.component)

@@ -20,6 +20,15 @@ export const SaveCloud = async () => {
     return !response.data.error;
 }
 
+export const GenerateCad = async () => {
+    const response = await api.get('/generateCad');
+    if (response.data.error) {
+        console.err(response.data.message)
+        return false;
+    }
+    return !response.data.error;
+}
+
 export const ApplyCropBox = async ({
     min_x, min_y, min_z,
     max_x, max_y, max_z,
