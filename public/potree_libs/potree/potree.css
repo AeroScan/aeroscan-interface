@@ -1,3 +1,4 @@
+
 /* CSS - Cascading Style Sheet */
 /* Palette color codes */
 /* Palette URL: http://paletton.com/#uid=13p0u0kex8W2uqu8af7lEqaulDE */
@@ -308,9 +309,10 @@ a:hover, a:visited, a:link, a:active{
 	opacity:	0.5;
 }
 
+
 canvas { 
 	width: 100%; 
-	/* margin-top: 200px; */
+	height: 100% 
 }
 
 body{ 

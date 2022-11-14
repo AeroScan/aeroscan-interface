@@ -11,7 +11,7 @@ export const Container = styled.nav`
         background: #D2CFCD;
         border: 1px solid #000; 
         cursor: pointer;
-        font-size: 1.6rem;
+        font-size: 1.25rem;
         height: 6vh;
         text-align: center;
         width: ${props => 100 / props.tabLength}%;
@@ -33,8 +33,8 @@ export const Container = styled.nav`
             cursor: pointer;
             list-style: none;
             margin: auto 1.8rem;
-            width: 6%;
-            padding: 20px 0;
+            width: 7.5%;
+            padding: 10px 0;
             border-radius: 10px;
             user-select: none;
 
@@ -47,13 +47,13 @@ export const Container = styled.nav`
             }
 
             img{
-                height: 4rem;
-                margin: 0.5rem 0;
-                width: 4rem;
+                height: 3rem;
+                margin: 1rem 0;
+                width: 3rem;
             }
 
             p{
-                font-size: 1.6rem;
+                font-size: 1.25rem;
             }
 
         }

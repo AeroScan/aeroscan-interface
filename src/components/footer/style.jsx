@@ -20,11 +20,11 @@ export const Container = styled.footer`
         align-items: center;
         display: flex;
         height: 40px;
-        width: 25%;
+        width: 40%;
 
         p{  
             border-left: 2px solid #D2CFCD;
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 600;
             padding: 0 2rem;
 
@@ -35,12 +35,12 @@ export const Container = styled.footer`
     }
 
     span{
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         text-align: right;
         width: 20%;
 
         strong{
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 600;
         }
     }

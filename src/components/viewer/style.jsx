@@ -13,12 +13,9 @@ export const Wrapper = styled.div`
     }  
 `
 export const Axes = styled.div`
-    
-    bottom: 5px;
+    bottom: 25px;
     position: absolute;
     right: 0;
     width: 10%;
     z-index: 10;
 `
-
-// height: 675px;

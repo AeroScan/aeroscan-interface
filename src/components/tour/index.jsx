@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Tour from 'reactour'
-import { Text, StepButton } from './style';
+import { StepButton } from './style';
 
 // 'guide' link para o manual
 
@@ -15,7 +15,7 @@ const tourConfig = [
       <p style={{fontSize: "1.6rem"}}>
         So right here you have the tabs where you can navigate through it. Starting with 
         the files tab, here you will find the functionalities of: <br/> ● Load Cloud <br/> 
-        ● Save Cloud <br/> ● Save Results <br/>
+        ● Save Cloud <br/> ● Save CAD <br/>
       </p>
     )
   },
@@ -28,7 +28,7 @@ const tourConfig = [
           already know the functions that each tab present, you can go straight to step 7 
           by clicking the button below.
         </p>
-        <StepButton onClick={() => goTo(7)}> Step 7 </StepButton>
+        <StepButton style={{ textAlign: 'center' }} onClick={() => goTo(7)}> Step 7 </StepButton>
       </div>
     )
   },
