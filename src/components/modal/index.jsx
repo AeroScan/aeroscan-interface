@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
-import Loading from '../loading/index';
-import Tooltip from '../tooltip';
 import md5 from 'md5';
 import * as ModalActions from './actions';
 import $ from 'jquery';
-import { customStyles, Container, Close, Button } from './style';
-
+import { customStyles, Container } from './style';
+import { CloseOutlined, QuestionCircleFilled  } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
+import 'antd/dist/antd.css';
 
 const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
 
@@ -14,6 +14,24 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
     const [selectField, setSelectField] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const [loadings, setLoadings] = useState([]);
+
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[index] = true;
+            return newLoadings;
+        });
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[index] = false;
+                
+                return newLoadings;
+            });
+        }, 2000);
+    };
 
     const handleValidation = (inputValues) => {
         if(inputValues.every(element => element === '')){
@@ -107,7 +125,7 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
             ariaHideApp={false}
         >
             <Container>
-                <Close onClick={closeModal}/>
+                <CloseOutlined className='closeIcon' onClick={closeModal}/>
                 <h1>{title}</h1>
                 {content?.map((element, contentIndex) => (
                     <form key={contentIndex}>
@@ -136,16 +154,20 @@ const ModalComponet = ({ title, content, buttonLabel, submitCode }) => {
                                     <option value="false">False</option>
                                 </select>
                             }
-                            <Tooltip text={element.tooltipMessage} position={'right'} background={'393e46'} />
+                            <Tooltip placement="right" title={element.tooltipMessage} overlayStyle={{ fontSize: '3.4rem' }}>
+                                <QuestionCircleFilled />
+                            </Tooltip>                  
                         </div>
-                        <span>{error && element.errorMessage}</span>
+                        <span className='error'>{error && element.errorMessage}</span>
                     </form>
                 ))}
                 <div className="buttons-container">
-                    <Button onClick={handleSubmit}>
-                        {loading ? <Loading  height={'20px'} width={'20px'}/> : buttonLabel}
+                    <Button loading={loadings[0]} onClick={() => enterLoading(0)}>
+                        Process
                     </Button>
-                    <Button cancel onClick={closeModal}>Cancel</Button>
+                    <Button className='cancel' onClick={closeModal}>
+                        Cancel
+                    </Button>
                 </div>
             </Container>
         </Modal>

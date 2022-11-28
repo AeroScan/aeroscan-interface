@@ -57,20 +57,23 @@ export const Container = styled.div`
             }
         }
 
-        button{
+        button.ant{
             background-color: #008542;
             border: none;
             border-radius: 30px;
-            color: #ffff;
-            cursor: pointer;
-            font-size: 1.8rem;
+            color: #FFF;
+            font-size: 2.4rem;
             font-weight: 600;
-            height: 42px;
+            height: 46px;
             margin: 48px 0 10px;
-            width: 200px;
+            width: 200px;  
+
+            svg{
+                font-size: 1.8rem;
+            }
         }
 
-        span{
+        span.error{
             color: red;
             font-size: 1.4rem;
         }
@@ -89,3 +92,22 @@ export const Link = styled(StyledLink)`
         color: #FDC82F;
     }
 `
+
+// button{
+//     background-color: #008542;
+//     border: none;
+//     border-radius: 30px;
+//     color: #FFF;
+//     cursor: pointer;
+//     font-size: 2.4rem;
+//     font-weight: 600;
+//     height: 42px;
+//     margin: 48px 0 10px;
+//     width: 200px;
+// }
+
+// span{
+//     margin-right: 5px;
+//     height: 20px;
+//     width: 20px;
+// }

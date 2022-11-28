@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Container, Link } from './style';
 import logo from '../../assets/img/logo.png';
-import Loading from '../../components/loading/index';
 import md5 from 'md5';
+import { Container, Link } from './style';
 import { SaveToken } from '../../services/util';
+import { Button } from 'antd';
+import 'antd/dist/antd.css';
 
 const Login = () => {
 
@@ -11,11 +12,26 @@ const Login = () => {
     const[password, setPassword] = useState("");
 
     const[error,setError] = useState(false);
-    const [loading, setLoading] = useState(false)
+    const [loadings, setLoadings] = useState([]);
+
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[index] = true;
+            return newLoadings;
+        });
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[index] = false;
+                
+                return newLoadings;
+            });
+        }, 2000);
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setLoading(true);
 
         setTimeout(() => {
             if(userName.includes("@")){
@@ -24,16 +40,14 @@ const Login = () => {
                 if(password === correctPassword){
                     SaveToken(userName);
                     window.open("/","_self");
-                    setLoading(false);
                 }else {  
                     setError(true);
-                    setLoading(false);
                 }
             }else{
                 setError(true);
-                setLoading(false);
             }
-        }, 1000);
+            
+        }, 2100);
     }
 
     return(
@@ -55,10 +69,10 @@ const Login = () => {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)} 
                 />
-                <button type='submit'>
-                    {loading ? <Loading height={'25px'} width={'25px'} /> : 'Acessar'}
-                </button>
-                <span>{error && 'Invalid Credentials'}</span>
+                <Button className='ant' htmlType='submit' value='submit' loading={loadings[0]} onClick={() => enterLoading(0)}>
+                    Acessar
+                </Button>
+                <span className='error'>{error && 'Invalid Credentials'}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>

@@ -30,13 +30,13 @@ export const Container = styled.nav`
         width: 100%;  
 
         li{
+            border-radius: 10px;
             cursor: pointer;
             list-style: none;
             margin: auto 1.8rem;
-            width: 6%;
-            padding: 20px 0;
-            border-radius: 10px;
+            padding: 5px;
             user-select: none;
+            width: 6%;
 
             &:hover{
                 background: #EFEEED;
