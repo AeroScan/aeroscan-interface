@@ -1,24 +1,6 @@
 import styled from 'styled-components';
 import select from '../../assets/img/select.svg';
 
-export const customStyles = {
-
-    overlay: {
-        background: 'rgba(0,0,0,0.6)'
-    },
-
-    content: {
-        background: '#FFF',
-        height: 'fit-content',
-        left: '50%',
-        padding: '10px',
-        transform: 'translate(-50%, -50%)',
-        top: '50%',
-        width: '40%',
-        zIndex: '1'
-    }
-}
-
 export const Container = styled.div`
     margin: 20px auto;
     text-align: center;
@@ -26,15 +8,21 @@ export const Container = styled.div`
 
     .closeIcon{
         color: #000;
-        font-size: 4.5rem;
-        margin-right: 20px;
+        font-size: 3.2rem;
+        margin-right: 30px;
+        padding: 1px;
         position: absolute;
         right: 0;
+
+        &:hover{
+            background: #D0D3D4;
+            border-radius: 5px;
+        }
     }
     
     h1{
         border-bottom: 2px solid rgba(0, 0, 0, 0.2);
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 40px;
         padding-bottom: 20px;
@@ -53,14 +41,14 @@ export const Container = styled.div`
         div.container{
             align-items: center;
             display: flex;
-            margin: 30px 100px 5px;
+            margin: 30px auto 5px auto;
             text-align: center;
-            width: 60%;
+            width: 75%;
 
             label{
-                font-size: 1.8rem;
+                font-size: 1.35rem;
                 text-align: right;
-                width: 30%;
+                width: 50%;
             }
             
             input{
@@ -113,7 +101,7 @@ export const Container = styled.div`
         }
 
         span.error{
-            color: red;
+            color: #C0392B;
             font-size: 1.4rem;
         }
     }

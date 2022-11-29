@@ -5,4 +5,7 @@ export const NORMAL_ESTIMATION = "NORMAL_ESTIMATION";
 export const REESCALE = "REESCALE";
 export const CENTRALIZATION = "CENTRALIZATION";
 export const ALIGNMENT = "ALIGNMENT";
+export const NOISE_ADD = "NOISE_ADD";
+export const CUBE_REESCALE = "CUBE_REESCALE";
 export const GENERATE_PASSWORD = "GENERATE_PASSWORD";
+export const RANSAC = "RANSAC";

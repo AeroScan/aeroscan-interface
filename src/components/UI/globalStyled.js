@@ -12,6 +12,10 @@ export const GlobalStyled = createGlobalStyle`
     padding: 0;
     text-decoration: none;
   }
+
+  .helper {
+    font-size: 1.6rem;
+  }
 `
 
 export const StyledLink = styled(Link)`

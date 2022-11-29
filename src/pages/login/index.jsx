@@ -54,10 +54,10 @@ const Login = () => {
         <Container>
             <img src={logo} alt="logo" />
             <form onSubmit={handleSubmit}>
-                <h1>Forneça suas Credenciais</h1>
+                <h1>Provide your Credentials</h1>
                 <input 
                     type="text" 
-                    placeholder='email' 
+                    placeholder='e-mail' 
                     aria-label='email'
                     value={userName}
                     onChange={(event) => setUserName(event.target.value)} 
@@ -70,7 +70,7 @@ const Login = () => {
                     onChange={(event) => setPassword(event.target.value)} 
                 />
                 <Button className='ant' htmlType='submit' value='submit' loading={loadings[0]} onClick={() => enterLoading(0)}>
-                    Acessar
+                    Access
                 </Button>
                 <span className='error'>{error && 'Invalid Credentials'}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
