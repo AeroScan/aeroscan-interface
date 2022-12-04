@@ -124,7 +124,7 @@ export const Container = styled.div`
             width: 40%;
         
             &:hover{
-                background: ${props => props.cancel ? '#C0392B' : '#7B7D7D'};
+                background: #7B7D7D
             }
 
             svg{

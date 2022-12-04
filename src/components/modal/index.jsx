@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { GlobalContext } from '../../context';
-// import Modal from 'react-modal';
 import md5 from 'md5';
 import * as ModalActions from './actions';
 import $ from 'jquery';
-import { customStyles, Container } from './style';
+import { Container } from './style';
 import { CloseOutlined, QuestionCircleFilled  } from '@ant-design/icons';
 import { Modal, Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
@@ -15,7 +14,6 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
 
     const [selectField, setSelectField] = useState("");
     const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
 
     const [loadings, setLoadings] = useState([]);
 
@@ -44,12 +42,12 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
     }
 
     const handleSubmit = async () => {
-        setLoading(true);
+
+        console.log('hello world')
 
         var values = $("input[name='parameters[]']")
             .map(function(){return $(this).val();}).get();
         if (values.length > 0 && !handleValidation(values)) {
-            setLoading(false);
             handleCloseModal();
             return;
         }
@@ -61,10 +59,8 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const emailHash = md5(values[0].split('@')[0]);
                     const password = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
                     document.getElementById("password").value = password;
-                    setLoading(false);
                 } else {
                     setError(true);
-                    setLoading(false);
                 }
                 break;
             case ModalActions.CROP_BOX:
@@ -79,17 +75,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     });
                     if (!response) {
                         setApplicationStatus('Failed to apply crop box');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Crop box applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply crop box');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.VOXEL_GRID:
@@ -97,17 +90,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyVoxelGrid({ leaf: values[0] });
                     if (!response) {
                         setApplicationStatus('Failed to apply voxel grid');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Voxel grid applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply voxel grid');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.STATISTICAL_REMOVAL:
@@ -118,17 +108,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     });
                     if (!response) {
                         setApplicationStatus('Failed to apply statistical removal');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Statistical removal applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply statistical removal');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.NORMAL_ESTIMATION:
@@ -136,17 +123,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyNormalEstimation({ radius: values[0] });
                     if (!response) {
                         setApplicationStatus('Failed to apply normal estimation');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Normal estimation applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply normal estimation');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.REESCALE:
@@ -154,17 +138,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyReescale({ factor: values[0] });
                     if (!response) {
                         setApplicationStatus('Failed to apply reescale');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Reescale applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply reescale');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.CENTRALIZATION:
@@ -172,17 +153,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyCentralization();
                     if (!response) {
                         setApplicationStatus('Failed to apply centralization');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Centralization applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply centralization');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.ALIGNMENT:
@@ -190,17 +168,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyAlignment();
                     if (!response) {
                         setApplicationStatus('Failed to apply alignment');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Alignment applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply alignment');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.NOISE_ADD:
@@ -208,17 +183,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyNoiseAdd({ limit: values[0] });
                     if (!response) {
                         setApplicationStatus('Failed to apply noise add');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Noise add applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply noise add');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.CUBE_REESCALE:
@@ -226,17 +198,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     const response = await ApplyCubeReescale({ factor: values[0] });
                     if (!response) {
                         setApplicationStatus('Failed to apply cube reescale');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Cube reescale applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply cube reescale');
-                    setLoading(false);
                     break;
                 }
             case ModalActions.RANSAC:
@@ -250,17 +219,14 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     });
                     if (!response) {
                         setApplicationStatus('Failed to apply efficient ransac');
-                        setLoading(false);
                         break;
                     }
                     setApplicationStatus('Efficient ransac applied');
                     setCloudFolderName(response);
-                    setLoading(false);
                     break;
                 } catch (error) {
                     console.error(error);
                     setApplicationStatus('Failed to apply efficient ransac');
-                    setLoading(false);
                     break;
                 }
             default:
@@ -280,7 +246,7 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                 <CloseOutlined className='closeIcon' onClick={handleCloseModal}/>
                 <h1>{modalContent.title}</h1>
                 {modalContent.content?.map((element, contentIndex) => (
-                    <form key={contentIndex}>
+                    <form key={contentIndex} onSubmit={handleSubmit} id="myform">
                         <div className='container'>
                             <label htmlFor={element.label}>{element.label}</label>
                             {element?.inputType === 'text' ?
@@ -314,7 +280,7 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
                     </form>
                 ))}
                 <div className="buttons-container">
-                    <Button loading={loadings[0]} onClick={() => enterLoading(0)}>
+                    <Button loading={loadings[0]} onClick={() => enterLoading(0)} htmlType='submit' form="myform">
                         Process
                     </Button>
                     <Button className='cancel' onClick={handleCloseModal}>
@@ -327,8 +293,3 @@ const ModalComponet = ({ setCloudFolderName, modalContent, setModalContent, setG
 }
  
 export default ModalComponet;
-
-// isOpen={modalContent !== null}
-//             onRequestClose={closeModal}
-//             style={customStyles}
-//             ariaHideApp={false}
