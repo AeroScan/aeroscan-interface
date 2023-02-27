@@ -26,7 +26,8 @@ export const Container = styled.div`
         height: 500px;
         justify-content: center;
         min-width: 300px;
-        width: 30%;
+        padding: 0 25px;
+        
         
         h1{
             color: #685d54;
