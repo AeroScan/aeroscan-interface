@@ -10,13 +10,13 @@ import { ApplyStatisticalOutlierRemoval } from '../../services/api';
 
 const StatisticalRemoval = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const statisticalRemovalSchema = yup.object().shape({
         mean: yup.number().typeError('A number is required'),
         standardDeviation: yup.number().typeError('A number is required')
     });
+    
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(statisticalRemovalSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

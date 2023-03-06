@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { QuestionCircleFilled  } from '@ant-design/icons';
 import { Tooltip } from 'antd';
@@ -10,7 +10,6 @@ import { ApplyCropBox } from '../../services/api';
 
 const CropBoxFilter = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const cropBoxSchema = yup.object().shape({
         startinPoint_x: yup.number().typeError('A number is required'),
         startinPoint_y: yup.number().typeError('A number is required'),
@@ -19,8 +18,10 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
         endingPoint_y: yup.number().typeError('A number is required'),
         endingPoint_z: yup.number().typeError('A number is required')
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cropBoxSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    
+    const { handleSubmit, register } = useForm({ resolver: yupResolver(cropBoxSchema) });
+    const [currentErrors, setCurrentErrors] = useState("");
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {
@@ -46,12 +47,11 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
                     setApplicationStatus('Crop box applied');
                     setCloudFolderName(response);
                 } catch (error) {
-                    console.error(error);
                     setApplicationStatus('Failed to apply crop box');
                 }
             })
             .catch(err => {
-                console.log(err);
+                setCurrentErrors(err.errors);
             });
             
             setLoadings((prevLoadings) => {
@@ -89,7 +89,7 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
                     <QuestionCircleFilled />
                 </Tooltip>
             </div>
-            {/* <span className='error'>{errors.startinPoint_x?.message}</span> */}
+            <span className='error'>{currentErrors}</span>
             <div className='formContainer'>
                 <label htmlFor='endingPoint'>Ending Point:</label>
                 <input 
@@ -114,7 +114,7 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
                     <QuestionCircleFilled />
                 </Tooltip>
             </div>
-            {/* <span className='error'>{errors.endingPoint?.message}</span> */}
+            <span className='error'>{currentErrors}</span>
         </form>
     );
 }

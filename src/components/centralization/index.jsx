@@ -8,10 +8,10 @@ import { ApplyCentralization } from '../../services/api';
 
 const Centralization = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
+    
 
     const { handleSubmit, register, formState: { errors } } = useForm();
-    const { setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

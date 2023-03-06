@@ -10,12 +10,12 @@ import { ApplyNoiseAdd } from '../../services/api';
 
 const NoiseAdd = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const noiseAddSchema = yup.object().shape({
         limit: yup.number().typeError('A number is required')
     });
+
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(noiseAddSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

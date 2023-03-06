@@ -10,12 +10,12 @@ import { ApplyVoxelGrid } from '../../services/api';
 
 const VoxelGridFilter = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const voxelGridSchema = yup.object().shape({
         leafSize: yup.number().typeError('A number is required')
     });
+
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

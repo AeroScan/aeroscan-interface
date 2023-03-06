@@ -10,12 +10,11 @@ import { ApplyReescale } from '../../services/api';
 
 const Reescale = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const reescaleSchema = yup.object().shape({
         scale: yup.number().typeError('A number is required')
     });
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(reescaleSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = (data) => {
         setLoadings((prevLoadings) => {

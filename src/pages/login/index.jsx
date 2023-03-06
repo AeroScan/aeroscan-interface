@@ -8,15 +8,15 @@ import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 
-
 const Login = () => {
 
-    const { register, handleSubmit, setError, formState: { errors } } = useForm();
-    const [loadings, setLoadings] = useState([]);   
+    const { register, handleSubmit } = useForm();
+    const [loadings, setLoadings] = useState([]);
+    const [currentErrors, setCurrentErrors] = useState("");
     
     const loginSchema = yup.object().shape({
-        email: yup.string().email().required(),
-        password: yup.string().min(10).max(10).required()
+        email: yup.string().email('Invalid email format').required('The field is required'),
+        password: yup.string().required('The field is required')
     });
     
     const onSubmit = data => {
@@ -27,27 +27,26 @@ const Login = () => {
             return newLoadings;
         });
 
-        setTimeout(async () => {
-            const isValid = await loginSchema.isValid(data)
-            if(isValid){
+        setTimeout(() => {
+            loginSchema.validate(data)
+            .then( async() => {
                 const emailHash = md5(data.email.split('@')[0]);
                 const correctPassword = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
                 if(data.password === correctPassword){
                     SaveToken(data.email);
                     window.open("/","_self");
-                }else{  
-
                 }
-            }
+            })
+            .catch(err => {
+                setCurrentErrors(err.errors);
+            });
 
             setLoadings((prevLoadings) => {
                 const newLoadings = [...prevLoadings];
                 newLoadings[0] = false;
-                
                 return newLoadings;
             });
         }, 2000);
-        
     };
 
     return(
@@ -59,18 +58,14 @@ const Login = () => {
                     type="text" 
                     placeholder='e-mail' 
                     aria-label='email'
-                    {...register("email", { required: 'Invalid e-mail' })}
-                    aria-invalid={errors.email ? "true" : "false"}
+                    {...register("email")}
                 />
-                {errors.email && <span role="alert" className='error'>{errors.email?.message}</span>}
                 <input 
                     type="password" 
                     placeholder='password' 
                     aria-label='password'
-                    {...register("password", { required: 'Invalid password' })}
-                    aria-invalid={errors.password ? "true" : "false"}
+                    {...register("password")}
                 />
-                {errors.password && <span className='error'>{errors.password?.message}</span>}
                 <Button 
                     className='antButton' 
                     htmlType='submit' 
@@ -79,7 +74,7 @@ const Login = () => {
                 >
                     Access
                 </Button>
-                {/* <span className='error'>{errors.email.type.custom}</span> */}
+                <span className='error'>{currentErrors}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>

@@ -10,7 +10,10 @@ import { ApplyEfficientRansac } from '../../services/api';
 
 const EfficientRansac = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
+    const { handleSubmit, register, formState: { errors } } = useForm();
+
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
+    
     const efficientRansacSchema = yup.object().shape({
         probability: yup.number().typeError('A number is required'),
         minPoints: yup.number().typeError('A number is required'),
@@ -18,8 +21,6 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         epsilon: yup.number().typeError('A number is required'),
         normalThreshold: yup.number().typeError('A number is required')
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
-    const { setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

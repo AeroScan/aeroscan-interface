@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import GeneratePassword from '../generatePassword';
 import CropBoxFilter from '../cropBoxFilter';
 import VoxelGridFilter from '../voxelGridFilter';
@@ -12,10 +12,9 @@ import CubeReescale from '../cubeReescale';
 import EfficientRansac from '../efficientRansac';
 import { GlobalContext } from '../../context';
 import * as ModalActions from './actions';
-import { useForm } from "react-hook-form";
 import { Container } from './style';
-import { CloseOutlined, QuestionCircleFilled  } from '@ant-design/icons';
-import { Modal, Button, Tooltip } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
+import { Modal, Button } from 'antd';
 import 'antd/dist/antd.css';
 
 const ModalComponet = ({ modalContent, setModalContent, setGlobalLoading, setCylinders, setCones, setSpheres, setPlanes }) => {
@@ -26,37 +25,26 @@ const ModalComponet = ({ modalContent, setModalContent, setGlobalLoading, setCyl
         switch(modalContent.submitCode){
             case ModalActions.CROP_BOX:
                 return(<CropBoxFilter />);
-                break;
             case ModalActions.VOXEL_GRID:
                 return(<VoxelGridFilter />);
-                break;
             case ModalActions.STATISTICAL_REMOVAL:
                 return(<StatisticalRemoval/>);
-                break;
             case ModalActions.NORMAL_ESTIMATION:
                 return(<NormalEstimation />);
-                break;
             case ModalActions.REESCALE:
                 return(<Reescale />);
-                break;
             case ModalActions.CENTRALIZATION:
                 return(<Centralization />);
-                break;
             case ModalActions.ALIGNMENT:
                 return(<Alignment />);
-                break;
             case ModalActions.NOISE_ADD:
                 return(<NoiseAdd />);
-                break;
             case ModalActions.CUBE_REESCALE:
                 return(<CubeReescale />);
-                break;
             case ModalActions.RANSAC:
                 return(<EfficientRansac />);
-                break;
             case ModalActions.GENERATE_PASSWORD:
                 return(<GeneratePassword />);
-                break;
             default:
                 break;
         }

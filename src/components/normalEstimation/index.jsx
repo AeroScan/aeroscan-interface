@@ -10,12 +10,12 @@ import { ApplyNormalEstimation } from '../../services/api';
 
 const NormalEstimation = ({ setCloudFolderName }) => {
 
-    const { setApplicationStatus } = useContext(GlobalContext);
     const normalEstimationSchema = yup.object().shape({
         radius: yup.number().typeError('A number is required')
     });
+
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
-    const { loadings, setLoadings } = useContext(GlobalContext);
+    const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {

@@ -121,8 +121,8 @@ export const Container = styled.div`
             font-size: 2rem;
             font-weight: 600;
             height: 40px;
-            width: 40%;
-        
+            padding: 0 20px;
+            
             &:hover{
                 background: #7B7D7D
             }
