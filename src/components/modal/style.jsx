@@ -37,14 +37,14 @@ export const Container = styled.div`
     form{
 
         width: 100%;
-        
-        div.container{
+
+        div.formContainer{
             align-items: center;
             display: flex;
             margin: 30px auto 5px auto;
             text-align: center;
             width: 75%;
-
+    
             label{
                 font-size: 1.35rem;
                 text-align: right;
@@ -61,7 +61,7 @@ export const Container = styled.div`
                 padding: 5px;
                 width: 50%;
             }
-
+    
             select{
                 appearance: none;
                 background: url(${select}) no-repeat 95% center #FFF;
@@ -77,29 +77,29 @@ export const Container = styled.div`
                     
                 -moz-appearance: none;
                 -webkit-appearance: none;
-
+    
                 option{
                     font-size: 1.8rem;
                 }
             }
-
+    
             img{
                 height: 15px;
                 margin-left: 10px;
                 width: 15px;
-
+    
                 &:hover{
                     cursor: pointer;
                 }
             }
-
+    
             span{
                 color: #000;
                 font-size: 2.6rem;
                 margin-left: 10px;
-            }   
-        }
-
+            } 
+        } 
+    
         span.error{
             color: #C0392B;
             font-size: 1.4rem;

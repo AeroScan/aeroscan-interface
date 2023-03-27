@@ -2,77 +2,84 @@ import React, { useState } from 'react';
 import logo from '../../assets/img/logo.png';
 import md5 from 'md5';
 import { Container, Link } from './style';
+import { useForm } from "react-hook-form";
 import { SaveToken } from '../../services/util';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
+import * as yup from 'yup';
+
 
 const Login = () => {
 
-    const[userName, setUserName] = useState("");
-    const[password, setPassword] = useState("");
+    const { register, handleSubmit, setError, formState: { errors } } = useForm();
+    const [loadings, setLoadings] = useState([]);   
+    
+    const loginSchema = yup.object().shape({
+        email: yup.string().email().required(),
+        password: yup.string().min(10).max(10).required()
+    });
+    
+    const onSubmit = data => {
 
-    const[error,setError] = useState(false);
-    const [loadings, setLoadings] = useState([]);
-
-    const enterLoading = (index) => {
         setLoadings((prevLoadings) => {
             const newLoadings = [...prevLoadings];
-            newLoadings[index] = true;
+            newLoadings[0] = true;
             return newLoadings;
         });
-        setTimeout(() => {
+
+        setTimeout(async () => {
+            const isValid = await loginSchema.isValid(data)
+            if(isValid){
+                const emailHash = md5(data.email.split('@')[0]);
+                const correctPassword = `${emailHash.slice(0, 5)}${emailHash.slice(emailHash.length - 5, emailHash.length)}`;
+                if(data.password === correctPassword){
+                    SaveToken(data.email);
+                    window.open("/","_self");
+                }else{  
+
+                }
+            }
+
             setLoadings((prevLoadings) => {
                 const newLoadings = [...prevLoadings];
-                newLoadings[index] = false;
+                newLoadings[0] = false;
                 
                 return newLoadings;
             });
         }, 2000);
+        
     };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        setTimeout(() => {
-            if(userName.includes("@")){
-                const userNameHash = md5(userName.split('@')[0]);
-                const correctPassword = `${userNameHash.slice(0, 5)}${userNameHash.slice(userNameHash.length - 5, userNameHash.length)}`;
-                if(password === correctPassword){
-                    SaveToken(userName);
-                    window.open("/","_self");
-                }else {  
-                    setError(true);
-                }
-            }else{
-                setError(true);
-            }
-            
-        }, 2100);
-    }
 
     return(
         <Container>
             <img src={logo} alt="logo" />
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <h1>Provide your Credentials</h1>
                 <input 
                     type="text" 
                     placeholder='e-mail' 
                     aria-label='email'
-                    value={userName}
-                    onChange={(event) => setUserName(event.target.value)} 
+                    {...register("email", { required: 'Invalid e-mail' })}
+                    aria-invalid={errors.email ? "true" : "false"}
                 />
+                {errors.email && <span role="alert" className='error'>{errors.email?.message}</span>}
                 <input 
                     type="password" 
                     placeholder='password' 
                     aria-label='password'
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)} 
+                    {...register("password", { required: 'Invalid password' })}
+                    aria-invalid={errors.password ? "true" : "false"}
                 />
-                <Button className='ant' htmlType='submit' value='submit' loading={loadings[0]} onClick={() => enterLoading(0)}>
+                {errors.password && <span className='error'>{errors.password?.message}</span>}
+                <Button 
+                    className='antButton' 
+                    htmlType='submit' 
+                    value='submit' 
+                    loading={loadings[0]} 
+                >
                     Access
                 </Button>
-                <span className='error'>{error && 'Invalid Credentials'}</span>
+                {/* <span className='error'>{errors.email.type.custom}</span> */}
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
             </form>
         </Container>

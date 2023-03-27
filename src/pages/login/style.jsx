@@ -58,7 +58,7 @@ export const Container = styled.div`
             }
         }
 
-        button.ant{
+        button.antButton{
             background-color: #008542;
             border: none;
             border-radius: 30px;
