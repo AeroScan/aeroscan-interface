@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { GlobalContext } from '../../context';
 import { Container } from './style';
 import { render } from '@testing-library/react';
 import { RemoveToken, RetrieveToken } from '../../services/util';
 import OverlayLoading from '../overlay/overlay';
 import ModalComponet from '../modal';
-
+import UploadButton from '../uploadButton';
 import loudCloudLogo from '../../assets/img/archives/load-cloud.png';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.png';
 import saveResultsLogo from '../../assets/img/archives/save-results.png';
@@ -16,6 +16,8 @@ import nEstimationLogo from '../../assets/img/pre-processing/normal-estimation.p
 import reescaleLogo from '../../assets/img/pre-processing/reescale.png';
 import centralizationLogo from '../../assets/img/pre-processing/centralization.png';
 import alignmentLogo from '../../assets/img/pre-processing/alignment.png';
+import noiseAddLogo from '../../assets/img/pre-processing/noise-add.png';
+import cubeReescaleLogo from '../../assets/img/pre-processing/cube-reescale.png';
 import ransacLogo from '../../assets/img/processing/efficient-ransac.png';
 import rAllocationLogo from '../../assets/img/configuration/resource-allocation.png';
 import tourLogo from '../../assets/img/help/tour.png';
@@ -25,6 +27,22 @@ import InterfaceTour from '../tour';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 
 const Header = () => {
+    
+
+    const { setCloudFolderName } = useContext(GlobalContext);
+    const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
+    const { setApplicationStatus } = useContext(GlobalContext);
+    const { modalContent, setModalContent } = useContext(GlobalContext);
+    const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
+
+    const [activeTab, setActiveTab] = useState(0);
+
+    const [tabsToShow, setTabsToShow] = useState([]);
+    const [tokenVerified, setTokenVerified] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    const inputFile = useRef(null);
+
     const tabs = [
         {
             name: 'Files',
@@ -32,7 +50,8 @@ const Header = () => {
             procedures: [
                 {
                     logo: loudCloudLogo,
-                    label: 'Load Cloud', 
+                    label: 'Load Cloud',
+                    component: <UploadButton inputFile={inputFile}/> 
                 },
                 {
                     logo: saveCloudLogo,
@@ -51,141 +70,47 @@ const Header = () => {
                 {
                     logo: cropBoxLogo,
                     label: 'Crop Box Filter',
-                    component: { 
-                        title: 'Crop Box Filter',
-                        content: [
-                            {
-                                id: 'startingPoint',
-                                label: 'Starting Point:',
-                                input: ['x', 'y', 'z'],
-                                inputType: 'text',
-                                tooltipMessage: 'These fields set the minimum coordinates.',
-                                errorMessage: 'Invalid Fields',
-                            },
-                            {
-                                id: 'endingPoint',
-                                label: 'Ending Point:',
-                                input: ['x', 'y', 'z'],
-                                inputType: 'text',
-                                tooltipMessage: 'These fields set the maximum coordinates.',
-                                errorMessage: 'Invalid Fields'
-                            },
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.CROP_BOX,
-                    }
+                    submitCode: ModalActions.CROP_BOX
                 },
                 {
                     logo: voxelGridLogo,
                     label: 'Voxel Grid Filter',
-                    component: { 
-                        title: 'Voxel Grid Filter', 
-                        content: [
-                            {
-                                id: 'leafSize',
-                                label: 'Leaf Size:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the minimum distance between neighboring points in the cloud equally.',
-                                errorMessage: 'Invalid Field'
-                            }
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.VOXEL_GRID,
-                    },
+                    submitCode: ModalActions.VOXEL_GRID
                 },
                 {
                     logo: sRemovalLogo,
                     label: 'Statistical Removal',
-                    component: { 
-                        title: 'Statistical Removal',
-                        labels: ['Mean:', 'Standard Deviation:'], 
-                        content: [
-                            {
-                                id: 'mean',
-                                label: 'Mean:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the average.',
-                                errorMessage: 'Invalid Field',
-                            },
-                            {
-                                id: 'standardDeviation',
-                                label: 'Standard Deviation:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the standard deviation.',
-                                errorMessage: 'Invalid Field',
-                            },
-                        ],
-                    },
-                    buttonLabel: 'Process',
-                    submitCode: ModalActions.STATISTICAL_REMOVAL,
+                    submitCode: ModalActions.STATISTICAL_REMOVAL
                 },
                 {
                     logo: nEstimationLogo,
                     label: 'Normal Estimation',
-                    component: { 
-                        title: 'Normal Estimation',
-                        content: [
-                            {
-                                id: 'radius',
-                                label: 'Radius:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the radius',
-                            }
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.NORMAL_ESTIMATION,
-                    },
+                    submitCode: ModalActions.NORMAL_ESTIMATION
                 },
                 {
                     logo: reescaleLogo,
                     label: 'Reescale',
-                    component: { 
-                        title: 'Reescale',
-                        labels: ['Scale:'],
-                        content: [
-                            {
-                                id: 'scale',
-                                label: 'Scale:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field update the scale of all cloud points.',
-                                errorMessage: 'Invalid Field',
-                            },
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.REESCALE,
-                    },
+                    submitCode: ModalActions.REESCALE
                 },
                 {
                     logo: centralizationLogo,
                     label: 'Centralization',
-                    component: { 
-                        title: 'Centralization',
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.CENTRALIZATION,
-                    },
+                    submitCode: ModalActions.CENTRALIZATION
                 },
                 {
                     logo: alignmentLogo,
                     label: 'Alignment',
-                    component: { 
-                        title:'Alignment',
-                        content: [
-                            {
-                                id: 'align',
-                                label: 'Align:',
-                                inputType: 'select',
-                                tooltipMessage: 'The select set the alignment.',
-                                errorMessage: 'Invalid Field'
-                            }
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.ALIGNMENT,
-                    }
+                    submitCode: ModalActions.ALIGNMENT
+                },
+                {
+                    logo: noiseAddLogo,
+                    label: 'Noise Add',
+                    submitCode: ModalActions.NOISE_ADD
+                },
+                {
+                    logo: cubeReescaleLogo,
+                    label: 'Cube Reescale',
+                    submitCode: ModalActions.CUBE_REESCALE
                 },
             ],
         },
@@ -196,53 +121,7 @@ const Header = () => {
                 {
                     logo: ransacLogo,
                     label: 'Efficient Ransac',
-                    component: { 
-                        title: 'Efficient Ransac',
-                        content: [
-                            {
-                                id: 'scale',
-                                label: 'Probability:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the method stop condition, probability of losing the largest primitive at each iteration.',
-                                errorMessage: 'Invalid Field'
-                            },
-                            {
-                                id: 'scale',
-                                label: 'Min Points:',
-                                input: ['int'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the minimum number of points for a sample to be considered a possible individual primitive.',
-                                errorMessage: 'Invalid Field'
-                            },
-                            {
-                                id: 'scale',
-                                label: 'Cluster Epsilon:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the distance used for two neighboring points to be considered adjacent or not.',
-                                errorMessage: 'Invalid Field'
-                            },
-                            {
-                                id: 'scale',
-                                label: 'Epsilon:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.',
-                                errorMessage: 'Invalid Field'
-                            },
-                            {
-                                id: 'scale',
-                                label: 'Normal Threshold:',
-                                input: ['float'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.',
-                                errorMessage: 'Invalid Field'
-                            }
-                        ],
-                        buttonLabel: 'Process',
-                        submitCode: ModalActions.RANSAC,
-                    },
+                    submitCode: ModalActions.RANSAC
                 }
             ]    
         },
@@ -253,7 +132,7 @@ const Header = () => {
             {
                 logo: tourLogo,
                 label: 'Interface Tour',
-                component: <InterfaceTour/>    
+                component: <InterfaceTour />    
             },
             {
                 logo: aboutLogo,
@@ -267,30 +146,7 @@ const Header = () => {
                 {
                     logo: rAllocationLogo,
                     label: 'Generate Password',
-                    component: { 
-                        title: 'Generate Password',
-                        labels: ['Email', 'Password'],
-                        inputs: 'text',
-                        content: [
-                            {
-                                id: 'email',
-                                label: 'E-mail:',
-                                input: ['Type your e-mail'],
-                                inputType: 'text',
-                                tooltipMessage: 'This field generate a password through the e-mail.',
-                                errorMessage: 'Invalid Email'
-                            },
-                            {
-                                id: 'password',
-                                label: 'Password:',
-                                input: [''],
-                                inputType: 'text',
-                                tooltipMessage: 'This field show the password generated by md5.'
-                            }
-                        ],
-                        buttonLabel: 'Generate',
-                        submitCode: ModalActions.GENERATE_PASSWORD,
-                    }
+                    submitCode: ModalActions.GENERATE_PASSWORD
                 }
             ]
         },
@@ -305,18 +161,6 @@ const Header = () => {
             ]
         }
     ];
-
-    const { setCloudFolderName } = useContext(GlobalContext);
-    const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { modalContent, setModalContent } = useContext(GlobalContext);
-    const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
-
-    const [activeTab, setActiveTab] = useState(0);
-
-    const [tabsToShow, setTabsToShow] = useState([]);
-    const [tokenVerified, setTokenVerified] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         if (!tokenVerified) {
@@ -342,6 +186,7 @@ const Header = () => {
     }, [tabsToShow, activeTab]);
 
     const handleLoadCloud = async () => {
+        console.log('to caindo aqui')
         setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
         try {
@@ -410,19 +255,23 @@ const Header = () => {
                 RemoveToken();
                 break;
             case "Load Cloud":
-                handleLoadCloud();
+                render(element.component);
+                inputFile.current.click();
+                // handleLoadCloud();
                 break;
             case "Save Cloud":
                 handleSaveCloud();
                 break;
             case "Save CAD":
                 handleGenerateCad();
+                break;
             case "Interface Tour":
-                setActiveTab(0)
-                render(element.component)
+                setActiveTab(0);
+                render(element.component);
                 break;
             default:
-                setModalContent(element.component)
+                setModalContent(element);
+                break;
         }
     }
     

@@ -4,7 +4,7 @@ export const Container = styled.nav`
     background: #FFF;
     display: flex;
     flex-wrap: wrap;
-    height: 20vh;
+   
     width: 100%;
 
     button{
@@ -24,19 +24,19 @@ export const Container = styled.nav`
 
     ul{    
         display: flex;
-        height: 14vh;
+        
         justify-content: center;
         text-align: center;
         width: 100%;  
 
         li{
+            border-radius: 10px;
             cursor: pointer;
             list-style: none;
-            margin: auto 1.8rem;
-            width: 7.5%;
-            padding: 10px 0;
-            border-radius: 10px;
+            margin: 10px 18px;
+            padding: 5px 0;
             user-select: none;
+            width: 6%;
 
             &:hover{
                 background: #EFEEED;

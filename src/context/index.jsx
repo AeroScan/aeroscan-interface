@@ -16,6 +16,9 @@ const AppContext = ({ children }) => {
   const [globalLoading, setGlobalLoading] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
+  // Loading
+  const [loadings, setLoadings] = useState([]);
+
   return (
     <GlobalContext.Provider value={{
       applicationStatus, setApplicationStatus,
@@ -27,6 +30,7 @@ const AppContext = ({ children }) => {
       cloudFolderName, setCloudFolderName,
       globalLoading, setGlobalLoading,
       modalContent, setModalContent,
+      loadings, setLoadings,
     }}>
         {children}
     </GlobalContext.Provider>
