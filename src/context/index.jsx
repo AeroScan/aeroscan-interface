@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext } from "react";
 
 export const GlobalContext = createContext();
 
@@ -16,25 +16,45 @@ const AppContext = ({ children }) => {
   const [globalLoading, setGlobalLoading] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
+  // Modal Handlers
+  const [alignmentModalOpen, setAlignmentModalOpen] = useState(false);
+  const [cropBoxModalOpen, setCropBoxModalOpen] = useState(false);
+
   // Loading
   const [loadings, setLoadings] = useState([]);
 
   return (
-    <GlobalContext.Provider value={{
-      applicationStatus, setApplicationStatus,
-      planes, setPlanes,
-      spheres, setSpheres,
-      cylinders, setCylinders,
-      cones, setCones,
-      typesView, setTypesView,
-      cloudFolderName, setCloudFolderName,
-      globalLoading, setGlobalLoading,
-      modalContent, setModalContent,
-      loadings, setLoadings,
-    }}>
-        {children}
+    <GlobalContext.Provider
+      value={{
+        applicationStatus,
+        setApplicationStatus,
+        planes,
+        setPlanes,
+        spheres,
+        setSpheres,
+        cylinders,
+        setCylinders,
+        cones,
+        setCones,
+        typesView,
+        setTypesView,
+        cloudFolderName,
+        setCloudFolderName,
+        globalLoading,
+        setGlobalLoading,
+        modalContent,
+        setModalContent,
+        alignmentModalOpen,
+        setAlignmentModalOpen,
+        cropBoxModalOpen,
+        setCropBoxModalOpen,
+        loadings,
+        setLoadings,
+      }}
+    >
+      {children}
     </GlobalContext.Provider>
   );
-}
+};
 
 export default AppContext;

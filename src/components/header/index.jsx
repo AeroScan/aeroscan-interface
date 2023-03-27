@@ -6,6 +6,9 @@ import { RemoveToken, RetrieveToken } from '../../services/util';
 import OverlayLoading from '../overlay/overlay';
 import ModalComponet from '../modal';
 
+import AlignmentModal from '../alignment';
+import CropBoxModal from '../cropBox';
+
 import loudCloudLogo from '../../assets/img/archives/load-cloud.png';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.png';
 import saveResultsLogo from '../../assets/img/archives/save-results.png';
@@ -153,6 +156,10 @@ const Header = () => {
     const { modalContent, setModalContent } = useContext(GlobalContext);
     const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
 
+    // Modals handling
+    const { alignmentModalOpen, setAlignmentModalOpen } = useContext(GlobalContext);
+    const { cropBoxModalOpen, setCropBoxModalOpen } = useContext(GlobalContext);
+
     const [activeTab, setActiveTab] = useState(0);
 
     const [tabsToShow, setTabsToShow] = useState([]);
@@ -262,6 +269,12 @@ const Header = () => {
                 setActiveTab(0)
                 render(element.component)
                 break;
+            case "Alignment":
+                setAlignmentModalOpen(true);
+                break;
+            case "Crop Box Filter":
+                setCropBoxModalOpen(true);
+                break;
             default:
                 setModalContent(element)
         }
@@ -279,6 +292,8 @@ const Header = () => {
                 setPlanes={setPlanes}
                 setSpheres={setSpheres}
             />}
+            {alignmentModalOpen && <AlignmentModal />}
+            {cropBoxModalOpen && <CropBoxModal />}
             {globalLoading && <OverlayLoading />}
             {tabsToShow.map((element, index) => (
                 <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
