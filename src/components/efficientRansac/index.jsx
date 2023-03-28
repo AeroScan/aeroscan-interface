@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled  } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
+import { Modal, Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyEfficientRansac } from '../../services/api';
+import { Container } from '../modal/style';
 
-const EfficientRansac = ({ setCloudFolderName }) => {
+const EfficientRansacModal = ({ setCloudFolderName }) => {
 
     const { setApplicationStatus } = useContext(GlobalContext);
     const efficientRansacSchema = yup.object().shape({
@@ -19,7 +20,8 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         normalThreshold: yup.number().typeError('A number is required')
     });
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { loadings, setLoadings } = useContext(GlobalContext);
+    const { efficientRansacModalOpen, setEfficientRansacModalOpen } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {
@@ -60,7 +62,23 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         }, 2000)
     }
 
+    const handleCloseModal = () => {
+        setEfficientRansacModalOpen(false);
+    };
+
     return(
+    <Modal
+      open={efficientRansacModalOpen}
+      footer={null}
+      width={"40%"}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <h1>Efficient Ransac</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
             <div className='formContainer'>
                 <label htmlFor='probability'>Probability:</label>
@@ -128,7 +146,18 @@ const EfficientRansac = ({ setCloudFolderName }) => {
             </div>
             <span className='error'>{errors.normalThreshold?.message}</span>
         </form>
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+            Process
+          </Button>
+          <Button className="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
+        
     );
 }
 
-export default EfficientRansac;
+export default EfficientRansacModal;

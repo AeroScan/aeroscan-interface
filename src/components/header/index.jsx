@@ -4,30 +4,36 @@ import { Container } from './style';
 import { render } from '@testing-library/react';
 import { RemoveToken, RetrieveToken } from '../../services/util';
 import OverlayLoading from '../overlay/overlay';
-import ModalComponet from '../modal';
-
 import AlignmentModal from '../alignment';
+import CentralizationModal from '../centralization';
 import CropBoxModal from '../cropBox';
-
-import loudCloudLogo from '../../assets/img/archives/load-cloud.png';
-import saveCloudLogo from '../../assets/img/archives/save-cloud.png';
-import saveResultsLogo from '../../assets/img/archives/save-results.png';
-import cropBoxLogo from '../../assets/img/pre-processing/crop-box.png';
-import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.png';
-import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.png';
-import nEstimationLogo from '../../assets/img/pre-processing/normal-estimation.png';
-import reescaleLogo from '../../assets/img/pre-processing/reescale.png';
-import centralizationLogo from '../../assets/img/pre-processing/centralization.png';
-import alignmentLogo from '../../assets/img/pre-processing/alignment.png';
+import CubeReescaleModal from '../cubeReescale';
+import EfficientRansacModal from '../efficientRansac';
+import GeneratePasswordModal from '../generatePassword';
+import NormalEstimationModal from '../normalEstimation';
+import ReescaleModal from '../reescale';
+import StatisticalRemovalModal from '../statisticalRemoval';
+import VoxelGridModal from '../voxelGrid';
+import NoiseAddModal from '../noiseAdd';
+import loudCloudLogo from '../../assets/img/archives/load-cloud.svg';
+import saveCloudLogo from '../../assets/img/archives/save-cloud.svg';
+import saveResultsLogo from '../../assets/img/archives/save-results.svg';
+import cropBoxLogo from '../../assets/img/pre-processing/crop-box.svg';
+import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.svg';
+import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.svg';
+import nEstimationLogo from '../../assets/img/pre-processing/normal-estimation.svg';
+import reescaleLogo from '../../assets/img/pre-processing/reescale.svg';
+import centralizationLogo from '../../assets/img/pre-processing/centralization.svg';
+import alignmentLogo from '../../assets/img/pre-processing/alignment.svg';
 import noiseAddLogo from '../../assets/img/pre-processing/noise-add.png';
-import cubeReescaleLogo from '../../assets/img/pre-processing/cube-reescale.png';
-import ransacLogo from '../../assets/img/processing/efficient-ransac.png';
-import rAllocationLogo from '../../assets/img/configuration/resource-allocation.png';
-import tourLogo from '../../assets/img/help/tour.png';
-import aboutLogo from '../../assets/img/help/about.png';
-import * as ModalActions from '../modal/actions';
+// import cubeReescaleLogo from '../../assets/img/pre-processing/cube-reescale.svg';
+import ransacLogo from '../../assets/img/processing/efficient-ransac.svg';
+import rAllocationLogo from '../../assets/img/configuration/resource-allocation.svg';
+import tourLogo from '../../assets/img/help/tour.svg';
+import aboutLogo from '../../assets/img/help/about.svg';
 import InterfaceTour from '../tour';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
+
 
 const Header = () => {
     const tabs = [
@@ -55,51 +61,41 @@ const Header = () => {
             procedures: [
                 {
                     logo: cropBoxLogo,
-                    label: 'Crop Box Filter',
-                    submitCode: ModalActions.CROP_BOX
+                    label: 'Crop Box Filter'
                 },
                 {
                     logo: voxelGridLogo,
-                    label: 'Voxel Grid Filter',
-                    submitCode: ModalActions.VOXEL_GRID
+                    label: 'Voxel Grid Filter'
                 },
                 {
                     logo: sRemovalLogo,
-                    label: 'Statistical Removal',
-
-                    submitCode: ModalActions.STATISTICAL_REMOVAL
+                    label: 'Statistical Removal'
                     
                 },
                 {
                     logo: nEstimationLogo,
-                    label: 'Normal Estimation',
-                    submitCode: ModalActions.NORMAL_ESTIMATION
+                    label: 'Normal Estimation'
                 },
                 {
                     logo: reescaleLogo,
-                    label: 'Reescale',
-                    submitCode: ModalActions.REESCALE
+                    label: 'Reescale'
                 },
                 {
                     logo: centralizationLogo,
-                    label: 'Centralization',
-                    submitCode: ModalActions.CENTRALIZATION
+                    label: 'Centralization'
                 },
                 {
                     logo: alignmentLogo,
-                    label: 'Alignment',
-                    submitCode: ModalActions.ALIGNMENT
+                    label: 'Alignment'
                 },
                 {
                     logo: noiseAddLogo,
-                    label: 'Noise Add',
-                    submitCode: ModalActions.NOISE_ADD
+                    label: 'Noise Add'
                 },
-                {
-                    logo: cubeReescaleLogo,
-                    label: 'Cube Reescale',
-                    submitCode: ModalActions.CUBE_REESCALE
-                },
+                // {
+                //     logo: cubeReescaleLogo,
+                //     label: 'Cube Reescale',
+                // },
             ],
         },
         {
@@ -109,7 +105,6 @@ const Header = () => {
                 {
                     logo: ransacLogo,
                     label: 'Efficient Ransac',
-                    submitCode: ModalActions.RANSAC
                 }
             ]    
         },
@@ -134,7 +129,6 @@ const Header = () => {
                 {
                     logo: rAllocationLogo,
                     label: 'Generate Password',
-                    submitCode: ModalActions.GENERATE_PASSWORD
                 }
             ]
         },
@@ -153,12 +147,20 @@ const Header = () => {
     const { setCloudFolderName } = useContext(GlobalContext);
     const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
     const { setApplicationStatus } = useContext(GlobalContext);
-    const { modalContent, setModalContent } = useContext(GlobalContext);
     const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
 
     // Modals handling
     const { alignmentModalOpen, setAlignmentModalOpen } = useContext(GlobalContext);
+    const { centralizationModalOpen, setCentralizationModalOpen } = useContext(GlobalContext);
     const { cropBoxModalOpen, setCropBoxModalOpen } = useContext(GlobalContext);
+    const { cubeReescaleModalOpen, setCubeReescaleModalOpen } = useContext(GlobalContext);
+    const { efficientRansacModalOpen, setEfficientRansacModalOpen } = useContext(GlobalContext);
+    const { generatePasswordModalOpen, setGeneratePasswordModalOpen } = useContext(GlobalContext);
+    const { noiseAddModalOpen, setNoiseAddModalOpen } = useContext(GlobalContext);
+    const { normalEstimationModalOpen, setNormalEstimationModalOpen } = useContext(GlobalContext);
+    const { reescaleModalOpen, setReescaleModalOpen } = useContext(GlobalContext);
+    const { statisticalRemovalModalOpen, setStatisticalRemovalModalOpen } = useContext(GlobalContext);
+    const { voxelGridModalOpen, setVoxelGridModalOpen } = useContext(GlobalContext);
 
     const [activeTab, setActiveTab] = useState(0);
 
@@ -272,28 +274,62 @@ const Header = () => {
             case "Alignment":
                 setAlignmentModalOpen(true);
                 break;
+            case "Centralization":
+                setCentralizationModalOpen(true);
+                break;
             case "Crop Box Filter":
                 setCropBoxModalOpen(true);
                 break;
+            case "Cube Reescale":
+                setCubeReescaleModalOpen(true);
+                break;
+            case "Efficient Ransac":
+                setEfficientRansacModalOpen(true);
+                break;
+            case "Generate Password":
+                setGeneratePasswordModalOpen(true);
+                break;
+            case "Noise Add":
+                setNoiseAddModalOpen(true);
+                break;
+            case "Normal Estimation":
+                setNormalEstimationModalOpen(true);
+                break;
+            case "Reescale":
+                setReescaleModalOpen(true);
+                break;
+            case "Statistical Removal":
+                setStatisticalRemovalModalOpen(true);
+                break;
+            case "Voxel Grid Filter":
+                setVoxelGridModalOpen(true);
+                break;
             default:
-                setModalContent(element)
+                break;
         }
     }
     
     return(
         <Container tabLength={tabsToShow.length}>
-            {modalContent !== null && <ModalComponet
+            {/* {modalContent !== null && <ModalComponet
                 setCloudFolderName={setCloudFolderName}
-                modalContent={modalContent}
-                setModalContent={setModalContent}
                 setGlobalLoading={setGlobalLoading}
                 setCones={setCones}
                 setCylinders={setCylinders}
                 setPlanes={setPlanes}
                 setSpheres={setSpheres}
-            />}
+            />} */}
             {alignmentModalOpen && <AlignmentModal />}
+            {centralizationModalOpen && <CentralizationModal />}
             {cropBoxModalOpen && <CropBoxModal />}
+            {cubeReescaleModalOpen && <cubeReescaleModal />}
+            {efficientRansacModalOpen && <EfficientRansacModal />}
+            {generatePasswordModalOpen && <GeneratePasswordModal />}
+            {noiseAddModalOpen && <NoiseAddModal />}
+            {normalEstimationModalOpen && <NormalEstimationModal />}
+            {reescaleModalOpen && <ReescaleModal />}
+            {statisticalRemovalModalOpen && <StatisticalRemovalModal />}
+            {voxelGridModalOpen && <VoxelGridModal />}
             {globalLoading && <OverlayLoading />}
             {tabsToShow.map((element, index) => (
                 <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>

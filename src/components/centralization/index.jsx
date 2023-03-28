@@ -1,17 +1,19 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled  } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
+import { Modal, Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyCentralization } from '../../services/api';
+import { Container } from '../modal/style';
 
-const Centralization = ({ setCloudFolderName }) => {
+const CentralizationModal = ({ setCloudFolderName }) => {
 
     const { setApplicationStatus } = useContext(GlobalContext);
 
     const { handleSubmit, register, formState: { errors } } = useForm();
-    const { setLoadings } = useContext(GlobalContext);
+    const { loadings, setLoadings } = useContext(GlobalContext);
+    const { centralizationModalOpen, setCentralizationModalOpen } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {
@@ -41,7 +43,23 @@ const Centralization = ({ setCloudFolderName }) => {
         }, 2000)
     }
 
+    const handleCloseModal = () => {
+        setCentralizationModalOpen(false);
+    };
+
     return(
+    <Modal
+      open={centralizationModalOpen}
+      footer={null}
+      width={"40%"}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <h1>Centralization</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
             <div className='formContainer'>
                 {/* <label htmlFor='scale'>Scale:</label>
@@ -58,7 +76,17 @@ const Centralization = ({ setCloudFolderName }) => {
             </div>
             {/* <span className='error'>{errors.email.type.custom}</span> */}
         </form>
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+            Process
+          </Button>
+          <Button className="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
     );
 }
 
-export default Centralization;
+export default CentralizationModal;

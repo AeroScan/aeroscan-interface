@@ -14,11 +14,19 @@ const AppContext = ({ children }) => {
   const [cloudFolderName, setCloudFolderName] = useState("");
   const [typesView, setTypesView] = useState(false);
   const [globalLoading, setGlobalLoading] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
 
   // Modal Handlers
   const [alignmentModalOpen, setAlignmentModalOpen] = useState(false);
+  const [centralizationModalOpen, setCentralizationModalOpen] = useState(false);
   const [cropBoxModalOpen, setCropBoxModalOpen] = useState(false);
+  const [cubeReescaleModalOpen, setCubeReescaleModalOpen] = useState(false);
+  const [efficientRansacModalOpen, setEfficientRansacModalOpen] = useState(false);
+  const [generatePasswordModalOpen, setGeneratePasswordModalOpen] = useState(false);
+  const [noiseAddModalOpen, setNoiseAddModalOpen] = useState(false);
+  const [normalEstimationModalOpen, setNormalEstimationModalOpen] = useState(false);
+  const [reescaleModalOpen, setReescaleModalOpen] = useState(false);
+  const [statisticalRemovalModalOpen, setStatisticalRemovalModalOpen] = useState(false);
+  const [voxelGridModalOpen, setVoxelGridModalOpen] = useState(false);
 
   // Loading
   const [loadings, setLoadings] = useState([]);
@@ -42,12 +50,28 @@ const AppContext = ({ children }) => {
         setCloudFolderName,
         globalLoading,
         setGlobalLoading,
-        modalContent,
-        setModalContent,
         alignmentModalOpen,
         setAlignmentModalOpen,
+        centralizationModalOpen, 
+        setCentralizationModalOpen,
         cropBoxModalOpen,
         setCropBoxModalOpen,
+        cubeReescaleModalOpen, 
+        setCubeReescaleModalOpen,
+        efficientRansacModalOpen, 
+        setEfficientRansacModalOpen,
+        generatePasswordModalOpen, 
+        setGeneratePasswordModalOpen,
+        noiseAddModalOpen, 
+        setNoiseAddModalOpen,
+        normalEstimationModalOpen, 
+        setNormalEstimationModalOpen,
+        reescaleModalOpen, 
+        setReescaleModalOpen,
+        statisticalRemovalModalOpen, 
+        setStatisticalRemovalModalOpen,
+        voxelGridModalOpen, 
+        setVoxelGridModalOpen,
         loadings,
         setLoadings,
       }}
