@@ -186,7 +186,6 @@ const Header = () => {
     }, [tabsToShow, activeTab]);
 
     const handleLoadCloud = async () => {
-        console.log('to caindo aqui')
         setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
         try {

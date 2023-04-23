@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: 'http://localhost:5619/api' });
+const api = axios.create({ baseURL: 'http://localhost:8080/api' });
 
-export const LoadCloud = async () => {
-    const response = await api.get('/loadCloud');
-    if (response.data.error) {
-        console.err(response.data.message)
-        return false;
-    }
-    return response.data.folderName;
+export const LoadCloud = async (dataForm) => {
+    const response = await api.post('/file', dataForm, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+    })
+    return response
 }
 
 export const SaveCloud = async () => {
