@@ -28,7 +28,7 @@ import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 
 const Header = () => {
     
-
+    const { cloudFile, setCloudFile } = useContext(GlobalContext);
     const { setCloudFolderName } = useContext(GlobalContext);
     const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
     const { setApplicationStatus } = useContext(GlobalContext);
@@ -51,7 +51,11 @@ const Header = () => {
                 {
                     logo: loudCloudLogo,
                     label: 'Load Cloud',
-                    component: <UploadButton inputFile={inputFile}/> 
+                    component: <UploadButton 
+                    inputFile={inputFile} 
+                    cloudFile={cloudFile}
+                    setCloudFile={setCloudFile}
+                    /> 
                 },
                 {
                     logo: saveCloudLogo,
@@ -212,7 +216,7 @@ const Header = () => {
         setApplicationStatus("Saving cloud...");
         setGlobalLoading(true);
         try {
-            const result = await SaveCloud();
+            const result = await SaveCloud(cloudFile);
             if (!result) {
                 setApplicationStatus("Failed to save cloud");
                 setGlobalLoading(false);

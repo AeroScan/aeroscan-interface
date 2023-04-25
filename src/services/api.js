@@ -11,13 +11,11 @@ export const LoadCloud = async (dataForm) => {
     return response
 }
 
-export const SaveCloud = async () => {
-    const response = await api.get('/saveCloud');
-    if (response.data.error) {
-        console.err(response.data.message)
-        return false;
-    }
-    return !response.data.error;
+export const SaveCloud = async ( cloudFile ) => {
+
+    const response = await api.get(`/file/${cloudFile.uuid}/${cloudFile.fileName}/${cloudFile.fileType}`);
+    console.log(response)
+    return response
 }
 
 export const GenerateCad = async () => {

@@ -3,6 +3,7 @@ import React, { useState, createContext } from 'react';
 export const GlobalContext = createContext();
 
 const AppContext = ({ children }) => {
+  
   // Footer
   const [applicationStatus, setApplicationStatus] = useState("Started");
   const [planes, setPlanes] = useState(0);
@@ -11,6 +12,11 @@ const AppContext = ({ children }) => {
   const [cones, setCones] = useState(0);
 
   // General
+  const [cloudFile, setCloudFile] = useState({
+    fileName: '',
+    uuid: '',
+    fileType: ''
+  });
   const [cloudFolderName, setCloudFolderName] = useState("");
   const [typesView, setTypesView] = useState(false);
   const [globalLoading, setGlobalLoading] = useState(false);
@@ -27,6 +33,7 @@ const AppContext = ({ children }) => {
       cylinders, setCylinders,
       cones, setCones,
       typesView, setTypesView,
+      cloudFile, setCloudFile,
       cloudFolderName, setCloudFolderName,
       globalLoading, setGlobalLoading,
       modalContent, setModalContent,

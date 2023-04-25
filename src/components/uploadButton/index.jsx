@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { LoadCloud } from '../../services/api';
 import { message } from 'antd';
 
-const UploadButton = ({ inputFile }) => {
-    
+const UploadButton = ({ inputFile, cloudFile, setCloudFile }) => {
+
     const [selectedFile, setSelectedFile] = useState(null);
 
     const Success = () => {
@@ -15,7 +15,7 @@ const UploadButton = ({ inputFile }) => {
               fontSize: '4rem',
               marginTop: '20vh',
             },
-          });
+        });
     };
 
     const Error = () => {
@@ -27,7 +27,7 @@ const UploadButton = ({ inputFile }) => {
               fontSize: '4rem',
               marginTop: '20vh',
             },
-          });
+        });
     };
     
     useEffect(() => {
@@ -42,8 +42,21 @@ const UploadButton = ({ inputFile }) => {
             dataForm.append('name', selectedFile.name);
             dataForm.append('file', selectedFile);
             dataForm.append('url_type', selectedFile.type);
+
             await LoadCloud(dataForm)
-            .then( response => response.status == 200 ? Success() : Error()  )
+            .then( response => {
+                if(response.status == 200){
+                    Success();
+                    setCloudFile({
+                        fileName: selectedFile.name.split('.')[0],
+                        uuid: response.data.uuid,
+                        fileType: selectedFile.type.split('/')[1]
+                    });
+                }else{
+                    Error();
+                }
+            } 
+            )
             .catch(err => Error())
         }
     }
