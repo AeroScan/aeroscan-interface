@@ -70,6 +70,7 @@ const tourConfig = [
     content: ({ goTo }) => (
       <div>
         <p style={{fontSize: "1.6rem"}}>
+        In this menu you are able to change some parameters of the viewer like the background color and the points budget.
         </p>
         <StepButton style={{ textAlign: 'center' }} onClick={() => goTo(13)}> Step 13 </StepButton>
       </div>
@@ -77,15 +78,15 @@ const tourConfig = [
   },
   {
     selector: "[data-tut='eleventh-step']",
-    content: ""
+    content: "In this menu we can found some useful tools to measure the cloud parameters like angles, distances, lengths. We also found some navigation tools."
   },
   {
     selector: "[data-tut='twelfth-step']",
-    content: ""
+    content: "In this menu we have a tool to export the scene with the desired information."
   },
   {
     selector: "[data-tut='thirteenth-step']",
-    content: ""
+    content: "In this menu we have a way to filter the efficient ransac results (when they exist)."
   },
   {
     selector: "[data-tut='fourteenth-step']",
