@@ -67,6 +67,28 @@ const tourConfig = [
   },
   {
     selector: "[data-tut='tenth-step']",
+    content: ({ goTo }) => (
+      <div>
+        <p style={{fontSize: "1.6rem"}}>
+        </p>
+        <StepButton style={{ textAlign: 'center' }} onClick={() => goTo(13)}> Step 13 </StepButton>
+      </div>
+    )
+  },
+  {
+    selector: "[data-tut='eleventh-step']",
+    content: ""
+  },
+  {
+    selector: "[data-tut='twelfth-step']",
+    content: ""
+  },
+  {
+    selector: "[data-tut='thirteenth-step']",
+    content: ""
+  },
+  {
+    selector: "[data-tut='fourteenth-step']",
     content: "Here you can see the quantity of planes, spheres, cylinders and cones."
   },
 ]
