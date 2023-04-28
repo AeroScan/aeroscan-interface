@@ -25,10 +25,10 @@ import aboutLogo from '../../assets/img/help/about.png';
 import * as ModalActions from '../modal/actions';
 import InterfaceTour from '../tour';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
+import { message } from 'antd';
 
 const Header = () => {
     
-    const { cloudFile, setCloudFile } = useContext(GlobalContext);
     const { setCloudFolderName } = useContext(GlobalContext);
     const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
     const { setApplicationStatus } = useContext(GlobalContext);
@@ -43,6 +43,101 @@ const Header = () => {
 
     const inputFile = useRef(null);
 
+    const Success = (msg) => {
+        message.open({
+            type: 'success',
+            content: msg,
+            className: 'success-message',
+            style: {
+              fontSize: '4rem',
+              marginTop: '20vh',
+            },
+        });
+    };
+
+    const Error = (msg) => {
+        message.open({
+            type: 'error',
+            content: msg,
+            className: 'error-message',
+            style: {
+              fontSize: '4rem',
+              marginTop: '20vh',
+            },
+        });
+    };
+
+    const handleLoadCloud = async (dataForm, file) => {
+
+        setApplicationStatus("Loading cloud...");
+        setGlobalLoading(true);
+        try {
+            const folderName = await LoadCloud(dataForm);
+            console.log(folderName)
+            if (!folderName) {
+                setApplicationStatus("Failed to load cloud");
+                setCloudFolderName('');
+                setGlobalLoading(false);
+                Error("Error loading cloud")
+                return;
+            }
+            setApplicationStatus("Cloud loaded");
+            setCloudFolderName(folderName);
+            setGlobalLoading(false);
+            Success("Cloud uploaded")
+            return;
+        } catch (error) {
+            setApplicationStatus("Failed to load cloud");
+            setCloudFolderName('');
+            setGlobalLoading(false);
+            Error("Error loading cloud");
+            return;
+        }
+    }
+
+    const handleSaveCloud = async () => {
+        setApplicationStatus("Saving cloud...");
+        setGlobalLoading(true);
+        try {
+            const response = await SaveCloud();
+            if (!response) {
+                setApplicationStatus("Failed to save cloud");
+                setGlobalLoading(false);
+                Error("Error saving cloud");
+                return;
+            }
+            setApplicationStatus("Cloud saved");
+            setGlobalLoading(false);
+            Success("Cloud saved");
+            return;
+        } catch (error) {
+            setApplicationStatus("Failed to save cloud");
+            setGlobalLoading(false);
+            Error("Error saving cloud");
+            return;
+        }
+    }
+
+    const handleGenerateCad = async () => {
+        setApplicationStatus("Generating cad...");
+        setGlobalLoading(true);
+        try {
+            const result = await GenerateCad();
+            if (!result) {
+                setApplicationStatus("Failed to generate cad");
+                setGlobalLoading(false);
+                return;
+            }
+            setApplicationStatus("Cad saved");
+            setGlobalLoading(false);
+            return;
+        } catch (error) {
+            setApplicationStatus("Failed to save cad");
+            setGlobalLoading(false);
+            return;
+        }
+    }
+
     const tabs = [
         {
             name: 'Files',
@@ -53,8 +148,7 @@ const Header = () => {
                     label: 'Load Cloud',
                     component: <UploadButton 
                     inputFile={inputFile} 
-                    cloudFile={cloudFile}
-                    setCloudFile={setCloudFile}
+                    handleLoadCloud={handleLoadCloud}
                     /> 
                 },
                 {
@@ -188,69 +282,6 @@ const Header = () => {
             }
         })
     }, [tabsToShow, activeTab]);
-
-    const handleLoadCloud = async () => {
-        setApplicationStatus("Loading cloud...");
-        setGlobalLoading(true);
-        try {
-            const folderName = await LoadCloud();
-            if (!folderName) {
-                setApplicationStatus("Failed to load cloud");
-                setCloudFolderName('');
-                setGlobalLoading(false);
-                return;
-            }
-            setApplicationStatus("Cloud loaded");
-            setCloudFolderName(folderName);
-            setGlobalLoading(false);
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to load cloud");
-            setCloudFolderName('');
-            setGlobalLoading(false);
-            return;
-        }
-    }
-
-    const handleSaveCloud = async () => {
-        setApplicationStatus("Saving cloud...");
-        setGlobalLoading(true);
-        try {
-            const result = await SaveCloud(cloudFile);
-            if (!result) {
-                setApplicationStatus("Failed to save cloud");
-                setGlobalLoading(false);
-                return;
-            }
-            setApplicationStatus("Cloud saved");
-            setGlobalLoading(false);
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to save cloud");
-            setGlobalLoading(false);
-            return;
-        }
-    }
-
-    const handleGenerateCad = async () => {
-        setApplicationStatus("Generating cad...");
-        setGlobalLoading(true);
-        try {
-            const result = await GenerateCad();
-            if (!result) {
-                setApplicationStatus("Failed to generate cad");
-                setGlobalLoading(false);
-                return;
-            }
-            setApplicationStatus("Cad saved");
-            setGlobalLoading(false);
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to save cad");
-            setGlobalLoading(false);
-            return;
-        }
-    }
 
     const handleActions = (element) => {
         switch(element.label){

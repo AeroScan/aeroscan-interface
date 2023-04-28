@@ -3,19 +3,20 @@ import axios from 'axios';
 const api = axios.create({ baseURL: 'http://localhost:8080/api' });
 
 export const LoadCloud = async (dataForm) => {
+    
     const response = await api.post('/file', dataForm, {
         headers: {
           'Content-Type': 'multipart/form-data',
         }
     })
-    return response
+    return response;
 }
 
-export const SaveCloud = async ( cloudFile ) => {
+export const SaveCloud = async () => {
 
-    const response = await api.get(`/file/${cloudFile.uuid}/${cloudFile.fileName}/${cloudFile.fileType}`);
+    const response = await api.get('/file');
     console.log(response)
-    return response
+    return response;
 }
 
 export const GenerateCad = async () => {

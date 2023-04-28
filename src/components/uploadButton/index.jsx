@@ -1,34 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { LoadCloud } from '../../services/api';
-import { message } from 'antd';
 
-const UploadButton = ({ inputFile, cloudFile, setCloudFile }) => {
+const UploadButton = ({ inputFile, handleLoadCloud }) => {
 
     const [selectedFile, setSelectedFile] = useState(null);
-
-    const Success = () => {
-        message.open({
-            type: 'success',
-            content: 'Cloud uploaded',
-            className: 'success-message',
-            style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
-            },
-        });
-    };
-
-    const Error = () => {
-        message.open({
-            type: 'error',
-            content: 'Error loading cloud',
-            className: 'error-message',
-            style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
-            },
-        });
-    };
     
     useEffect(() => {
         
@@ -42,22 +16,9 @@ const UploadButton = ({ inputFile, cloudFile, setCloudFile }) => {
             dataForm.append('name', selectedFile.name);
             dataForm.append('file', selectedFile);
             dataForm.append('url_type', selectedFile.type);
+            console.log("form", dataForm)
 
-            await LoadCloud(dataForm)
-            .then( response => {
-                if(response.status == 200){
-                    Success();
-                    setCloudFile({
-                        fileName: selectedFile.name.split('.')[0],
-                        uuid: response.data.uuid,
-                        fileType: selectedFile.type.split('/')[1]
-                    });
-                }else{
-                    Error();
-                }
-            } 
-            )
-            .catch(err => Error())
+            await handleLoadCloud(dataForm, selectedFile)
         }
     }
 
