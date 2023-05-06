@@ -66,6 +66,10 @@ const tourConfig = [
     content: "The sidebar has some tools, such as compass, distance measurement, front view, which can be used within the viewer."
   },
   {
+    selector: "[data-tut='ninth-step']",
+    content: "Inside each one of the following menus you are going to find these tools. If you hover the option, it will show you a tooltip to know what it is."
+  },
+  {
     selector: "[data-tut='tenth-step']",
     content: ({ goTo }) => (
       <div>
