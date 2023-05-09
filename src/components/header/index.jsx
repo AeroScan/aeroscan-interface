@@ -28,8 +28,8 @@ import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
 const Header = () => {
-    
-    const { setCloudFolderName } = useContext(GlobalContext);
+
+    const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
     const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
     const { setApplicationStatus } = useContext(GlobalContext);
     const { modalContent, setModalContent } = useContext(GlobalContext);
@@ -49,8 +49,8 @@ const Header = () => {
             content: msg,
             className: 'success-message',
             style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
+                fontSize: '4rem',
+                marginTop: '20vh',
             },
         });
     };
@@ -61,34 +61,36 @@ const Header = () => {
             content: msg,
             className: 'error-message',
             style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
+                fontSize: '4rem',
+                marginTop: '20vh',
             },
         });
     };
 
     const handleLoadCloud = async (dataForm, file) => {
-
         setApplicationStatus("Loading cloud...");
         setGlobalLoading(true);
         try {
-            const folderName = await LoadCloud(dataForm);
-            console.log(folderName)
-            if (!folderName) {
+            const response = await LoadCloud(dataForm);
+            console.log(response)
+            if (!response || !response.data.uuid) {
                 setApplicationStatus("Failed to load cloud");
                 setCloudFolderName('');
+                setSessionID('');
                 setGlobalLoading(false);
                 Error("Error loading cloud")
                 return;
             }
             setApplicationStatus("Cloud loaded");
-            setCloudFolderName(folderName);
+            setCloudFolderName(response.data.uuid);
+            setSessionID(response.data.session);
             setGlobalLoading(false);
             Success("Cloud uploaded")
             return;
         } catch (error) {
             setApplicationStatus("Failed to load cloud");
             setCloudFolderName('');
+            setSessionID('');
             setGlobalLoading(false);
             Error("Error loading cloud");
             return;
@@ -146,10 +148,10 @@ const Header = () => {
                 {
                     logo: loudCloudLogo,
                     label: 'Load Cloud',
-                    component: <UploadButton 
-                    inputFile={inputFile} 
-                    handleLoadCloud={handleLoadCloud}
-                    /> 
+                    component: <UploadButton
+                        inputFile={inputFile}
+                        handleLoadCloud={handleLoadCloud}
+                    />
                 },
                 {
                     logo: saveCloudLogo,
@@ -221,21 +223,21 @@ const Header = () => {
                     label: 'Efficient Ransac',
                     submitCode: ModalActions.RANSAC
                 }
-            ]    
+            ]
         },
         {
             name: 'Help',
             step: 'sixth-step',
             procedures: [
-            {
-                logo: tourLogo,
-                label: 'Interface Tour',
-                component: <InterfaceTour />    
-            },
-            {
-                logo: aboutLogo,
-                label: 'About Software'
-            }
+                {
+                    logo: tourLogo,
+                    label: 'Interface Tour',
+                    component: <InterfaceTour />
+                },
+                {
+                    logo: aboutLogo,
+                    label: 'About Software'
+                }
             ]
         },
         {
@@ -252,10 +254,10 @@ const Header = () => {
             name: 'Account',
             step: 'seventh-step',
             procedures: [
-            {
-                logo: rAllocationLogo,
-                label: 'Logout', 
-            }
+                {
+                    logo: rAllocationLogo,
+                    label: 'Logout',
+                }
             ]
         }
     ];
@@ -273,18 +275,18 @@ const Header = () => {
         else setTabsToShow(tabs.filter(tab => tab.name !== "Admin"));
     }, [isAdmin]);
 
-    const[tabContent, setTabContent] = useState([]);
+    const [tabContent, setTabContent] = useState([]);
 
     useEffect(() => {
         tabsToShow.forEach((element, index) => {
-            if(index === activeTab){
+            if (index === activeTab) {
                 setTabContent(element.procedures);
             }
         })
     }, [tabsToShow, activeTab]);
 
     const handleActions = (element) => {
-        switch(element.label){
+        switch (element.label) {
             case "Logout":
                 RemoveToken();
                 break;
@@ -308,8 +310,8 @@ const Header = () => {
                 break;
         }
     }
-    
-    return(
+
+    return (
         <Container tabLength={tabsToShow.length}>
             {modalContent !== null && <ModalComponet
                 setCloudFolderName={setCloudFolderName}
@@ -331,11 +333,11 @@ const Header = () => {
                 {tabContent.map((element, index) => (
                     <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
                         <img src={element.logo} alt={element.label} />
-                        <p>{element.label}</p>  
+                        <p>{element.label}</p>
                     </li>
                 ))}
             </ul>
-        </Container>  
+        </Container>
     );
 }
 
