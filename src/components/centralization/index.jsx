@@ -44,19 +44,8 @@ const Centralization = ({ setCloudFolderName }) => {
     return(
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
             <div className='formContainer'>
-                {/* <label htmlFor='scale'>Scale:</label>
-                <input 
-                type='text' 
-                id='scale' 
-                placeholder='float'
-                {...register("scale", { required: 'Invalid scale' })}
-                aria-invalid={errors.scale ? "true" : "false"}
-                />
-                <Tooltip placement="right" title={'This field update the scale of all cloud points.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip> */}
+                <p>Are you sure you want to set centralization?</p>
             </div>
-            {/* <span className='error'>{errors.email.type.custom}</span> */}
         </form>
     );
 }

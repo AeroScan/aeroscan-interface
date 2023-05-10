@@ -44,6 +44,12 @@ export const Container = styled.div`
             margin: 30px auto 5px auto;
             text-align: center;
             width: 75%;
+
+            p{
+                font-size: 1.6rem;
+                text-alignment: center;
+                width: 100%;
+            }
     
             label{
                 font-size: 1.35rem;
