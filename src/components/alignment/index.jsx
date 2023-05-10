@@ -1,17 +1,19 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
+import { Modal, Button } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyAlignment } from '../../services/api';
+import { Container } from '../modal/style';
 
-const Alignment = ({ setCloudFolderName }) => {
-
+const AlignmentModal = ({ setCloudFolderName }) => {
+    const { loadings, setLoadings } = useContext(GlobalContext);
     const { setApplicationStatus } = useContext(GlobalContext);
+    const { alignment, setAlignment } = useContext(GlobalContext);
+    const { handleSubmit } = useForm();
 
-    const { handleSubmit, register, formState: { errors } } = useForm();
-    const { setLoadings } = useContext(GlobalContext);
-
-    const onSubmit = async(data) => {
+    const onSubmit = async() => {
         setLoadings((prevLoadings) => {
             const newLoadings = [...prevLoadings];
             newLoadings[0] = true;
@@ -36,16 +38,44 @@ const Alignment = ({ setCloudFolderName }) => {
                 
                 return newLoadings;
             });
-        }, 2000)
+        }, 2000);
+    }
+
+    const handleCloseModal = () => {
+      setAlignment({
+        modalOpen: false
+      })
     }
 
     return(
+    <Modal
+      open={alignment.modalOpen}
+      footer={null}
+      width={"40%"}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <h1>Alignment</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
             <div className='formContainer'>
                 <p>Are you sure you want to set alignment?</p>
             </div>
         </form>
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+            Process
+          </Button>
+          <Button className="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
     );
 }
 
-export default Alignment;
+export default AlignmentModal;

@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled  } from '@ant-design/icons';
-import { Tooltip } from 'antd';
+import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
+import { Modal, Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyEfficientRansac } from '../../services/api';
+import { Container } from '../modal/style';
 
-const EfficientRansac = ({ setCloudFolderName }) => {
+const EfficientRansacModal = ({ setCloudFolderName }) => {
 
     const { setApplicationStatus } = useContext(GlobalContext);
     const efficientRansacSchema = yup.object().shape({
@@ -19,7 +20,8 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         normalThreshold: yup.number().typeError('A number is required')
     });
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
-    const { setLoadings } = useContext(GlobalContext);
+    const { loadings, setLoadings } = useContext(GlobalContext);
+    const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
 
     const onSubmit = async(data) => {
         setLoadings((prevLoadings) => {
@@ -60,7 +62,25 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         }, 2000)
     }
 
+    const handleCloseModal = () => {
+        setEfficientRansac({
+            modalOpen: false,
+        });
+    };
+
     return(
+    <Modal
+      open={efficientRansac.modalOpen}
+      footer={null}
+      width={"40%"}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <h1>Efficient Ransac</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
             <div className='formContainer'>
                 <label htmlFor='probability'>Probability:</label>
@@ -68,7 +88,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
                 type='text' 
                 id='probability' 
                 placeholder='float'
-                {...register('probability')}
+                {...register('probability', { value: `${efficientRansac.probability}` })}
                 />
                 <Tooltip placement="right" title={'This field set the method stop condition, probability of losing the largest primitive at each iteration.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -81,7 +101,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
                 type='text' 
                 id='minPoints'
                 placeholder='float'
-                {...register('minPoints')}
+                {...register('minPoints', { value: `${efficientRansac.minPoints}` })}
                 />
                 <Tooltip placement="right" title={'This field set the minimum number of points for a sample to be considered a possible individual primitive.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -94,7 +114,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
                 type='text' 
                 id='minPoints'
                 placeholder='float'
-                {...register('clusterEpsilon')}
+                {...register('clusterEpsilon', { value: `${efficientRansac.clusterEpsilon}` })}
                 />
                 <Tooltip placement="right" title={'This field set the distance used for two neighboring points to be considered adjacent or not.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -107,7 +127,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
                 type='text' 
                 id='epsilon'
                 placeholder='float'
-                {...register('epsilon')}
+                {...register('epsilon', { value: `${efficientRansac.epsilon}` })}
                 />
                 <Tooltip placement="right" title={'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -120,7 +140,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
                 type='text' 
                 id='normalThreshold'
                 placeholder='float'
-                {...register('normalThreshold')}
+                {...register('normalThreshold', { value: `${efficientRansac.normalThreshold}` })}
                 />
                 <Tooltip placement="right" title={'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -128,7 +148,18 @@ const EfficientRansac = ({ setCloudFolderName }) => {
             </div>
             <span className='error'>{errors.normalThreshold?.message}</span>
         </form>
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+            Process
+          </Button>
+          <Button className="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
+        
     );
 }
 
-export default EfficientRansac;
+export default EfficientRansacModal;
