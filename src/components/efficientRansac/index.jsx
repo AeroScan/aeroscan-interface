@@ -21,6 +21,7 @@ const EfficientRansac = ({ setCloudFolderName }) => {
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
   const { setLoadings } = useContext(GlobalContext);
   const { setEfficientRansacApplied } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     setLoadings((prevLoadings) => {
@@ -33,6 +34,8 @@ const EfficientRansac = ({ setCloudFolderName }) => {
         .then(async () => {
           try {
             const response = await ApplyEfficientRansac({
+              session: sessionID,
+              uuid: cloudFolderName,
               probability: data.probability,
               min_points: data.minPoints,
               epsilon: data.clusterEpsilon,

@@ -18,7 +18,6 @@ import { Modal, Button } from 'antd';
 import 'antd/dist/antd.css';
 
 const ModalComponet = ({ modalContent, setModalContent, setGlobalLoading, setCylinders, setCones, setSpheres, setPlanes }) => {
-
   const { loadings } = useContext(GlobalContext);
 
   const handleModalContent = () => {

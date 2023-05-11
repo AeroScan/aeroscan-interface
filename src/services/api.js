@@ -13,14 +13,14 @@ export const LoadCloud = async (dataForm) => {
   return response;
 };
 
-export const SaveCloud = async () => {
-  const response = await api.get("/download");
+export const SaveCloud = async ({ session, uuid }) => {
+  const response = await api.get(`/download/${session}/${uuid}`);
   console.log(response);
   return response;
 };
 
-export const GenerateCad = async () => {
-  const response = await api.get("/generateCad");
+export const GenerateCad = async ({ session, uuid }) => {
+  const response = await api.get(`/generateCad/${session}/${uuid}`);
   if (response.data.error) {
     console.err(response.data.message);
     return false;
@@ -29,6 +29,8 @@ export const GenerateCad = async () => {
 };
 
 export const ApplyCropBox = async ({
+  session,
+  uuid,
   min_x,
   min_y,
   min_z,
@@ -37,6 +39,8 @@ export const ApplyCropBox = async ({
   max_z,
 }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "crop_box",
     values: {
       min_x: min_x,
@@ -54,8 +58,10 @@ export const ApplyCropBox = async ({
   return response.data.folderName;
 };
 
-export const ApplyVoxelGrid = async ({ leaf }) => {
+export const ApplyVoxelGrid = async ({ session, uuid, leaf }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "voxel_grid",
     values: { leaf: leaf },
   });
@@ -66,8 +72,15 @@ export const ApplyVoxelGrid = async ({ leaf }) => {
   return response.data.folderName;
 };
 
-export const ApplyStatisticalOutlierRemoval = async ({ mean, std }) => {
+export const ApplyStatisticalOutlierRemoval = async ({
+  session,
+  uuid,
+  mean,
+  std,
+}) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "statistical_removal",
     values: {
       mean: mean,
@@ -81,8 +94,10 @@ export const ApplyStatisticalOutlierRemoval = async ({ mean, std }) => {
   return response.data.folderName;
 };
 
-export const ApplyNormalEstimation = async ({ radius }) => {
+export const ApplyNormalEstimation = async ({ session, uuid, radius }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "normal_estimation",
     values: { radius: radius },
   });
@@ -93,8 +108,10 @@ export const ApplyNormalEstimation = async ({ radius }) => {
   return response.data.folderName;
 };
 
-export const ApplyReescale = async ({ factor }) => {
+export const ApplyReescale = async ({ session, uuid, factor }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "reescale",
     values: { factor: factor },
   });
@@ -105,8 +122,10 @@ export const ApplyReescale = async ({ factor }) => {
   return response.data.folderName;
 };
 
-export const ApplyAlignment = async () => {
+export const ApplyAlignment = async ({ session, uuid }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "alignment",
   });
   if (response.data.error) {
@@ -116,8 +135,10 @@ export const ApplyAlignment = async () => {
   return response.data.folderName;
 };
 
-export const ApplyCentralization = async () => {
+export const ApplyCentralization = async ({ session, uuid }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "centralization",
   });
   if (response.data.error) {
@@ -127,8 +148,10 @@ export const ApplyCentralization = async () => {
   return response.data.folderName;
 };
 
-export const ApplyNoiseAdd = async ({ limit }) => {
+export const ApplyNoiseAdd = async ({ session, uuid, limit }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "noise_add",
     values: { limit: limit },
   });
@@ -139,8 +162,10 @@ export const ApplyNoiseAdd = async ({ limit }) => {
   return response.data.folderName;
 };
 
-export const ApplyCubeReescale = async ({ factor }) => {
+export const ApplyCubeReescale = async ({ session, uuid, factor }) => {
   const response = await api.post("/preProcessing", {
+    uuid: uuid,
+    session: session,
     function_type: "cube_reescale",
     values: { factor: factor },
   });
@@ -152,6 +177,8 @@ export const ApplyCubeReescale = async ({ factor }) => {
 };
 
 export const ApplyEfficientRansac = async ({
+  session,
+  uuid,
   probability,
   min_points,
   epsilon,
@@ -159,11 +186,15 @@ export const ApplyEfficientRansac = async ({
   normal_threshold,
 }) => {
   const response = await api.post("/effRansac", {
-    probability: probability,
-    min_points: min_points,
-    epsilon: epsilon,
-    cluster_epsilon: cluster_epsilon,
-    normal_threshold: normal_threshold,
+    uuid: uuid,
+    session: session,
+    values: {
+      probability: probability,
+      min_points: min_points,
+      epsilon: epsilon,
+      cluster_epsilon: cluster_epsilon,
+      normal_threshold: normal_threshold,
+    },
   });
   if (response.data.error) {
     console.err(response.data.message);

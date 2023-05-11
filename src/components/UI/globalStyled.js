@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { createGlobalStyle } from 'styled-components';
+import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import { Link } from "react-router-dom";
 
 export const GlobalStyled = createGlobalStyle`
@@ -16,10 +16,10 @@ export const GlobalStyled = createGlobalStyle`
   .helper {
     font-size: 1.6rem;
   }
-`
+`;
 
 export const StyledLink = styled(Link)`
   color: #000;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.7rem;
 `;
