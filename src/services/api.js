@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: "http://aeroscan.c3.furg.br:5619/api" });
+const api = axios.create({
+  baseURL: `${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_API_PORT}/api`,
+});
 
 export const LoadCloud = async (dataForm) => {
   const response = await api.post("/uploadCloud", dataForm, {
@@ -171,3 +173,4 @@ export const ApplyEfficientRansac = async ({
 };
 
 export default api;
+
