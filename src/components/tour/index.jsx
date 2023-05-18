@@ -66,7 +66,34 @@ const tourConfig = [
     content: "The sidebar has some tools, such as compass, distance measurement, front view, which can be used within the viewer."
   },
   {
+    selector: "[data-tut='ninth-step']",
+    content: "Inside each one of the following menus you are going to find these tools. If you hover the option, it will show you a tooltip to know what it is."
+  },
+  {
     selector: "[data-tut='tenth-step']",
+    content: ({ goTo }) => (
+      <div>
+        <p style={{fontSize: "1.6rem"}}>
+        In this menu you are able to change some parameters of the viewer like the background color and the points budget.
+        </p>
+        <StepButton style={{ textAlign: 'center' }} onClick={() => goTo(13)}> Step 13 </StepButton>
+      </div>
+    )
+  },
+  {
+    selector: "[data-tut='eleventh-step']",
+    content: "In this menu we can found some useful tools to measure the cloud parameters like angles, distances, lengths. We also found some navigation tools."
+  },
+  {
+    selector: "[data-tut='twelfth-step']",
+    content: "In this menu we have a tool to export the scene with the desired information."
+  },
+  {
+    selector: "[data-tut='thirteenth-step']",
+    content: "In this menu we have a way to filter the efficient ransac results (when they exist)."
+  },
+  {
+    selector: "[data-tut='fourteenth-step']",
     content: "Here you can see the quantity of planes, spheres, cylinders and cones."
   },
 ]

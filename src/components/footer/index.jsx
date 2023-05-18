@@ -36,7 +36,7 @@ const Footer = () => {
 
     return(
         <Container>
-            <div data-tut="tenth-step">
+            <div data-tut="fourteenth-step">
                 {legendItems.map((element, index) => (
                     <p key={index} style={{ color: element.color }}>{element.value} {element.label}</p>
                 ))}

@@ -18,8 +18,8 @@ import { Modal, Button } from 'antd';
 import 'antd/dist/antd.css';
 
 const ModalComponet = ({ modalContent, setModalContent, setGlobalLoading, setCylinders, setCones, setSpheres, setPlanes }) => {
-    
-    const { loadings } = useContext(GlobalContext);
+
+  const { loadings } = useContext(GlobalContext);
 
     const handleModalContent = () => {
         switch(modalContent.submitCode){
@@ -50,34 +50,34 @@ const ModalComponet = ({ modalContent, setModalContent, setGlobalLoading, setCyl
         }
     }
 
-    const handleCloseModal = () => {
-        setModalContent(null);
-    }
+  const handleCloseModal = () => {
+    setModalContent(null);
+  }
 
-    return (
-        <Modal 
-            open={modalContent !== null} 
-            footer={null} width={'40%'} 
-            closable={false} 
-            maskClosable={true}
-            centered
-            destroyOnClose
-        >
-            <Container>
-                <CloseOutlined className='closeIcon' onClick={handleCloseModal}/>
-                <h1>{modalContent.label}</h1>
-                    {handleModalContent()}
-                <div className="buttons-container">
-                    <Button loading={loadings[0]} htmlType='submit' form="modalForm">
-                        Process
-                    </Button>
-                    <Button className='cancel' onClick={handleCloseModal}>
-                        Cancel
-                    </Button>
-                </div>
-            </Container>
-        </Modal>
-    );
+  return (
+    <Modal
+      open={modalContent !== null}
+      footer={null} width={'40%'}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className='closeIcon' onClick={handleCloseModal} />
+        <h1>{modalContent.label}</h1>
+        {handleModalContent()}
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType='submit' form="modalForm">
+            Process
+          </Button>
+          <Button className='cancel' onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
+  );
 }
- 
+
 export default ModalComponet;

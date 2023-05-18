@@ -22,6 +22,9 @@ const AppContext = ({ children }) => {
   const [globalLoading, setGlobalLoading] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
+  // States
+  const [efficientRansacApplied, setEfficientRansacApplied] = useState(false);
+
   // Loading
   const [loadings, setLoadings] = useState([]);
 
@@ -37,6 +40,7 @@ const AppContext = ({ children }) => {
       cloudFolderName, setCloudFolderName,
       globalLoading, setGlobalLoading,
       modalContent, setModalContent,
+      efficientRansacApplied, setEfficientRansacApplied,
       loadings, setLoadings,
     }}>
         {children}
