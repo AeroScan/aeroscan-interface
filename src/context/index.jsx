@@ -18,6 +18,7 @@ const AppContext = ({ children }) => {
     fileType: ''
   });
   const [cloudFolderName, setCloudFolderName] = useState("");
+  const [sessionID, setSessionID] = useState("");
   const [typesView, setTypesView] = useState(false);
   const [globalLoading, setGlobalLoading] = useState(false);
   const [modalContent, setModalContent] = useState(null);
@@ -38,6 +39,7 @@ const AppContext = ({ children }) => {
       typesView, setTypesView,
       cloudFile, setCloudFile,
       cloudFolderName, setCloudFolderName,
+      sessionID, setSessionID,
       globalLoading, setGlobalLoading,
       modalContent, setModalContent,
       efficientRansacApplied, setEfficientRansacApplied,

@@ -28,315 +28,318 @@ import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
 const Header = () => {
-    
-    const { setCloudFolderName } = useContext(GlobalContext);
-    const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { modalContent, setModalContent } = useContext(GlobalContext);
-    const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
 
-    const [activeTab, setActiveTab] = useState(0);
+  const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
+  const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { modalContent, setModalContent } = useContext(GlobalContext);
+  const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-    const [tabsToShow, setTabsToShow] = useState([]);
-    const [tokenVerified, setTokenVerified] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
-    const inputFile = useRef(null);
+  const [tabsToShow, setTabsToShow] = useState([]);
+  const [tokenVerified, setTokenVerified] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    const Success = (msg) => {
-        message.open({
-            type: 'success',
-            content: msg,
-            className: 'success-message',
-            style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
-            },
-        });
-    };
+  const inputFile = useRef(null);
 
-    const Error = (msg) => {
-        message.open({
-            type: 'error',
-            content: msg,
-            className: 'error-message',
-            style: {
-              fontSize: '4rem',
-              marginTop: '20vh',
-            },
-        });
-    };
+  const Success = (msg) => {
+    message.open({
+      type: 'success',
+      content: msg,
+      className: 'success-message',
+      style: {
+        fontSize: '4rem',
+        marginTop: '20vh',
+      },
+    });
+  };
 
-    const handleLoadCloud = async (dataForm, file) => {
+  const Error = (msg) => {
+    message.open({
+      type: 'error',
+      content: msg,
+      className: 'error-message',
+      style: {
+        fontSize: '4rem',
+        marginTop: '20vh',
+      },
+    });
+  };
 
-        setApplicationStatus("Loading cloud...");
-        setGlobalLoading(true);
-        try {
-            const folderName = await LoadCloud(dataForm);
-            console.log(folderName)
-            if (!folderName) {
-                setApplicationStatus("Failed to load cloud");
-                setCloudFolderName('');
-                setGlobalLoading(false);
-                Error("Error loading cloud")
-                return;
-            }
-            setApplicationStatus("Cloud loaded");
-            setCloudFolderName(folderName);
-            setGlobalLoading(false);
-            Success("Cloud uploaded")
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to load cloud");
-            setCloudFolderName('');
-            setGlobalLoading(false);
-            Error("Error loading cloud");
-            return;
-        }
+  const handleLoadCloud = async (dataForm, file) => {
+    setApplicationStatus("Loading cloud...");
+    setGlobalLoading(true);
+    try {
+      const response = await LoadCloud(dataForm);
+      console.log(response)
+      if (!response || !response.data.uuid) {
+        setApplicationStatus("Failed to load cloud");
+        setCloudFolderName('');
+        setSessionID('');
+        setGlobalLoading(false);
+        Error("Error loading cloud")
+        return;
+      }
+      setApplicationStatus("Cloud loaded");
+      setCloudFolderName(response.data.uuid);
+      setSessionID(response.data.session);
+      setGlobalLoading(false);
+      Success("Cloud uploaded")
+      return;
+    } catch (error) {
+      setApplicationStatus("Failed to load cloud");
+      setCloudFolderName('');
+      setSessionID('');
+      setGlobalLoading(false);
+      Error("Error loading cloud");
+      return;
     }
+  }
 
-    const handleSaveCloud = async () => {
-        setApplicationStatus("Saving cloud...");
-        setGlobalLoading(true);
-        try {
-            const response = await SaveCloud();
-            if (!response) {
-                setApplicationStatus("Failed to save cloud");
-                setGlobalLoading(false);
-                Error("Error saving cloud");
-                return;
-            }
-            setApplicationStatus("Cloud saved");
-            setGlobalLoading(false);
-            Success("Cloud saved");
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to save cloud");
-            setGlobalLoading(false);
-            Error("Error saving cloud");
-            return;
-        }
+  const handleSaveCloud = async () => {
+    setApplicationStatus("Saving cloud...");
+    setGlobalLoading(true);
+    try {
+      const response = await SaveCloud({ session: sessionID, uuid: cloudFolderName });
+      if (!response) {
+        setApplicationStatus("Failed to save cloud");
+        setGlobalLoading(false);
+        Error("Error saving cloud");
+        return;
+      }
+      setApplicationStatus("Cloud saved");
+      setGlobalLoading(false);
+      Success("Cloud saved");
+      return;
+    } catch (error) {
+      setApplicationStatus("Failed to save cloud");
+      setGlobalLoading(false);
+      Error("Error saving cloud");
+      return;
     }
+  }
 
-    const handleGenerateCad = async () => {
-        setApplicationStatus("Generating cad...");
-        setGlobalLoading(true);
-        try {
-            const result = await GenerateCad();
-            if (!result) {
-                setApplicationStatus("Failed to generate cad");
-                setGlobalLoading(false);
-                return;
-            }
-            setApplicationStatus("Cad saved");
-            setGlobalLoading(false);
-            return;
-        } catch (error) {
-            setApplicationStatus("Failed to save cad");
-            setGlobalLoading(false);
-            return;
-        }
+  const handleGenerateCad = async ({ session: sessionID, uuid: cloudFolderName }) => {
+    setApplicationStatus("Generating cad...");
+    setGlobalLoading(true);
+    try {
+      const result = await GenerateCad();
+      if (!result) {
+        setApplicationStatus("Failed to generate cad");
+        setGlobalLoading(false);
+        return;
+      }
+      setApplicationStatus("Cad saved");
+      setGlobalLoading(false);
+      return;
+    } catch (error) {
+      setApplicationStatus("Failed to save cad");
+      setGlobalLoading(false);
+      return;
     }
+  }
 
-    const tabs = [
+  const tabs = [
+    {
+      name: 'Files',
+      step: 'second-step',
+      procedures: [
         {
-            name: 'Files',
-            step: 'second-step',
-            procedures: [
-                {
-                    logo: loudCloudLogo,
-                    label: 'Load Cloud',
-                    component: <UploadButton 
-                    inputFile={inputFile} 
-                    handleLoadCloud={handleLoadCloud}
-                    /> 
-                },
-                {
-                    logo: saveCloudLogo,
-                    label: 'Save Cloud'
-                },
-                {
-                    logo: saveResultsLogo,
-                    label: 'Save CAD'
-                }
-            ]
+          logo: loudCloudLogo,
+          label: 'Load Cloud',
+          component: <UploadButton
+            inputFile={inputFile}
+            handleLoadCloud={handleLoadCloud}
+          />
         },
         {
-            name: 'Pre-Processing',
-            step: 'fourth-step',
-            procedures: [
-                {
-                    logo: cropBoxLogo,
-                    label: 'Crop Box Filter',
-                    submitCode: ModalActions.CROP_BOX
-                },
-                {
-                    logo: voxelGridLogo,
-                    label: 'Voxel Grid Filter',
-                    submitCode: ModalActions.VOXEL_GRID
-                },
-                {
-                    logo: sRemovalLogo,
-                    label: 'Statistical Removal',
-                    submitCode: ModalActions.STATISTICAL_REMOVAL
-                },
-                {
-                    logo: nEstimationLogo,
-                    label: 'Normal Estimation',
-                    submitCode: ModalActions.NORMAL_ESTIMATION
-                },
-                {
-                    logo: reescaleLogo,
-                    label: 'Reescale',
-                    submitCode: ModalActions.REESCALE
-                },
-                {
-                    logo: centralizationLogo,
-                    label: 'Centralization',
-                    submitCode: ModalActions.CENTRALIZATION
-                },
-                {
-                    logo: alignmentLogo,
-                    label: 'Alignment',
-                    submitCode: ModalActions.ALIGNMENT
-                },
-                {
-                    logo: noiseAddLogo,
-                    label: 'Noise Add',
-                    submitCode: ModalActions.NOISE_ADD
-                },
-                {
-                    logo: cubeReescaleLogo,
-                    label: 'Cube Reescale',
-                    submitCode: ModalActions.CUBE_REESCALE
-                },
-            ],
+          logo: saveCloudLogo,
+          label: 'Save Cloud'
         },
         {
-            name: 'Processing',
-            step: 'fifth-step',
-            procedures: [
-                {
-                    logo: ransacLogo,
-                    label: 'Efficient Ransac',
-                    submitCode: ModalActions.RANSAC
-                }
-            ]    
-        },
-        {
-            name: 'Help',
-            step: 'sixth-step',
-            procedures: [
-            {
-                logo: tourLogo,
-                label: 'Interface Tour',
-                component: <InterfaceTour />    
-            },
-            {
-                logo: aboutLogo,
-                label: 'About Software'
-            }
-            ]
-        },
-        {
-            name: 'Admin',
-            procedures: [
-                {
-                    logo: rAllocationLogo,
-                    label: 'Generate Password',
-                    submitCode: ModalActions.GENERATE_PASSWORD
-                }
-            ]
-        },
-        {
-            name: 'Account',
-            step: 'seventh-step',
-            procedures: [
-            {
-                logo: rAllocationLogo,
-                label: 'Logout', 
-            }
-            ]
+          logo: saveResultsLogo,
+          label: 'Save CAD'
         }
-    ];
-
-    useEffect(() => {
-        if (!tokenVerified) {
-            if (RetrieveToken() === "admin@aeroscan.com") setIsAdmin(true);
-            else setIsAdmin(false);
-            setTokenVerified(true);
+      ]
+    },
+    {
+      name: 'Pre-Processing',
+      step: 'fourth-step',
+      procedures: [
+        {
+          logo: cropBoxLogo,
+          label: 'Crop Box Filter',
+          submitCode: ModalActions.CROP_BOX
+        },
+        {
+          logo: voxelGridLogo,
+          label: 'Voxel Grid Filter',
+          submitCode: ModalActions.VOXEL_GRID
+        },
+        {
+          logo: sRemovalLogo,
+          label: 'Statistical Removal',
+          submitCode: ModalActions.STATISTICAL_REMOVAL
+        },
+        {
+          logo: nEstimationLogo,
+          label: 'Normal Estimation',
+          submitCode: ModalActions.NORMAL_ESTIMATION
+        },
+        {
+          logo: reescaleLogo,
+          label: 'Reescale',
+          submitCode: ModalActions.REESCALE
+        },
+        {
+          logo: centralizationLogo,
+          label: 'Centralization',
+          submitCode: ModalActions.CENTRALIZATION
+        },
+        {
+          logo: alignmentLogo,
+          label: 'Alignment',
+          submitCode: ModalActions.ALIGNMENT
+        },
+        {
+          logo: noiseAddLogo,
+          label: 'Noise Add',
+          submitCode: ModalActions.NOISE_ADD
+        },
+        {
+          logo: cubeReescaleLogo,
+          label: 'Cube Reescale',
+          submitCode: ModalActions.CUBE_REESCALE
+        },
+      ],
+    },
+    {
+      name: 'Processing',
+      step: 'fifth-step',
+      procedures: [
+        {
+          logo: ransacLogo,
+          label: 'Efficient Ransac',
+          submitCode: ModalActions.RANSAC
         }
-    }, [tokenVerified]);
-
-    useEffect(() => {
-        if (isAdmin) setTabsToShow(tabs);
-        else setTabsToShow(tabs.filter(tab => tab.name !== "Admin"));
-    }, [isAdmin]);
-
-    const[tabContent, setTabContent] = useState([]);
-
-    useEffect(() => {
-        tabsToShow.forEach((element, index) => {
-            if(index === activeTab){
-                setTabContent(element.procedures);
-            }
-        })
-    }, [tabsToShow, activeTab]);
-
-    const handleActions = (element) => {
-        switch(element.label){
-            case "Logout":
-                RemoveToken();
-                break;
-            case "Load Cloud":
-                render(element.component);
-                inputFile.current.click();
-                // handleLoadCloud();
-                break;
-            case "Save Cloud":
-                handleSaveCloud();
-                break;
-            case "Save CAD":
-                handleGenerateCad();
-                break;
-            case "Interface Tour":
-                setActiveTab(0);
-                render(element.component);
-                break;
-            default:
-                setModalContent(element);
-                break;
+      ]
+    },
+    {
+      name: 'Help',
+      step: 'sixth-step',
+      procedures: [
+        {
+          logo: tourLogo,
+          label: 'Interface Tour',
+          component: <InterfaceTour />
+        },
+        {
+          logo: aboutLogo,
+          label: 'About Software'
         }
+      ]
+    },
+    {
+      name: 'Admin',
+      procedures: [
+        {
+          logo: rAllocationLogo,
+          label: 'Generate Password',
+          submitCode: ModalActions.GENERATE_PASSWORD
+        }
+      ]
+    },
+    {
+      name: 'Account',
+      step: 'seventh-step',
+      procedures: [
+        {
+          logo: rAllocationLogo,
+          label: 'Logout',
+        }
+      ]
     }
-    
-    return(
-        <Container tabLength={tabsToShow.length}>
-            {modalContent !== null && <ModalComponet
-                setCloudFolderName={setCloudFolderName}
-                modalContent={modalContent}
-                setModalContent={setModalContent}
-                setGlobalLoading={setGlobalLoading}
-                setCones={setCones}
-                setCylinders={setCylinders}
-                setPlanes={setPlanes}
-                setSpheres={setSpheres}
-            />}
-            {globalLoading && <OverlayLoading />}
-            {tabsToShow.map((element, index) => (
-                <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
-                    {element.name}
-                </button>
-            ))}
-            <ul>
-                {tabContent.map((element, index) => (
-                    <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
-                        <img src={element.logo} alt={element.label} />
-                        <p>{element.label}</p>  
-                    </li>
-                ))}
-            </ul>
-        </Container>  
-    );
+  ];
+
+  useEffect(() => {
+    if (!tokenVerified) {
+      if (RetrieveToken() === "admin@aeroscan.com") setIsAdmin(true);
+      else setIsAdmin(false);
+      setTokenVerified(true);
+    }
+  }, [tokenVerified]);
+
+  useEffect(() => {
+    if (isAdmin) setTabsToShow(tabs);
+    else setTabsToShow(tabs.filter(tab => tab.name !== "Admin"));
+  }, [isAdmin]);
+
+  const [tabContent, setTabContent] = useState([]);
+
+  useEffect(() => {
+    tabsToShow.forEach((element, index) => {
+      if (index === activeTab) {
+        setTabContent(element.procedures);
+      }
+    })
+  }, [tabsToShow, activeTab]);
+
+  const handleActions = (element) => {
+    switch (element.label) {
+      case "Logout":
+        RemoveToken();
+        break;
+      case "Load Cloud":
+        render(element.component);
+        inputFile.current.click();
+        // handleLoadCloud();
+        break;
+      case "Save Cloud":
+        handleSaveCloud();
+        break;
+      case "Save CAD":
+        handleGenerateCad();
+        break;
+      case "Interface Tour":
+        setActiveTab(0);
+        render(element.component);
+        break;
+      default:
+        setModalContent(element);
+        break;
+    }
+  }
+
+  return (
+    <Container tabLength={tabsToShow.length}>
+      {modalContent !== null && <ModalComponet
+        setCloudFolderName={setCloudFolderName}
+        modalContent={modalContent}
+        setModalContent={setModalContent}
+        setGlobalLoading={setGlobalLoading}
+        setCones={setCones}
+        setCylinders={setCylinders}
+        setPlanes={setPlanes}
+        setSpheres={setSpheres}
+      />}
+      {globalLoading && <OverlayLoading />}
+      {tabsToShow.map((element, index) => (
+        <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
+          {element.name}
+        </button>
+      ))}
+      <ul>
+        {tabContent.map((element, index) => (
+          <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
+            <img src={element.logo} alt={element.label} />
+            <p>{element.label}</p>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  );
 }
 
 export default Header;
