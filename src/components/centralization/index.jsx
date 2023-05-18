@@ -1,48 +1,83 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
+import { CloseOutlined } from '@ant-design/icons';
+import { Modal, Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyCentralization } from '../../services/api';
+import { Container } from '../modal/style';
 
-const Centralization = ({ setCloudFolderName }) => {
-  const { handleSubmit } = useForm();
-  const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
-  const { sessionID, cloudFolderName } = useContext(GlobalContext);
+const CentralizationModal = ({ setCloudFolderName }) => {
 
-  const onSubmit = async () => {
-    setLoadings((prevLoadings) => {
-      const newLoadings = [...prevLoadings];
-      newLoadings[0] = true;
-      return newLoadings;
-    });
-    setTimeout(async () => {
-      try {
-        const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
-        if (!response) {
-          setApplicationStatus('Failed to apply centralization');
-        }
-        setApplicationStatus('Centralization applied');
-        setCloudFolderName(response);
-      } catch (error) {
-        console.error(error);
-        setApplicationStatus('Failed to apply centralization');
-      }
+    const { handleSubmit } = useForm();
+    const { setApplicationStatus } = useContext(GlobalContext);
+    const { loadings, setLoadings } = useContext(GlobalContext);
+    const { centralization, setCentralization } = useContext(GlobalContext);
+    const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
+    const onSubmit = async(data) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = true;
+            return newLoadings;
+        });
+        setTimeout(async() => {
+            try {
+              const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
+              if (!response) {
+                setApplicationStatus('Failed to apply centralization');
+              }
+              setApplicationStatus('Centralization applied');
+              setCloudFolderName(response);
+            } catch (error) {
+                console.error(error);
+                setApplicationStatus('Failed to apply centralization');
+            }
+            
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[0] = false;
+                
+                return newLoadings;
+            });
+        }, 2000)
+    }
 
-        return newLoadings;
+    const handleCloseModal = () => {
+      setCentralization({
+        modalOpen: false,
       });
-    }, 2000)
-  }
+    };
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-      <div className='formContainer'>
-      </div>
-    </form>
-  );
+    return(
+    <Modal
+      open={centralization.modalOpen}
+      footer={null}
+      width={"40%"}
+      closable={false}
+      maskClosable={true}
+      centered
+      destroyOnClose
+    >
+      <Container>
+        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <h1>Centralization</h1>
+        <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
+            <div className='formContainer'>
+                <p>Are you sure you want to set centralization?</p>
+            </div>
+        </form>
+        <div className="buttons-container">
+          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+            Process
+          </Button>
+          <Button className="cancel" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+        </div>
+      </Container>
+    </Modal>
+    );
 }
 
-export default Centralization;
+export default CentralizationModal;

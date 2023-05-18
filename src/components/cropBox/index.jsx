@@ -18,14 +18,11 @@ const CropBoxModal = ({ setCloudFolderName }) => {
     endingPoint_y: yup.number().typeError("These three parameter are required"),
     endingPoint_z: yup.number().typeError("These three parameter are required"),
   });
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm({ resolver: yupResolver(cropBoxSchema) });
-  const { loadings, setLoadings } = useContext(GlobalContext);
+  const { handleSubmit, register, formState: { errors }} = useForm({ resolver: yupResolver(cropBoxSchema) });
   const { setApplicationStatus } = useContext(GlobalContext);
-  const { cropBoxModalOpen, setCropBoxModalOpen } = useContext(GlobalContext);
+  const { loadings, setLoadings } = useContext(GlobalContext);
+  const { cropBox, setCropBox } = useContext(GlobalContext);
+  const { cloudFolderName, sessionID } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     setLoadings((prevLoadings) => {
@@ -39,6 +36,8 @@ const CropBoxModal = ({ setCloudFolderName }) => {
         .then(async () => {
           try {
             const response = await ApplyCropBox({
+              session: sessionID,
+              uuid: cloudFolderName,
               min_x: data.startinPoint_x,
               min_y: data.startinPoint_y,
               min_z: data.startinPoint_z,
@@ -70,12 +69,14 @@ const CropBoxModal = ({ setCloudFolderName }) => {
   };
 
   const handleCloseModal = () => {
-    setCropBoxModalOpen(false);
+    setCropBox({
+      modalOpen: false,
+    });
   };
 
   return (
     <Modal
-      open={cropBoxModalOpen}
+      open={cropBox.modalOpen}
       footer={null}
       width={"40%"}
       closable={false}
@@ -93,19 +94,19 @@ const CropBoxModal = ({ setCloudFolderName }) => {
               type="text"
               id="startinPoint"
               placeholder="x"
-              {...register("startinPoint_x")}
+              {...register("startinPoint_x", { value: `${cropBox.startinPoint_x}` })}
             />
             <input
               type="text"
               id="startinPoint"
               placeholder="y"
-              {...register("startinPoint_y")}
+              {...register("startinPoint_y", { value: `${cropBox.startinPoint_y}` })}
             />
             <input
               type="text"
               id="startinPoint"
               placeholder="z"
-              {...register("startinPoint_z")}
+              {...register("startinPoint_z", { value: `${cropBox.startinPoint_z}` })}
             />
             <Tooltip
               placement="right"
@@ -128,19 +129,19 @@ const CropBoxModal = ({ setCloudFolderName }) => {
               type="text"
               id="endingPoint"
               placeholder="x"
-              {...register("endingPoint_x")}
+              {...register("endingPoint_x", { value: `${cropBox.endingPoint_x}` })}
             />
             <input
               type="text"
               id="endingPoint"
               placeholder="y"
-              {...register("endingPoint_y")}
+              {...register("endingPoint_y", { value: `${cropBox.endingPoint_y}` })}
             />
             <input
               type="text"
               id="endingPoint"
               placeholder="z"
-              {...register("endingPoint_z")}
+              {...register("endingPoint_z", { value: `${cropBox.endingPoint_z}` })}
             />
             <Tooltip
               placement="right"

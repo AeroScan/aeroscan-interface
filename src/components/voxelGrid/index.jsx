@@ -1,12 +1,7 @@
 import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-<<<<<<< HEAD:src/components/voxelGridFilter/index.jsx
-import { QuestionCircleFilled } from '@ant-design/icons';
-import { Tooltip } from 'antd';
-=======
 import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
 import { Modal, Button, Tooltip } from 'antd';
->>>>>>> 6ba36fe8a1958e5f7bcc1fea57a461edc6f7ea92:src/components/voxelGrid/index.jsx
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,95 +11,69 @@ import { Container } from '../modal/style';
 
 const VoxelGridModal = ({ setCloudFolderName }) => {
 
-<<<<<<< HEAD:src/components/voxelGridFilter/index.jsx
-  const voxelGridSchema = yup.object().shape({
-    leafSize: yup.number().typeError('A number is required')
-  });
-=======
-    const { setApplicationStatus } = useContext(GlobalContext);
     const voxelGridSchema = yup.object().shape({
         leafSize: yup.number().typeError('A number is required')
     });
     const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
     const { loadings, setLoadings } = useContext(GlobalContext);
-    const { voxelGridModalOpen, setVoxelGridModalOpen } = useContext(GlobalContext);
->>>>>>> 6ba36fe8a1958e5f7bcc1fea57a461edc6f7ea92:src/components/voxelGrid/index.jsx
+    const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+    const { setApplicationStatus } = useContext(GlobalContext);
+    const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
-  const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
-  const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-  const onSubmit = async (data) => {
-    setLoadings((prevLoadings) => {
-      const newLoadings = [...prevLoadings];
-      newLoadings[0] = true;
-      return newLoadings;
-    });
-    setTimeout(() => {
-      voxelGridSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyVoxelGrid({
-              session: sessionID,
-              uuid: cloudFolderName,
-              leaf: data.leafSize,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply voxel grid');
-            }
-            setApplicationStatus('Voxel grid applied');
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
-            setApplicationStatus('Failed to apply voxel grid');
-          }
-        })
-        .catch(err => {
-          console.log(err);
+    const onSubmit = async(data) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = true;
+            return newLoadings;
         });
+        setTimeout(() => {
+            voxelGridSchema.validate(data)
+            .then( async() => {
+                try {
+                    const response = await ApplyVoxelGrid({
+                      session: sessionID,
+                      uuid: cloudFolderName,
+                      leaf: data.leafSize,
+                    });
+                    if (!response) {
+                        setApplicationStatus('Failed to apply voxel grid');
+                    }
+                    setApplicationStatus('Voxel grid applied');
+                    setCloudFolderName(response);
+                } catch (error) {
+                    console.error(error);
+                    setApplicationStatus('Failed to apply voxel grid');
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[0] = false;
+                
+                return newLoadings;
+            });
+        }, 2000)
+    }
 
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
-      });
-    }, 2000)
-  }
-
-<<<<<<< HEAD:src/components/voxelGridFilter/index.jsx
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-      <div className='formContainer'>
-        <label htmlFor='leafSize'>Leaf Size:</label>
-        <input
-          type='text'
-          id='leafSize'
-          placeholder='float'
-          {...register("leafSize")}
-        />
-        <Tooltip placement="right" title={'This field set the minimum distance between neighboring points in the cloud equally.'} overlayStyle={{ fontSize: '3rem' }}>
-          <QuestionCircleFilled />
-        </Tooltip>
-      </div>
-      <span className='error'>{errors.leafSize?.message}</span>
-    </form>
-  );
-=======
     const handleCloseModal = () => {
-        setVoxelGridModalOpen(null);
+        setVoxelGrid({
+            modalOpen: false,
+        });
     };
 
     return(
-        <Modal
-      open={voxelGridModalOpen}
+      <Modal
+      open={voxelGrid.modalOpen}
       footer={null}
       width={"40%"}
       closable={false}
       maskClosable={true}
       centered
       destroyOnClose
-    >
+      >
       <Container>
         <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
         <h1>Voxel Grid Filter</h1>
@@ -115,7 +84,7 @@ const VoxelGridModal = ({ setCloudFolderName }) => {
                 type='text' 
                 id='leafSize' 
                 placeholder='float'
-                {...register("leafSize")}
+                {...register("leafSize", { value: `${voxelGrid.leafSize}` })}
                 />
                 <Tooltip placement="right" title={'This field set the minimum distance between neighboring points in the cloud equally.'} overlayStyle={{ fontSize: '3rem' }}>
                     <QuestionCircleFilled />
@@ -134,8 +103,8 @@ const VoxelGridModal = ({ setCloudFolderName }) => {
       </Container>
     </Modal>
         
+
     );
->>>>>>> 6ba36fe8a1958e5f7bcc1fea57a461edc6f7ea92:src/components/voxelGrid/index.jsx
 }
 
 export default VoxelGridModal;
