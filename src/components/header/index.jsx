@@ -165,6 +165,10 @@ const Header = () => {
         }
     }
 
+    const handleRedirect = () => {
+        window.open("http://aeroscan.c3.furg.br/tutorials");
+    }
+
     const png = "http://localhost:3000/print.png"
 
     const tabs = [
@@ -259,6 +263,10 @@ const Header = () => {
             {
                 logo: aboutLogo,
                 label: 'About Software'
+            },
+            {
+                logo: aboutLogo,
+                label: 'Tutorials'
             }
             ]
         },
@@ -326,6 +334,9 @@ const Header = () => {
             case "Interface Tour":
                 setActiveTab(0)
                 render(element.component)
+                break;
+            case "Tutorials":
+                handleRedirect()
                 break;
             case "Alignment":
                 setAlignment({
