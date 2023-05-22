@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { GlobalContext } from '../../context';
 import { Container } from './style';
 import { render } from '@testing-library/react';
@@ -32,6 +32,8 @@ import rAllocationLogo from '../../assets/img/configuration/resource-allocation.
 import tourLogo from '../../assets/img/help/tour.svg';
 import aboutLogo from '../../assets/img/help/about.svg';
 import InterfaceTour from '../tour';
+import UploadButton from '../uploadButton';
+import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
@@ -62,6 +64,9 @@ const Header = () => {
     const [tabsToShow, setTabsToShow] = useState([]);
     const [tokenVerified, setTokenVerified] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+
+    const inputFile = useRef(null);
+    const downloadLink = useRef(null);
 
     const Success = (msg) => {
         message.open({
@@ -160,6 +165,8 @@ const Header = () => {
         }
     }
 
+    const png = "http://localhost:3000/print.png"
+
     const tabs = [
         {
             name: 'Files',
@@ -168,10 +175,18 @@ const Header = () => {
                 {
                     logo: loudCloudLogo,
                     label: 'Load Cloud', 
+                    component: <UploadButton
+                        inputFile={inputFile}
+                        handleLoadCloud={handleLoadCloud}
+                    />
                 },
                 {
                     logo: saveCloudLogo,
-                    label: 'Save Cloud'
+                    label: 'Save Cloud',
+                    component: <DownloadButton
+                        downloadLink={downloadLink}
+                        file={png}
+                    />
                 },
                 {
                     logo: saveResultsLogo,
@@ -297,10 +312,13 @@ const Header = () => {
                 RemoveToken();
                 break;
             case "Load Cloud":
-                handleLoadCloud();
+                render(element.component);
+                inputFile.current.click();
                 break;
             case "Save Cloud":
-                handleSaveCloud();
+                render(element.component);
+                downloadLink.current.click();
+                /* handleSaveCloud(); */
                 break;
             case "Save CAD":
                 handleGenerateCad();
