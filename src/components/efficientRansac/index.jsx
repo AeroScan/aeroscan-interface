@@ -29,40 +29,43 @@ const EfficientRansac = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      efficientRansacSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyEfficientRansac({
-              session: sessionID,
-              uuid: cloudFolderName,
-              probability: data.probability,
-              min_points: data.minPoints,
-              epsilon: data.clusterEpsilon,
-              cluster_epsilon: data.epsilon,
-              normal_threshold: data.normalThreshold,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply efficient ransac');
-            }
-            setApplicationStatus('Efficient ransac applied');
-            setEfficientRansacApplied(true);
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
+    efficientRansacSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyEfficientRansac({
+            session: sessionID,
+            uuid: cloudFolderName,
+            probability: data.probability,
+            min_points: data.minPoints,
+            epsilon: data.clusterEpsilon,
+            cluster_epsilon: data.epsilon,
+            normal_threshold: data.normalThreshold,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply efficient ransac');
+          } else {
+            setApplicationStatus('Efficient ransac applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setEfficientRansacApplied(true);
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply efficient ransac');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

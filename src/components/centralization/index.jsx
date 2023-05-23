@@ -15,26 +15,28 @@ const Centralization = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(async () => {
-      try {
-        const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
-        if (!response) {
-          setApplicationStatus('Failed to apply centralization');
-        }
-        setApplicationStatus('Centralization applied');
-        setCloudFolderName(response);
-      } catch (error) {
-        console.error(error);
+    try {
+      const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
+      if (!response) {
         setApplicationStatus('Failed to apply centralization');
+      } else {
+        setApplicationStatus('Centralization applied');
       }
-
+      setCloudFolderName(response);
       setLoadings((prevLoadings) => {
         const newLoadings = [...prevLoadings];
         newLoadings[0] = false;
-
         return newLoadings;
       });
-    }, 2000)
+    } catch (error) {
+      console.error(error);
+      setApplicationStatus('Failed to apply centralization');
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[0] = false;
+        return newLoadings;
+      });
+    }
   }
 
   return (

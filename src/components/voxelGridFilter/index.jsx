@@ -8,15 +8,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyVoxelGrid } from '../../services/api';
 
-const VoxelGridFilter = ({ setCloudFolderName }) => {
-
+const VoxelGridFilter = () => {
   const voxelGridSchema = yup.object().shape({
     leafSize: yup.number().typeError('A number is required')
   });
 
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
   const { setApplicationStatus, setLoadings } = useContext(GlobalContext);
-  const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName, setCloudFolderName } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     setLoadings((prevLoadings) => {
@@ -24,36 +23,38 @@ const VoxelGridFilter = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      voxelGridSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyVoxelGrid({
-              session: sessionID,
-              uuid: cloudFolderName,
-              leaf: data.leafSize,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply voxel grid');
-            }
-            setApplicationStatus('Voxel grid applied');
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
+    voxelGridSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyVoxelGrid({
+            session: sessionID,
+            uuid: cloudFolderName,
+            leaf: data.leafSize,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply voxel grid');
+          } else {
+            setApplicationStatus('Voxel grid applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply voxel grid');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

@@ -23,35 +23,38 @@ const Reescale = ({ setCloudFolderName }) => {
       return newLoadings;
     });
 
-    setTimeout(() => {
-      reescaleSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyReescale({
-              session: sessionID,
-              uuid: cloudFolderName,
-              factor: data.scale,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply reescale');
-            }
-            setApplicationStatus('Reescale applied');
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
+    reescaleSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyReescale({
+            session: sessionID,
+            uuid: cloudFolderName,
+            factor: data.scale,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply reescale');
+          } else {
+            setApplicationStatus('Reescale applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply reescale');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

@@ -24,37 +24,39 @@ const StatisticalRemoval = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-
-      statisticalRemovalSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyStatisticalOutlierRemoval({
-              session: sessionID,
-              uuid: cloudFolderName,
-              mean: data.mean,
-              std: data.standardDeviation,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply statistical removal');
-            }
-            setApplicationStatus('Statistical removal applied');
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
+    statisticalRemovalSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyStatisticalOutlierRemoval({
+            session: sessionID,
+            uuid: cloudFolderName,
+            mean: data.mean,
+            std: data.standardDeviation,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply statistical removal');
+          } else {
+            setApplicationStatus('Statistical removal applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply statistical removal');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

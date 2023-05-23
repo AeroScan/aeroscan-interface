@@ -73,7 +73,6 @@ const Header = () => {
     setGlobalLoading(true);
     try {
       const response = await LoadCloud(dataForm);
-      console.log(response)
       if (!response || !response.data.uuid) {
         setApplicationStatus("Failed to load cloud");
         setCloudFolderName('');

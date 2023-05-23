@@ -23,35 +23,38 @@ const NormalEstimation = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      normalEstimationSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyNormalEstimation({
-              session: sessionID,
-              uuid: cloudFolderName,
-              radius: data.radius,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply normal estimation');
-            }
-            setApplicationStatus('Normal estimation applied');
-            setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
+    normalEstimationSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyNormalEstimation({
+            session: sessionID,
+            uuid: cloudFolderName,
+            radius: data.radius,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply normal estimation');
+          } else {
+            setApplicationStatus('Normal estimation applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply normal estimation');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

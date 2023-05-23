@@ -23,35 +23,38 @@ const NoiseAdd = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      noiseAddSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyNoiseAdd({
-              session: sessionID,
-              uuid: cloudFolderName,
-              limit: data.limit,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply noise add');
-            }
-            setApplicationStatus('Noise add applied');
-            setCloudFolderName(response);
-
-          } catch (error) {
-            console.error(error);
+    noiseAddSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyNoiseAdd({
+            session: sessionID,
+            uuid: cloudFolderName,
+            limit: data.limit,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply noise add');
+          } else {
+            setApplicationStatus('Noise add applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply noise add');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (

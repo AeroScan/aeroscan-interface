@@ -15,7 +15,6 @@ export const LoadCloud = async (dataForm) => {
 
 export const SaveCloud = async ({ session, uuid }) => {
   const response = await api.get(`/download/${session}/${uuid}`);
-  console.log(response);
   return response;
 };
 
@@ -55,7 +54,7 @@ export const ApplyCropBox = async ({
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyVoxelGrid = async ({ session, uuid, leaf }) => {
@@ -65,11 +64,13 @@ export const ApplyVoxelGrid = async ({ session, uuid, leaf }) => {
     function_type: "voxel_grid",
     values: { leaf: leaf },
   });
+  console.log("##### RESPONSE BODY #####");
+  console.log(response);
   if (response.data.error) {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyStatisticalOutlierRemoval = async ({
@@ -91,7 +92,7 @@ export const ApplyStatisticalOutlierRemoval = async ({
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyNormalEstimation = async ({ session, uuid, radius }) => {
@@ -105,7 +106,7 @@ export const ApplyNormalEstimation = async ({ session, uuid, radius }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyReescale = async ({ session, uuid, factor }) => {
@@ -119,7 +120,7 @@ export const ApplyReescale = async ({ session, uuid, factor }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyAlignment = async ({ session, uuid }) => {
@@ -132,7 +133,7 @@ export const ApplyAlignment = async ({ session, uuid }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyCentralization = async ({ session, uuid }) => {
@@ -145,7 +146,7 @@ export const ApplyCentralization = async ({ session, uuid }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyNoiseAdd = async ({ session, uuid, limit }) => {
@@ -159,7 +160,7 @@ export const ApplyNoiseAdd = async ({ session, uuid, limit }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyCubeReescale = async ({ session, uuid, factor }) => {
@@ -173,7 +174,7 @@ export const ApplyCubeReescale = async ({ session, uuid, factor }) => {
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export const ApplyEfficientRansac = async ({
@@ -200,7 +201,7 @@ export const ApplyEfficientRansac = async ({
     console.err(response.data.message);
     return false;
   }
-  return response.data.folderName;
+  return response.data.uuid;
 };
 
 export default api;

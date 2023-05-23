@@ -9,7 +9,6 @@ import { GlobalContext } from '../../context';
 import { ApplyCropBox } from '../../services/api';
 
 const CropBoxFilter = ({ setCloudFolderName }) => {
-
   const cropBoxSchema = yup.object().shape({
     startinPoint_x: yup.number().typeError('A number is required'),
     startinPoint_y: yup.number().typeError('A number is required'),
@@ -30,40 +29,43 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      cropBoxSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyCropBox({
-              session: sessionID,
-              uuid: cloudFolderName,
-              min_x: data.startinPoint_x,
-              min_y: data.startinPoint_y,
-              min_z: data.startinPoint_z,
-              max_x: data.endingPoint_x,
-              max_y: data.endingPoint_y,
-              max_z: data.endingPoint_z,
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply crop box');
-            }
-            setApplicationStatus('Crop box applied');
-            setCloudFolderName(response);
-          } catch (error) {
+    cropBoxSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyCropBox({
+            session: sessionID,
+            uuid: cloudFolderName,
+            min_x: data.startinPoint_x,
+            min_y: data.startinPoint_y,
+            min_z: data.startinPoint_z,
+            max_x: data.endingPoint_x,
+            max_y: data.endingPoint_y,
+            max_z: data.endingPoint_z,
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply crop box');
+          } else {
+            setApplicationStatus('Crop box applied');
           }
-        })
-        .catch(err => {
-          setCurrentErrors(err.errors);
-        });
-
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply crop box');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        setCurrentErrors(err.errors);
       });
-    }, 2000)
   }
 
   return (
@@ -92,7 +94,6 @@ const CropBoxFilter = ({ setCloudFolderName }) => {
           <QuestionCircleFilled />
         </Tooltip>
       </div>
-      <span className='error'>{currentErrors}</span>
       <div className='formContainer'>
         <label htmlFor='endingPoint'>Ending Point:</label>
         <input

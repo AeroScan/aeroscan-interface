@@ -23,37 +23,38 @@ const CubeReescale = ({ setCloudFolderName }) => {
       newLoadings[0] = true;
       return newLoadings;
     });
-    setTimeout(() => {
-      cubeReescaleSchema.validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyCubeReescale({
-              session: sessionID,
-              uuid: cloudFolderName,
-              factor: data.factor
-            });
-            if (!response) {
-              setApplicationStatus('Failed to apply cube reescale');
-
-            }
-            setApplicationStatus('Cube reescale applied');
-            setCloudFolderName(response);
-
-          } catch (error) {
-            console.error(error);
+    cubeReescaleSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyCubeReescale({
+            session: sessionID,
+            uuid: cloudFolderName,
+            factor: data.factor
+          });
+          if (!response) {
             setApplicationStatus('Failed to apply cube reescale');
+          } else {
+            setApplicationStatus('Cube reescale applied');
           }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setCloudFolderName(response);
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus('Failed to apply cube reescale');
+          setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[0] = false;
+            return newLoadings;
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
       });
-    }, 2000)
   }
 
   return (
