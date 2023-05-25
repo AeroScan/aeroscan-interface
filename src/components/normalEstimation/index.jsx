@@ -9,60 +9,65 @@ import { GlobalContext } from '../../context';
 import { ApplyNormalEstimation } from '../../services/api';
 import { Container } from '../modal/style';
 
-const NormalEstimationModal = ({ setCloudFolderName }) => {
-    const normalEstimationSchema = yup.object().shape({
-        radius: yup.number().typeError('A number is required')
+const NormalEstimationModal = () => {
+  const normalEstimationSchema = yup.object().shape({
+    radius: yup.number().typeError('A number is required')
+  });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
+
+  const onSubmit = async (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying normal estimation',
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-    const onSubmit = async(data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            normalEstimationSchema.validate(data)
-            .then( async() => {
-                try {
-                  const response = await ApplyNormalEstimation({
-                    session: sessionID,
-                    uuid: cloudFolderName,
-                    radius: data.radius,
-                  });
-                  if (!response) {
-                    setApplicationStatus('Failed to apply normal estimation');
-                  }
-                  setApplicationStatus('Normal estimation applied');
-                  setCloudFolderName(response);
-                } catch (error) {
-                    console.error(error);
-                    setApplicationStatus('Failed to apply normal estimation');
-                }
-            })
-            .catch(err => {
-                console.log(err);
+    setGlobalLoading(true);
+    normalEstimationSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyNormalEstimation({
+            session: sessionID,
+            uuid: cloudFolderName,
+            radius: data.radius,
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: 'Failed to apply normal estimation',
             });
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
+          } else {
+            setApplicationStatus({
+              status: 'success',
+              message: 'Normal estimation applied',
             });
-        }, 2000)
-    }
+            setCloudFolderName(response);
+          }
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: 'Failed to apply normal estimation',
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
-    const handleCloseModal = () => {
-        setNormalEstimation({
-            modalOpen: false,
-        });
-    };
+  const closeModal = () => {
+    setNormalEstimation({
+      modalOpen: false,
+    });
+  };
 
-    return(
+  return (
     <Modal
       open={normalEstimation.modalOpen}
       footer={null}
@@ -73,34 +78,34 @@ const NormalEstimationModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Normal Estimation</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <label htmlFor='radius'>Radius:</label>
-                <input 
-                type='text' 
-                id='radius' 
-                placeholder='float'
-                {...register("radius", { value: `${normalEstimation.radius}` })}
-                />
-                <Tooltip placement="right" title={'This field set the radius.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.radius?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='radius'>Radius:</label>
+            <input
+              type='text'
+              id='radius'
+              placeholder='float'
+              {...register("radius")}
+            />
+            <Tooltip placement="right" title={'This field set the radius.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.radius?.message}</span>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
     </Modal>
-    );
+  );
 }
 
 export default NormalEstimationModal;

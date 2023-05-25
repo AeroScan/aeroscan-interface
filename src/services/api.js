@@ -13,13 +13,13 @@ export const LoadCloud = async (dataForm) => {
   return response;
 };
 
-export const SaveCloud = async ({ session, uuid }) => {
-  const response = await api.get(`/download/${session}/${uuid}`);
+export const SaveCloud = async ({ session }) => {
+  const response = await api.get(`/saveCloud/${session}`);
   return response;
 };
 
-export const GenerateCad = async ({ session, uuid }) => {
-  const response = await api.get(`/generateCad/${session}/${uuid}`);
+export const GenerateCad = async ({ session }) => {
+  const response = await api.get(`/generateCad/${session}`);
   if (response.data.error) {
     console.err(response.data.message);
     return false;
@@ -64,8 +64,6 @@ export const ApplyVoxelGrid = async ({ session, uuid, leaf }) => {
     function_type: "voxel_grid",
     values: { leaf: leaf },
   });
-  console.log("##### RESPONSE BODY #####");
-  console.log(response);
   if (response.data.error) {
     console.err(response.data.message);
     return false;

@@ -7,48 +7,52 @@ import { GlobalContext } from '../../context';
 import { ApplyCentralization } from '../../services/api';
 import { Container } from '../modal/style';
 
-const CentralizationModal = ({ setCloudFolderName }) => {
-    const { handleSubmit } = useForm();
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { centralization, setCentralization } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
+const CentralizationModal = () => {
+  const { handleSubmit } = useForm();
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { centralization, setCentralization } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-    const onSubmit = async(data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
+  const onSubmit = async (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying centralization',
+    });
+    setGlobalLoading(true);
+    try {
+      const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
+      if (!response) {
+        setApplicationStatus({
+          status: 'error',
+          message: 'Failed to apply centralization',
         });
-        setTimeout(async() => {
-            try {
-              const response = await ApplyCentralization({ session: sessionID, uuid: cloudFolderName });
-              if (!response) {
-                setApplicationStatus('Failed to apply centralization');
-              }
-              setApplicationStatus('Centralization applied');
-              setCloudFolderName(response);
-            } catch (error) {
-                console.error(error);
-                setApplicationStatus('Failed to apply centralization');
-            }
-            
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
-            });
-        }, 2000)
-    }
-
-    const handleCloseModal = () => {
-      setCentralization({
-        modalOpen: false,
+      } else {
+        setApplicationStatus({
+          status: 'success',
+          message: 'Centralization applied',
+        });
+        setCloudFolderName(response);
+      }
+      setGlobalLoading(false);
+    } catch (error) {
+      console.error(error);
+      setApplicationStatus({
+        status: 'error',
+        message: 'Failed to apply centralization',
       });
-    };
+      setGlobalLoading(false);
+    }
+  }
 
-    return(
+  const closeModal = () => {
+    setCentralization({
+      modalOpen: false,
+    });
+  };
+
+  return (
     <Modal
       open={centralization.modalOpen}
       footer={null}
@@ -59,24 +63,24 @@ const CentralizationModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Centralization</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <p>Are you sure you want to set centralization?</p>
-            </div>
+          <div className='formContainer'>
+            <p>Are you sure you want to set centralization?</p>
+          </div>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
     </Modal>
-    );
+  );
 }
 
 export default CentralizationModal;

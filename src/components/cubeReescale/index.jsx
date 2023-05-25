@@ -9,61 +9,65 @@ import { GlobalContext } from '../../context';
 import { ApplyCubeReescale } from '../../services/api';
 import { Container } from '../modal/style';
 
-const CubeReescaleModal = ({ setCloudFolderName }) => {
-    const cubeReescaleSchema = yup.object().shape({
-        factor: yup.number().typeError('A number is required')
+const CubeReescaleModal = () => {
+  const cubeReescaleSchema = yup.object().shape({
+    factor: yup.number().typeError('A number is required')
+  });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cubeReescaleSchema) });
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
+
+  const onSubmit = async (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying cube reescale',
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cubeReescaleSchema) });
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-    const onSubmit = async(data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            cubeReescaleSchema.validate(data)
-            .then( async() => {
-                try {
-                  const response = await ApplyCubeReescale({
-                    session: sessionID,
-                    uuid: cloudFolderName,
-                    factor: data.factor
-                  });
-                  if (!response) {
-                    setApplicationStatus('Failed to apply cube reescale');
-                            
-                  }
-                  setApplicationStatus('Cube reescale applied');
-                  setCloudFolderName(response);      
-                } catch (error) {
-                    console.error(error);
-                    setApplicationStatus('Failed to apply cube reescale');
-                }
-            })
-            .catch(err => {
-                console.log(err);
+    setGlobalLoading(true);
+    cubeReescaleSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyCubeReescale({
+            session: sessionID,
+            uuid: cloudFolderName,
+            factor: data.factor
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: 'Failed to apply cube reescale',
             });
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
+          } else {
+            setApplicationStatus({
+              status: 'success',
+              message: 'Cube reescale applied',
             });
-        }, 2000)
-    }
+            setCloudFolderName(response);
+          }
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: 'Failed to apply cube reescale',
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
-    const handleCloseModal = () => {
-        setCubeReescale({
-            modalOpen: false,
-        });
-    };
+  const closeModal = () => {
+    setCubeReescale({
+      modalOpen: false,
+    });
+  };
 
-    return(
+  return (
     <Modal
       open={cubeReescale.modalOpen}
       footer={null}
@@ -74,35 +78,35 @@ const CubeReescaleModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Cube Reescale</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <label htmlFor='factor'>Factor:</label>
-                <input 
-                type='text' 
-                id='factor' 
-                placeholder='float'
-                {...register("factor", { value: `${cubeReescale.factor}` })}
-                />
-                <Tooltip placement="right" title={'The select set the factor for rescaling the cloud. .'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.factor?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='factor'>Factor:</label>
+            <input
+              type='text'
+              id='factor'
+              placeholder='float'
+              {...register("factor", { value: `${cubeReescale.factor}` })}
+            />
+            <Tooltip placement="right" title={'The select set the factor for rescaling the cloud. .'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.factor?.message}</span>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
     </Modal>
-        
-    );
+
+  );
 }
 
 export default CubeReescaleModal;

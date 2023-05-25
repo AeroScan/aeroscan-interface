@@ -70,7 +70,7 @@ const Login = () => {
                     className='antButton' 
                     htmlType='submit' 
                     value='submit' 
-                    loading={loadings[0]} 
+                    
                 >
                     Access
                 </Button>

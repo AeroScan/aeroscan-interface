@@ -63,8 +63,6 @@ const Viewer = () => {
       viewer.setPointBudget(1 * 1000 * 1000);
       viewer.loadSettingsFromURL();
 
-      console.log(viewer)
-
       viewer.loadGUI(() => {
         viewer.setLanguage('en');
         $("#menu_filters").next().show();

@@ -6,7 +6,15 @@ export const OverlayContainer = styled.div`
     position: fixed;
     z-index: 25;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 20px;
     background-color: rgba(0, 0, 0, 0.75);
+
+    span {
+        color: #FFFFFF;
+        font-size: 18px;
+        font-weight: bold;
+    }
 `;
