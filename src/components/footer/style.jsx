@@ -7,7 +7,7 @@ export const Container = styled.footer`
     box-sizing: border-box;
     display: flex;
     height: 8vh;
-    justify-content: space-between;
+    justify-content: flex-end;
     padding: 0 2rem;
     position: absolute;
     width: 100%;
@@ -38,10 +38,12 @@ export const Container = styled.footer`
         font-size: 1.25rem;
         text-align: right;
         width: 20%;
-
-        strong{
-            font-size: 1.25rem;
-            font-weight: 600;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-right: 20px;
+        
+        .status {
+            color: ${({ status }) => status === 'success' ? '#008000' : status === 'busy' ? '#DDDD00' : status === 'error' ? '#FF0000' : '#000000'};
         }
     }
 

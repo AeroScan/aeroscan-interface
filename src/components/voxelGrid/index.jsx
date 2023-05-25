@@ -6,43 +6,44 @@ import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
-import { ApplyNormalEstimation } from '../../services/api';
+import { ApplyVoxelGrid } from '../../services/api';
 import { Container } from '../modal/style';
 
-const NormalEstimationModal = () => {
-  const normalEstimationSchema = yup.object().shape({
-    radius: yup.number().typeError('A number is required')
+const VoxelGridModal = () => {
+
+  const voxelGridSchema = yup.object().shape({
+    leafSize: yup.number().typeError('A number is required')
   });
-  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
-  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+  const { setApplicationStatus } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
     setApplicationStatus({
       status: 'busy',
-      message: 'Applying normal estimation',
+      message: 'Applying voxel grid',
     });
     setGlobalLoading(true);
-    normalEstimationSchema.validate(data)
+    voxelGridSchema.validate(data)
       .then(async () => {
         try {
-          const response = await ApplyNormalEstimation({
+          const response = await ApplyVoxelGrid({
             session: sessionID,
             uuid: cloudFolderName,
-            radius: data.radius,
+            leaf: data.leafSize,
           });
           if (!response) {
             setApplicationStatus({
               status: 'error',
-              message: 'Failed to apply normal estimation',
+              message: 'Failed to apply voxel grid',
             });
           } else {
             setApplicationStatus({
               status: 'success',
-              message: 'Normal estimation applied',
+              message: 'Voxel grid applied',
             });
             setCloudFolderName(response);
           }
@@ -51,7 +52,7 @@ const NormalEstimationModal = () => {
           console.error(error);
           setApplicationStatus({
             status: 'error',
-            message: 'Failed to apply normal estimation',
+            message: 'Failed to apply voxel grid',
           });
           setGlobalLoading(false);
         }
@@ -62,14 +63,14 @@ const NormalEstimationModal = () => {
   }
 
   const closeModal = () => {
-    setNormalEstimation({
+    setVoxelGrid({
       modalOpen: false,
     });
   };
 
   return (
     <Modal
-      open={normalEstimation.modalOpen}
+      open={voxelGrid.modalOpen}
       footer={null}
       width={"40%"}
       closable={false}
@@ -79,21 +80,21 @@ const NormalEstimationModal = () => {
     >
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
-        <h1>Normal Estimation</h1>
+        <h1>Voxel Grid Filter</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
-            <label htmlFor='radius'>Radius:</label>
+            <label htmlFor='leafSize'>Leaf Size:</label>
             <input
               type='text'
-              id='radius'
+              id='leafSize'
               placeholder='float'
-              {...register("radius")}
+              {...register("leafSize")}
             />
-            <Tooltip placement="right" title={'This field set the radius.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="right" title={'This field set the minimum distance between neighboring points in the cloud equally.'} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
-          <span className='error'>{errors.radius?.message}</span>
+          <span className='error'>{errors.leafSize?.message}</span>
         </form>
         <div className="buttons-container">
           <Button htmlType="submit" form="modalForm">
@@ -105,7 +106,9 @@ const NormalEstimationModal = () => {
         </div>
       </Container>
     </Modal>
+
+
   );
 }
 
-export default NormalEstimationModal;
+export default VoxelGridModal;
