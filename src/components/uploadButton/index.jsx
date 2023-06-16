@@ -25,6 +25,7 @@ const UploadButton = ({ inputFile, handleLoadCloud }) => {
       ref={inputFile}
       style={{ display: 'none' }}
       onChange={(e) => setSelectedFile(e.target.files[0])}
+      accept=".ptx, .las, .laz, .pcd, .ply, .obj, .e57"
     />
   );
 }

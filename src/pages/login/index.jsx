@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, version } from 'react';
 import logo from '../../assets/img/logo.png';
 import md5 from 'md5';
 import { Container, Link } from './style';
@@ -7,6 +7,7 @@ import { SaveToken } from '../../services/util';
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
+import { softwareVersion  } from '../../services/contants';
 
 const Login = () => {
 
@@ -76,6 +77,7 @@ const Login = () => {
                 </Button>
                 <span className='error'>{currentErrors}</span>
                 {/* <Link to='/'>Esqueceu sua senha?</Link> */}
+                <span className='version'>V { softwareVersion }</span>
             </form>
         </Container>
     );

@@ -25,7 +25,7 @@ export const Container = styled.div`
         flex-direction: column;
         height: 500px;
         justify-content: center;
-        min-width: 300px;
+        min-width: 45.0rem;
         padding: 0 25px;
         
         
@@ -77,6 +77,11 @@ export const Container = styled.div`
         span.error{
             color: red;
             font-size: 1.4rem;
+        }
+
+        .version{
+            font-size: 1.6rem;
+            margin-top: 20px;
         }
     }
 

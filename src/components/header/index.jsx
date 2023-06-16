@@ -31,6 +31,7 @@ import ransacLogo from '../../assets/img/processing/efficient-ransac.svg';
 import rAllocationLogo from '../../assets/img/configuration/resource-allocation.svg';
 import tourLogo from '../../assets/img/help/tour.svg';
 import aboutLogo from '../../assets/img/help/about.svg';
+import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
 import DownloadButton from '../downloadButton';
@@ -265,7 +266,7 @@ const Header = () => {
                 label: 'About Software'
             },
             {
-                logo: aboutLogo,
+                logo: tutorialsLogo,
                 label: 'Tutorials'
             }
             ]

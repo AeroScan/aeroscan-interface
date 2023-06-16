@@ -1,0 +1,1 @@
+export const softwareVersion = "2.1.0"
