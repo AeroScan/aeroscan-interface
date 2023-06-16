@@ -33,7 +33,9 @@ import aboutLogo from '../../assets/img/help/about.svg';
 import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
+import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
+import { message } from 'antd';
 
 const Header = () => {
 
@@ -64,6 +66,31 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const inputFile = useRef(null);
+  const downloadLink = useRef(null);
+
+  const Success = (msg) => {
+    message.open({
+        type: 'success',
+        content: msg,
+        className: 'success-message',
+        style: {
+          fontSize: '4rem',
+          marginTop: '20vh',
+        },
+    });
+  };
+
+  const Error = (msg) => {
+      message.open({
+          type: 'error',
+          content: msg,
+          className: 'error-message',
+          style: {
+            fontSize: '4rem',
+            marginTop: '20vh',
+          },
+      });
+  };
 
   const handleLoadCloud = async (dataForm) => {
     setApplicationStatus({
@@ -80,6 +107,7 @@ const Header = () => {
         });
         setCloudFolderName('');
         setSessionID('');
+        Error("Error loading cloud");
       } else {
         setApplicationStatus({
           status: 'success',
@@ -87,8 +115,10 @@ const Header = () => {
         });
         setCloudFolderName(response.data.uuid);
         setSessionID(response.data.session);
+        Success("Cloud uploaded");
       }
       setGlobalLoading(false);
+      
     } catch (error) {
       setApplicationStatus({
         status: 'error',
@@ -97,6 +127,7 @@ const Header = () => {
       setCloudFolderName('');
       setSessionID('');
       setGlobalLoading(false);
+      Error("Error loading cloud");
     }
   }
 
@@ -113,11 +144,13 @@ const Header = () => {
           status: 'error',
           message: 'Failed to save cloud',
         });
+        Error("Error saving cloud");
       } else {
         setApplicationStatus({
           status: 'success',
           message: 'Cloud saved',
         });
+        Success("Cloud saved");
       }
       setGlobalLoading(false);
     } catch (error) {
@@ -126,6 +159,7 @@ const Header = () => {
         message: 'Failed to save cloud',
       });
       setGlobalLoading(false);
+      Error("Error saving cloud");
     }
   }
 
@@ -185,10 +219,10 @@ const Header = () => {
                         file={png}
                     />
                 },
-                {
+                /* {
                     logo: saveResultsLogo,
                     label: 'Save CAD'
-                }
+                } */
             ]
         },
         {
