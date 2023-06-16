@@ -9,7 +9,7 @@ import { GlobalContext } from "../../context";
 import { ApplyCropBox } from "../../services/api";
 import { Container } from '../modal/style';
 
-const CropBoxModal = ({ setCloudFolderName }) => {
+const CropBoxModal = () => {
   const cropBoxSchema = yup.object().shape({
     startinPoint_x: yup.number().typeError("These three parameter are required"),
     startinPoint_y: yup.number().typeError("These three parameter are required"),
@@ -18,57 +18,63 @@ const CropBoxModal = ({ setCloudFolderName }) => {
     endingPoint_y: yup.number().typeError("These three parameter are required"),
     endingPoint_z: yup.number().typeError("These three parameter are required"),
   });
-  const { handleSubmit, register, formState: { errors }} = useForm({ resolver: yupResolver(cropBoxSchema) });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cropBoxSchema) });
   const { setApplicationStatus } = useContext(GlobalContext);
-  const { loadings, setLoadings } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { cropBox, setCropBox } = useContext(GlobalContext);
   const { cloudFolderName, sessionID } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
-    setLoadings((prevLoadings) => {
-      const newLoadings = [...prevLoadings];
-      newLoadings[0] = true;
-      return newLoadings;
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying crop box'
     });
-    setTimeout(() => {
-      cropBoxSchema
-        .validate(data)
-        .then(async () => {
-          try {
-            const response = await ApplyCropBox({
-              session: sessionID,
-              uuid: cloudFolderName,
-              min_x: data.startinPoint_x,
-              min_y: data.startinPoint_y,
-              min_z: data.startinPoint_z,
-              max_x: data.endingPoint_x,
-              max_y: data.endingPoint_y,
-              max_z: data.endingPoint_z,
+    setGlobalLoading(true)
+    cropBoxSchema
+      .validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyCropBox({
+            session: sessionID,
+            uuid: cloudFolderName,
+            min_x: data.startinPoint_x,
+            min_y: data.startinPoint_y,
+            min_z: data.startinPoint_z,
+            max_x: data.endingPoint_x,
+            max_y: data.endingPoint_y,
+            max_z: data.endingPoint_z,
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: "Failed to apply crop box",
             });
-            if (!response) {
-              setApplicationStatus("Failed to apply crop box");
-            }
-            setApplicationStatus("Crop box applied");
+          } else {
+            console.log(cloudFolderName);
+            console.log(response);
+            setApplicationStatus({
+              status: 'success',
+              message: "Crop box applied",
+            });
             setCloudFolderName(response);
-          } catch (error) {
-            console.error(error);
-            setApplicationStatus("Failed to apply crop box");
           }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[0] = false;
-
-        return newLoadings;
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: "Failed to apply crop box",
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
-    }, 2000);
   };
 
-  const handleCloseModal = () => {
+  const closeModal = () => {
     setCropBox({
       modalOpen: false,
     });
@@ -85,7 +91,7 @@ const CropBoxModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Crop Box Filter</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className="formContainer">
@@ -94,19 +100,19 @@ const CropBoxModal = ({ setCloudFolderName }) => {
               type="text"
               id="startinPoint"
               placeholder="x"
-              {...register("startinPoint_x", { value: `${cropBox.startinPoint_x}` })}
+              {...register("startinPoint_x")}
             />
             <input
               type="text"
               id="startinPoint"
               placeholder="y"
-              {...register("startinPoint_y", { value: `${cropBox.startinPoint_y}` })}
+              {...register("startinPoint_y")}
             />
             <input
               type="text"
               id="startinPoint"
               placeholder="z"
-              {...register("startinPoint_z", { value: `${cropBox.startinPoint_z}` })}
+              {...register("startinPoint_z")}
             />
             <Tooltip
               placement="right"
@@ -129,19 +135,19 @@ const CropBoxModal = ({ setCloudFolderName }) => {
               type="text"
               id="endingPoint"
               placeholder="x"
-              {...register("endingPoint_x", { value: `${cropBox.endingPoint_x}` })}
+              {...register("endingPoint_x")}
             />
             <input
               type="text"
               id="endingPoint"
               placeholder="y"
-              {...register("endingPoint_y", { value: `${cropBox.endingPoint_y}` })}
+              {...register("endingPoint_y")}
             />
             <input
               type="text"
               id="endingPoint"
               placeholder="z"
-              {...register("endingPoint_z", { value: `${cropBox.endingPoint_z}` })}
+              {...register("endingPoint_z")}
             />
             <Tooltip
               placement="right"
@@ -160,10 +166,10 @@ const CropBoxModal = ({ setCloudFolderName }) => {
           ) : null}
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>

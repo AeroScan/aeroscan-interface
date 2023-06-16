@@ -9,71 +9,76 @@ import { GlobalContext } from '../../context';
 import { ApplyEfficientRansac } from '../../services/api';
 import { Container } from '../modal/style';
 
-const EfficientRansacModal = ({ setCloudFolderName }) => {
+const EfficientRansacModal = () => {
 
-    const efficientRansacSchema = yup.object().shape({
-      probability: yup.number().typeError('A number is required'),
-      minPoints: yup.number().typeError('A number is required'),
-      clusterEpsilon: yup.number().typeError('A number is required'),
-      epsilon: yup.number().typeError('A number is required'),
-      normalThreshold: yup.number().typeError('A number is required')
+  const efficientRansacSchema = yup.object().shape({
+    probability: yup.number().typeError('A number is required'),
+    minPoints: yup.number().typeError('A number is required'),
+    clusterEpsilon: yup.number().typeError('A number is required'),
+    epsilon: yup.number().typeError('A number is required'),
+    normalThreshold: yup.number().typeError('A number is required')
+  });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { setEfficientRansacApplied } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
+
+  const onSubmit = async (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying efficient ransac',
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
-    const { setEfficientRansacApplied } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-    const onSubmit = async(data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            efficientRansacSchema.validate(data)
-            .then( async() => {
-                try {
-                  const response = await ApplyEfficientRansac({
-                    session: sessionID,
-                    uuid: cloudFolderName,
-                    probability: data.probability,
-                    min_points: data.minPoints,
-                    epsilon: data.clusterEpsilon,
-                    cluster_epsilon: data.epsilon,
-                    normal_threshold: data.normalThreshold,
-                  });
-                  if (!response) {
-                    setApplicationStatus('Failed to apply efficient ransac');
-                  }
-                  setApplicationStatus('Efficient ransac applied');
-                  setEfficientRansacApplied(true);
-                  setCloudFolderName(response);
-                } catch (error) {
-                  console.error(error);
-                  setApplicationStatus('Failed to apply efficient ransac');
-                }
-            })
-            .catch(err => {
-                console.log(err);
+    setGlobalLoading(true);
+    efficientRansacSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyEfficientRansac({
+            session: sessionID,
+            uuid: cloudFolderName,
+            probability: data.probability,
+            min_points: data.minPoints,
+            epsilon: data.clusterEpsilon,
+            cluster_epsilon: data.epsilon,
+            normal_threshold: data.normalThreshold,
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: 'Failed to apply efficient ransac',
             });
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
+          } else {
+            setApplicationStatus({
+              status: 'success',
+              message: 'Efficient ransac applied',
             });
-        }, 2000)
-    }
+            setEfficientRansacApplied(true);
+            setCloudFolderName(response);
+          }
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: 'Failed to apply efficient ransac',
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
-    const handleCloseModal = () => {
-        setEfficientRansac({
-            modalOpen: false,
-        });
-    };
+  const closeModal = () => {
+    setEfficientRansac({
+      modalOpen: false,
+    });
+  };
 
-    return(
+  return (
     <Modal
       open={efficientRansac.modalOpen}
       footer={null}
@@ -84,87 +89,87 @@ const EfficientRansacModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Efficient Ransac</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <label htmlFor='probability'>Probability:</label>
-                <input 
-                type='text' 
-                id='probability' 
-                placeholder='float'
-                {...register('probability', { value: `${efficientRansac.probability}` })}
-                />
-                <Tooltip placement="right" title={'This field set the method stop condition, probability of losing the largest primitive at each iteration.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.probability?.message}</span>
-            <div className='formContainer'>
-                <label htmlFor='minPoints'>Min Points:</label>
-                <input 
-                type='text' 
-                id='minPoints'
-                placeholder='float'
-                {...register('minPoints', { value: `${efficientRansac.minPoints}` })}
-                />
-                <Tooltip placement="right" title={'This field set the minimum number of points for a sample to be considered a possible individual primitive.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.minPoints?.message}</span>
-            <div className='formContainer'>
-                <label htmlFor='clusterEpsilon'>Cluster Epsilon:</label>
-                <input 
-                type='text' 
-                id='minPoints'
-                placeholder='float'
-                {...register('clusterEpsilon', { value: `${efficientRansac.clusterEpsilon}` })}
-                />
-                <Tooltip placement="right" title={'This field set the distance used for two neighboring points to be considered adjacent or not.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.clusterEpsilon?.message}</span>
-            <div className='formContainer'>
-                <label htmlFor='epsilon'>Epsilon:</label>
-                <input 
-                type='text' 
-                id='epsilon'
-                placeholder='float'
-                {...register('epsilon', { value: `${efficientRansac.epsilon}` })}
-                />
-                <Tooltip placement="right" title={'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.epsilon?.message}</span>
-            <div className='formContainer'>
-                <label htmlFor='normalThreshold'>Normal Threshold:</label>
-                <input 
-                type='text' 
-                id='normalThreshold'
-                placeholder='float'
-                {...register('normalThreshold', { value: `${efficientRansac.normalThreshold}` })}
-                />
-                <Tooltip placement="right" title={'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.normalThreshold?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='probability'>Probability:</label>
+            <input
+              type='text'
+              id='probability'
+              placeholder='float'
+              {...register('probability')}
+            />
+            <Tooltip placement="right" title={'This field set the method stop condition, probability of losing the largest primitive at each iteration.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.probability?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='minPoints'>Min Points:</label>
+            <input
+              type='text'
+              id='minPoints'
+              placeholder='float'
+              {...register('minPoints')}
+            />
+            <Tooltip placement="right" title={'This field set the minimum number of points for a sample to be considered a possible individual primitive.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.minPoints?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='clusterEpsilon'>Cluster Epsilon:</label>
+            <input
+              type='text'
+              id='minPoints'
+              placeholder='float'
+              {...register('clusterEpsilon')}
+            />
+            <Tooltip placement="right" title={'This field set the distance used for two neighboring points to be considered adjacent or not.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.clusterEpsilon?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='epsilon'>Epsilon:</label>
+            <input
+              type='text'
+              id='epsilon'
+              placeholder='float'
+              {...register('epsilon')}
+            />
+            <Tooltip placement="right" title={'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.epsilon?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='normalThreshold'>Normal Threshold:</label>
+            <input
+              type='text'
+              id='normalThreshold'
+              placeholder='float'
+              {...register('normalThreshold')}
+            />
+            <Tooltip placement="right" title={'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.normalThreshold?.message}</span>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
     </Modal>
-        
-    );
+
+  );
 }
 
 export default EfficientRansacModal;

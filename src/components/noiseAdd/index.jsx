@@ -9,64 +9,66 @@ import { GlobalContext } from '../../context';
 import { ApplyNoiseAdd } from '../../services/api';
 import { Container } from '../modal/style';
 
-const NoiseAddModal = ({ setCloudFolderName }) => {
+const NoiseAddModal = () => {
+  const noiseAddSchema = yup.object().shape({
+    limit: yup.number().typeError('A number is required')
+  });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(noiseAddSchema) });
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-    
-    const noiseAddSchema = yup.object().shape({
-        limit: yup.number().typeError('A number is required')
+  const onSubmit = async (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying noise add',
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(noiseAddSchema) });
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-    const onSubmit = async(data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            noiseAddSchema.validate(data)
-            .then( async() => {
-                try {
-                  const response = await ApplyNoiseAdd({
-                    session: sessionID,
-                    uuid: cloudFolderName,
-                    limit: data.limit,
-                  });
-                  if (!response) {
-                    setApplicationStatus('Failed to apply noise add');
-
-                  }
-                  setApplicationStatus('Noise add applied');
-                  setCloudFolderName(response);
-                } catch (error) {
-                    console.error(error);
-                    setApplicationStatus('Failed to apply noise add');
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            });     
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
+    setGlobalLoading(true);
+    noiseAddSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyNoiseAdd({
+            session: sessionID,
+            uuid: cloudFolderName,
+            limit: data.limit,
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: 'Failed to apply noise add',
             });
-        }, 2000)
-    }
+          } else {
+            setApplicationStatus({
+              status: 'success',
+              message: 'Noise add applied',
+            });
+            setCloudFolderName(response);
+          }
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: 'Failed to apply noise add',
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
-    const handleCloseModal = () => {
-        setNoiseAdd({
-            modalOpen: false,
-        });
-    };
+  const closeModal = () => {
+    setNoiseAdd({
+      modalOpen: false,
+    });
+  };
 
-    return(
-        <Modal
+  return (
+    <Modal
       open={noiseAdd.modalOpen}
       footer={null}
       width={"40%"}
@@ -76,34 +78,34 @@ const NoiseAddModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Noise Add</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <label htmlFor='limit'>Limit:</label>
-                <input 
-                type='text' 
-                id='limit' 
-                placeholder='float'
-                {...register("limit", { value: `${noiseAdd.limit}` })}
-                />
-                <Tooltip placement="right" title={'The select set the maximum value of noise to add.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.limit?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='limit'>Limit:</label>
+            <input
+              type='text'
+              id='limit'
+              placeholder='float'
+              {...register("limit")}
+            />
+            <Tooltip placement="right" title={'The select set the maximum value of noise to add.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.limit?.message}</span>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
     </Modal>
-    );
+  );
 }
 
 export default NoiseAddModal;

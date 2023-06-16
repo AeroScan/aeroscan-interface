@@ -9,62 +9,65 @@ import { GlobalContext } from '../../context';
 import { ApplyReescale } from '../../services/api';
 import { Container } from '../modal/style';
 
-const ReescaleModal = ({ setCloudFolderName }) => {
+const ReescaleModal = () => {
+  const reescaleSchema = yup.object().shape({
+    scale: yup.number().typeError('A number is required')
+  });
+  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(reescaleSchema) });
+  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
+  const { reescale, setReescale } = useContext(GlobalContext);
+  const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
-    const reescaleSchema = yup.object().shape({
-        scale: yup.number().typeError('A number is required')
+  const onSubmit = (data) => {
+    closeModal();
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Applying reescale',
     });
-    const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(reescaleSchema) });
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { loadings, setLoadings } = useContext(GlobalContext);
-    const { reescale, setReescale } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-
-    const onSubmit = (data) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[0] = true;
-            return newLoadings;
-        });
-
-        setTimeout(() => {
-            reescaleSchema.validate(data)
-            .then( async() => {
-                try {
-                  const response = await ApplyReescale({
-                    session: sessionID,
-                    uuid: cloudFolderName,
-                    factor: data.scale,
-                  });
-                  if (!response) {
-                      setApplicationStatus('Failed to apply reescale');
-                  }
-                  setApplicationStatus('Reescale applied');
-                  setCloudFolderName(response);
-                } catch (error) {
-                    console.error(error);
-                    setApplicationStatus('Failed to apply reescale');
-                }
-            })
-            .catch(err => {
-                console.log(err);
+    setGlobalLoading(true);
+    reescaleSchema.validate(data)
+      .then(async () => {
+        try {
+          const response = await ApplyReescale({
+            session: sessionID,
+            uuid: cloudFolderName,
+            factor: data.scale,
+          });
+          if (!response) {
+            setApplicationStatus({
+              status: 'error',
+              message: 'Failed to apply reescale',
             });
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[0] = false;
-                
-                return newLoadings;
+          } else {
+            setApplicationStatus({
+              status: 'success',
+              message: 'Reescale applied',
             });
-        }, 2000)
-    }
+            setCloudFolderName(response);
+          }
+          setGlobalLoading(false);
+        } catch (error) {
+          console.error(error);
+          setApplicationStatus({
+            status: 'error',
+            message: 'Failed to apply reescale',
+          });
+          setGlobalLoading(false);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 
-    const handleCloseModal = () => {
-        setReescale({
-            modalOpen: false,
-        });
-    };
-    
-    return(
+  const closeModal = () => {
+    setReescale({
+      modalOpen: false,
+    });
+  };
+
+  return (
     <Modal
       open={reescale.modalOpen}
       footer={null}
@@ -75,34 +78,34 @@ const ReescaleModal = ({ setCloudFolderName }) => {
       destroyOnClose
     >
       <Container>
-        <CloseOutlined className="closeIcon" onClick={handleCloseModal} />
+        <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Reescale</h1>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-            <div className='formContainer'>
-                <label htmlFor='scale'>Scale:</label>
-                <input 
-                type='text' 
-                id='scale' 
-                placeholder='float'
-                {...register("scale", { value: `${reescale.scale}` })}
-                />
-                <Tooltip placement="right" title={'This field update the scale of all cloud points.'} overlayStyle={{ fontSize: '3rem' }}>
-                    <QuestionCircleFilled />
-                </Tooltip>
-            </div>
-            <span className='error'>{errors.scale?.message}</span>
+          <div className='formContainer'>
+            <label htmlFor='scale'>Scale:</label>
+            <input
+              type='text'
+              id='scale'
+              placeholder='float'
+              {...register("scale")}
+            />
+            <Tooltip placement="right" title={'This field update the scale of all cloud points.'} overlayStyle={{ fontSize: '3rem' }}>
+              <QuestionCircleFilled />
+            </Tooltip>
+          </div>
+          <span className='error'>{errors.scale?.message}</span>
         </form>
         <div className="buttons-container">
-          <Button loading={loadings[0]} htmlType="submit" form="modalForm">
+          <Button htmlType="submit" form="modalForm">
             Process
           </Button>
-          <Button className="cancel" onClick={handleCloseModal}>
+          <Button className="cancel" onClick={closeModal}>
             Cancel
           </Button>
         </div>
       </Container>
-    </Modal>  
-    );
+    </Modal>
+  );
 }
 
 export default ReescaleModal;

@@ -1,3 +1,4 @@
+import React from 'react';
 import { GlobalStyled } from './components/UI/globalStyled';
 import ProjectRoutes from './routes';
 

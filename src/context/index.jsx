@@ -5,7 +5,10 @@ export const GlobalContext = createContext();
 const AppContext = ({ children }) => {
   
   // Footer
-  const [applicationStatus, setApplicationStatus] = useState("Started");
+  const [applicationStatus, setApplicationStatus] = useState({
+    status: "success",
+    message: "Started",
+  });
   const [planes, setPlanes] = useState(0);
   const [spheres, setSpheres] = useState(0);
   const [cylinders, setCylinders] = useState(0);
@@ -78,9 +81,6 @@ const AppContext = ({ children }) => {
   // States
   const [efficientRansacApplied, setEfficientRansacApplied] = useState(false);
 
-  // Loading
-  const [loadings, setLoadings] = useState([]);
-
   return (
     <GlobalContext.Provider
       value={{
@@ -95,7 +95,6 @@ const AppContext = ({ children }) => {
         sessionID, setSessionID,
         globalLoading, setGlobalLoading,
         efficientRansacApplied, setEfficientRansacApplied,
-        loadings, setLoadings,
         cropBox, setCropBox,
         voxelGrid, setVoxelGrid,
         statisticalRemoval, setStatisticalRemoval,

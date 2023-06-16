@@ -34,13 +34,13 @@ const Footer = () => {
   ];
 
   return (
-    <Container>
-      <div data-tut="fourteenth-step">
+    <Container status={applicationStatus.status}>
+      {/* <div data-tut="fourteenth-step">
         {legendItems.map((element, index) => (
           <p key={index} style={{ color: element.color }}>{element.value} {element.label}</p>
         ))}
-      </div>
-      <span><strong>Status:</strong> {applicationStatus}</span>
+      </div> */}
+      <span>Status: <span className='status'>{applicationStatus.message}</span></span>
     </Container>
   );
 }

@@ -17,7 +17,6 @@ import VoxelGridModal from '../voxelGrid';
 import NoiseAddModal from '../noiseAdd';
 import loudCloudLogo from '../../assets/img/archives/load-cloud.svg';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.svg';
-import saveResultsLogo from '../../assets/img/archives/save-results.svg';
 import cropBoxLogo from '../../assets/img/pre-processing/crop-box.svg';
 import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.svg';
 import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.svg';
@@ -34,137 +33,130 @@ import aboutLogo from '../../assets/img/help/about.svg';
 import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
-import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
-import { message } from 'antd';
 
 const Header = () => {
 
-    const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
-    const { setApplicationStatus } = useContext(GlobalContext);
-    const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
-    const { sessionID, cloudFolderName } = useContext(GlobalContext);
-    const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
+  const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
+  const { setApplicationStatus } = useContext(GlobalContext);
+  // const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
+  const { sessionID } = useContext(GlobalContext);
+  const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
 
-    // Modals handling
-    
-    const { cropBox, setCropBox } = useContext(GlobalContext);
-    const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
-    const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
-    const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
-    const { reescale, setReescale } = useContext(GlobalContext);
-    const { centralization, setCentralization } = useContext(GlobalContext);
-    const { alignment, setAlignment } = useContext(GlobalContext);
-    const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
-    const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
-    const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
-    const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
+  // Modals handling
 
-    const [activeTab, setActiveTab] = useState(0);
+  const { cropBox, setCropBox } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+  const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
+  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
+  const { reescale, setReescale } = useContext(GlobalContext);
+  const { centralization, setCentralization } = useContext(GlobalContext);
+  const { alignment, setAlignment } = useContext(GlobalContext);
+  const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
+  const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
 
-    const [tabsToShow, setTabsToShow] = useState([]);
-    const [tokenVerified, setTokenVerified] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
-    const inputFile = useRef(null);
-    const downloadLink = useRef(null);
+  const [tabsToShow, setTabsToShow] = useState([]);
+  const [tokenVerified, setTokenVerified] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    const Success = (msg) => {
-        message.open({
-          type: 'success',
-          content: msg,
-          className: 'success-message',
-          style: {
-            fontSize: '4rem',
-            marginTop: '20vh',
-          },
+  const inputFile = useRef(null);
+
+  const handleLoadCloud = async (dataForm) => {
+    setApplicationStatus({
+      status: 'busy',
+      message: "Loading cloud",
+    });
+    setGlobalLoading(true);
+    try {
+      const response = await LoadCloud(dataForm);
+      if (!response || !response.data.uuid) {
+        setApplicationStatus({
+          status: 'error',
+          message: "Failed to load cloud",
         });
-      };
-    
-    const Error = (msg) => {
-        message.open({
-          type: 'error',
-          content: msg,
-          className: 'error-message',
-          style: {
-            fontSize: '4rem',
-            marginTop: '20vh',
-          },
-        });
-    };
-
-    const handleLoadCloud = async (dataForm) => {
-        setApplicationStatus("Loading cloud...");
-        setGlobalLoading(true);
-        try {
-        const response = await LoadCloud(dataForm);
-        console.log(response)
-        if (!response || !response.data.uuid) {
-            setApplicationStatus("Failed to load cloud");
-            setCloudFolderName('');
-            setSessionID('');
-            setGlobalLoading(false);
-            Error("Error loading cloud")
-            return;
-        }
-        setApplicationStatus("Cloud loaded");
-        setCloudFolderName(response.data.uuid);
-        setSessionID(response.data.session);
-        setGlobalLoading(false);
-        Success("Cloud uploaded")
-        return;
-        } catch (error) {
-        setApplicationStatus("Failed to load cloud");
         setCloudFolderName('');
         setSessionID('');
-        setGlobalLoading(false);
-        Error("Error loading cloud");
-        return;
-        }
+      } else {
+        setApplicationStatus({
+          status: 'success',
+          message: "Cloud loaded",
+        });
+        setCloudFolderName(response.data.uuid);
+        setSessionID(response.data.session);
+      }
+      setGlobalLoading(false);
+    } catch (error) {
+      setApplicationStatus({
+        status: 'error',
+        message: "Failed to load cloud",
+      });
+      setCloudFolderName('');
+      setSessionID('');
+      setGlobalLoading(false);
     }
+  }
 
-    const handleSaveCloud = async () => {
-        setApplicationStatus("Saving cloud...");
-        setGlobalLoading(true);
-        try {
-        const response = await SaveCloud({ session: sessionID, uuid: cloudFolderName });
-        if (!response) {
-            setApplicationStatus("Failed to save cloud");
-            setGlobalLoading(false);
-            Error("Error saving cloud");
-            return;
-        }
-        setApplicationStatus("Cloud saved");
-        setGlobalLoading(false);
-        Success("Cloud saved");
-        return;
-        } catch (error) {
-        setApplicationStatus("Failed to save cloud");
-        setGlobalLoading(false);
-        Error("Error saving cloud");
-        return;
-        }
+  const handleSaveCloud = async () => {
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Saving cloud',
+    });
+    setGlobalLoading(true);
+    try {
+      const response = await SaveCloud({ session: sessionID });
+      if (!response) {
+        setApplicationStatus({
+          status: 'error',
+          message: 'Failed to save cloud',
+        });
+      } else {
+        setApplicationStatus({
+          status: 'success',
+          message: 'Cloud saved',
+        });
+      }
+      setGlobalLoading(false);
+    } catch (error) {
+      setApplicationStatus({
+        status: 'error',
+        message: 'Failed to save cloud',
+      });
+      setGlobalLoading(false);
     }
+  }
 
-    const handleGenerateCad = async () => {
-        setApplicationStatus("Generating cad...");
-        setGlobalLoading(true);
-        try {
-        const result = await GenerateCad();
-        if (!result) {
-            setApplicationStatus("Failed to generate cad");
-            setGlobalLoading(false);
-            return;
-        }
-        setApplicationStatus("Cad saved");
-        setGlobalLoading(false);
-        return;
-        } catch (error) {
-        setApplicationStatus("Failed to save cad");
-        setGlobalLoading(false);
-        return;
-        }
+  const handleGenerateCad = async () => {
+    setApplicationStatus({
+      status: 'busy',
+      message: 'Generating cad',
+    });
+    setGlobalLoading(true);
+    try {
+      const result = await GenerateCad();
+      if (!result) {
+        setApplicationStatus({
+          status: 'error',
+          message: 'Failed to generate cad',
+        });
+      } else {
+        setApplicationStatus({
+          status: 'busy',
+          message: 'Cad saved',
+        });
+      }
+      setGlobalLoading(false);
+    } catch (error) {
+      setApplicationStatus({
+        status: 'error',
+        message: 'Failed to save cad',
+      });
+      setGlobalLoading(false);
     }
+  }
 
     const handleRedirect = () => {
         window.open("http://aeroscan.c3.furg.br/tutorials");
@@ -292,142 +284,141 @@ const Header = () => {
         }
     ];
 
-    useEffect(() => {
-        if (!tokenVerified) {
-            if (RetrieveToken() === "admin@aeroscan.com") setIsAdmin(true);
-            else setIsAdmin(false);
-            setTokenVerified(true);
-        }
-    }, [tokenVerified]);
-
-    useEffect(() => {
-        if (isAdmin) setTabsToShow(tabs);
-        else setTabsToShow(tabs.filter(tab => tab.name !== "Admin"));
-    }, [isAdmin]);
-
-    const[tabContent, setTabContent] = useState([]);
-
-    useEffect(() => {
-        tabsToShow.forEach((element, index) => {
-            if(index === activeTab){
-                setTabContent(element.procedures);
-            }
-        })
-    }, [tabsToShow, activeTab]);
-
-    const handleActions = (element) => {
-        switch(element.label){
-            case "Logout":
-                RemoveToken();
-                break;
-            case "Load Cloud":
-                render(element.component);
-                inputFile.current.click();
-                break;
-            case "Save Cloud":
-                render(element.component);
-                downloadLink.current.click();
-                /* handleSaveCloud(); */
-                break;
-            case "Save CAD":
-                handleGenerateCad();
-                break;
-            case "Interface Tour":
-                setActiveTab(0)
-                render(element.component)
-                break;
-            case "Tutorials":
-                handleRedirect()
-                break;
-            case "Alignment":
-                setAlignment({
-                    modalOpen: true,
-                });
-                break;
-            case "Centralization":
-                setCentralization({
-                    modalOpen: true,
-                });
-                break;
-            case "Crop Box Filter":
-                setCropBox({
-                    modalOpen: true,
-                });
-                break;
-            case "Cube Reescale":
-                setCubeReescale({
-                    modalOpen: true,
-                });
-                break;
-            case "Efficient Ransac":
-                setEfficientRansac({
-                    modalOpen: true,
-                });
-                break;
-            case "Generate Password":
-                setGeneratePassword({
-                    modalOpen: true,
-                });
-                break;
-            case "Noise Add":
-                setNoiseAdd({
-                    modalOpen: true,
-                });
-                break;
-            case "Normal Estimation":
-                setNormalEstimation({
-                    modalOpen: true,
-                });
-                break;
-            case "Reescale":
-                setReescale({
-                    modalOpen: true,
-                });
-                break;
-            case "Statistical Removal":
-                setStatisticalRemoval({
-                    modalOpen: true,
-                });
-                break;
-            case "Voxel Grid Filter":
-                setVoxelGrid({
-                    modalOpen: true,
-                });
-                break;
-            default:
-                break;
-        }
+  useEffect(() => {
+    if (!tokenVerified) {
+      if (RetrieveToken() === "admin@aeroscan.com") setIsAdmin(true);
+      else setIsAdmin(false);
+      setTokenVerified(true);
     }
-    
-    return(
-        <Container tabLength={tabsToShow.length}>
-            {alignment.modalOpen && <AlignmentModal />}
-            {centralization.modalOpen && <CentralizationModal />}
-            {cropBox.modalOpen && <CropBoxModal />}
-            {cubeReescale.modalOpen && <CubeReescaleModal />}
-            {efficientRansac.modalOpen && <EfficientRansacModal />}
-            {generatePassword.modalOpen && <GeneratePasswordModal />}
-            {noiseAdd.modalOpen && <NoiseAddModal />}
-            {normalEstimation.modalOpen && <NormalEstimationModal />}
-            {reescale.modalOpen && <ReescaleModal />}
-            {statisticalRemoval.modalOpen && <StatisticalRemovalModal />}
-            {voxelGrid.modalOpen && <VoxelGridModal />}
-            {globalLoading && <OverlayLoading />}
-            {tabsToShow.map((element, index) => (
-                <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
-                    {element.name}
-                </button>
-            ))}
-            <ul>
-                {tabContent.map((element, index) => (
-                    <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
-                        <img src={element.logo} alt={element.label} />
-                        <p>{element.label}</p>  
-                    </li>
-                ))}
-            </ul>
-        </Container>  
-    );
+  }, [tokenVerified]);
+
+  useEffect(() => {
+    if (isAdmin) setTabsToShow(tabs);
+    else setTabsToShow(tabs.filter(tab => tab.name !== "Admin"));
+  }, [isAdmin]);
+
+  const [tabContent, setTabContent] = useState([]);
+
+  useEffect(() => {
+    tabsToShow.forEach((element, index) => {
+      if (index === activeTab) {
+        setTabContent(element.procedures);
+      }
+    })
+  }, [tabsToShow, activeTab]);
+
+  const handleActions = (element) => {
+    switch (element.label) {
+        case "Logout":
+            RemoveToken();
+            break;
+        case "Load Cloud":
+            render(element.component);
+            inputFile.current.click();
+            break;
+        case "Save Cloud":
+            render(element.component);
+            handleSaveCloud();
+            break;
+        case "Save CAD":
+            handleGenerateCad();
+            break;
+        case "Interface Tour":
+            setActiveTab(0)
+            render(element.component)
+            break;
+        case "Tutorials":
+            handleRedirect()
+            break;
+        case "Alignment":
+            setAlignment({
+                modalOpen: true,
+            });
+            break;
+        case "Centralization":
+            setCentralization({
+                modalOpen: true,
+            });
+            break;
+        case "Crop Box Filter":
+            setCropBox({
+                modalOpen: true,
+            });
+            break;
+        case "Cube Reescale":
+            setCubeReescale({
+            modalOpen: true,
+            });
+            break;
+        case "Efficient Ransac":
+            setEfficientRansac({
+                modalOpen: true,
+            });
+            break;
+        case "Generate Password":
+            setGeneratePassword({
+                modalOpen: true,
+            });
+            break;
+        case "Noise Add":
+            setNoiseAdd({
+                modalOpen: true,
+            });
+            break;
+        case "Normal Estimation":
+            setNormalEstimation({
+                modalOpen: true,
+            });
+            break;
+        case "Reescale":
+            setReescale({
+                modalOpen: true,
+            });
+            break;
+        case "Statistical Removal":
+            setStatisticalRemoval({
+                modalOpen: true,
+            });
+            break;
+        case "Voxel Grid Filter":
+            setVoxelGrid({
+                modalOpen: true,
+            });
+            break;
+        default:
+            break;
+    }
+  }
+
+  return (
+    <Container tabLength={tabsToShow.length}>
+      {alignment.modalOpen && <AlignmentModal />}
+      {centralization.modalOpen && <CentralizationModal />}
+      {cropBox.modalOpen && <CropBoxModal />}
+      {cubeReescale.modalOpen && <CubeReescaleModal />}
+      {efficientRansac.modalOpen && <EfficientRansacModal />}
+      {generatePassword.modalOpen && <GeneratePasswordModal />}
+      {noiseAdd.modalOpen && <NoiseAddModal />}
+      {normalEstimation.modalOpen && <NormalEstimationModal />}
+      {reescale.modalOpen && <ReescaleModal />}
+      {statisticalRemoval.modalOpen && <StatisticalRemovalModal />}
+      {voxelGrid.modalOpen && <VoxelGridModal />}
+      {globalLoading && <OverlayLoading />}
+      {tabsToShow.map((element, index) => (
+        <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
+          {element.name}
+        </button>
+      ))}
+      <ul>
+        {tabContent.map((element, index) => (
+          <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
+            <img src={element.logo} alt={element.label} />
+            <p>{element.label}</p>
+          </li>
+        ))}
+      </ul>
+    </Container>
+  );
 }
 
 export default Header;

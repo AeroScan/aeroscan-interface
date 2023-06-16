@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DownloadButton = ({ downloadLink, handleLoadCloud, file }) => {
+const DownloadButton = ({ downloadLink, file }) => {
   return (
     <a href={file} ref={downloadLink}></a>
   );

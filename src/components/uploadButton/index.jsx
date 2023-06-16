@@ -10,8 +10,6 @@ const UploadButton = ({ inputFile, handleLoadCloud }) => {
         dataForm.append('name', selectedFile.name);
         dataForm.append('file', selectedFile);
         dataForm.append('url_type', selectedFile.type);
-        console.log("form", dataForm)
-
         await handleLoadCloud(dataForm, selectedFile)
       }
     }
