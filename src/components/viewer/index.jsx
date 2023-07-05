@@ -66,6 +66,7 @@ const Viewer = () => {
       viewer.loadGUI(() => {
         viewer.setLanguage('en');
         $("#menu_filters").next().show();
+        /* $("[title=Distance mesurement]").attr('data-tut', 'twelfth-step'); */
         viewer.toggleSidebar();
         viewer.setClassifications([
           {

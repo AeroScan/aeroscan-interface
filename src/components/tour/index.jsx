@@ -61,11 +61,7 @@ const tourConfig = [
   },
   {
     selector: "[data-tut='ninth-step']",
-    content: "The sidebar has some tools, such as compass, distance measurement, front view, which can be used within the viewer."
-  },
-  {
-    selector: "[data-tut='ninth-step']",
-    content: "Inside each one of the following menus you are going to find these tools. If you hover the option, it will show you a tooltip to know what it is."
+    content: "The sidebar has some tools and inside each one of the following menus you are going to find these tools. If you hover the option, it will show you a tooltip with a description of each feature."
   },
   {
     selector: "[data-tut='tenth-step']",
@@ -84,14 +80,18 @@ const tourConfig = [
   },
   {
     selector: "[data-tut='twelfth-step']",
-    content: "In this menu we have a tool to export the scene with the desired information."
+    content: "Do not forgot that"
   },
   {
     selector: "[data-tut='thirteenth-step']",
-    content: "In this menu we have a way to filter the efficient ransac results (when they exist)."
+    content: "Right here we have a tool to export the scene with the desired information."
   },
   {
     selector: "[data-tut='fourteenth-step']",
+    content: "This one we have a way to filter the efficient ransac results (when they exist)."
+  },
+  {
+    selector: "[data-tut='fifteenth-step']",
     content: "Here you can see the quantity of planes, spheres, cylinders and cones."
   },
 ]
