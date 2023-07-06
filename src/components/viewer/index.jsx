@@ -65,7 +65,8 @@ const Viewer = () => {
 
       viewer.loadGUI(() => {
         viewer.setLanguage('en');
-        $("#menu_filters").next().show();
+        $("#menu_tools").next().show();
+        $(".button-icon:nth-child(3)").first().attr("data-tut","twelfth-step")
         viewer.toggleSidebar();
         viewer.setClassifications([
           {

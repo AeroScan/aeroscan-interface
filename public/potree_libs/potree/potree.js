@@ -79096,6 +79096,7 @@ ENDSEC
 				}
 			));
 
+			/* data-tut=eleventh-step' */
 			// DISTANCE
 			elToolbar.append(this.createToolIcon(
 				Potree.resourcePath + '/icons/distance.svg',
@@ -79106,7 +79107,8 @@ ENDSEC
 						showDistances: true,
 						showArea: false,
 						closed: false,
-						name: 'Distance'});
+						name: 'Distance',
+					});
 
 					let measurementsRoot = $("#jstree_scene").jstree().get_json("measurements");
 					let jsonNode = measurementsRoot.children.find(child => child.data.uuid === measurement.uuid);
