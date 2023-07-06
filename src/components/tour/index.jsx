@@ -80,7 +80,7 @@ const tourConfig = [
   },
   {
     selector: "[data-tut='twelfth-step']",
-    content: "Do not forgot that"
+    content: "Do not forget that to end a command, just click with the right mouse button"
   },
   {
     selector: "[data-tut='thirteenth-step']",
@@ -90,11 +90,12 @@ const tourConfig = [
     selector: "[data-tut='fourteenth-step']",
     content: "This one we have a way to filter the efficient ransac results (when they exist)."
   },
-  {
-    selector: "[data-tut='fifteenth-step']",
-    content: "Here you can see the quantity of planes, spheres, cylinders and cones."
-  },
 ]
+
+/* {
+  selector: "[data-tut='fifteenth-step']",
+  content: "Here you can see the quantity of planes, spheres, cylinders and cones."
+}, */
 
 const InterfaceTour = () => {
 
