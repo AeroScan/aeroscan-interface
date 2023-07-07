@@ -15,6 +15,7 @@ const Viewer = () => {
   const potree_render_area = useRef(null);
   const { cloudFolderName, sessionID } = useContext(GlobalContext);
   const { efficientRansacApplied } = useContext(GlobalContext);
+  const { tour } = useContext(GlobalContext);
 
   const potreeAxes = useRef(null);
 
@@ -25,6 +26,10 @@ const Viewer = () => {
       setPageLoaded(true);
     }
   }, [Potree, pageLoaded]);
+
+  if(tour){
+    $("#menu_tools").next().show();
+  }
 
   useEffect(() => {
     if (efficientRansacApplied && viewer) {

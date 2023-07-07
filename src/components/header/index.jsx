@@ -44,6 +44,7 @@ const Header = () => {
   // const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
   const { sessionID } = useContext(GlobalContext);
   const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
+  const { setTour } = useContext(GlobalContext);
 
   // Modals handling
 
@@ -359,6 +360,9 @@ const Header = () => {
             break;
         case "Interface Tour":
             setActiveTab(0)
+            setTour({
+              active: true,
+            });
             render(element.component)
             break;
         case "Tutorials":
@@ -366,57 +370,57 @@ const Header = () => {
             break;
         case "Alignment":
             setAlignment({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Centralization":
             setCentralization({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Crop Box Filter":
             setCropBox({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Cube Reescale":
             setCubeReescale({
-            modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Efficient Ransac":
             setEfficientRansac({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Generate Password":
             setGeneratePassword({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Noise Add":
             setNoiseAdd({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Normal Estimation":
             setNormalEstimation({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Reescale":
             setReescale({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Statistical Removal":
             setStatisticalRemoval({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         case "Voxel Grid Filter":
             setVoxelGrid({
-                modalOpen: true,
+              modalOpen: true,
             });
             break;
         default:

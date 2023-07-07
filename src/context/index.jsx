@@ -14,6 +14,10 @@ const AppContext = ({ children }) => {
   const [cylinders, setCylinders] = useState(0);
   const [cones, setCones] = useState(0);
 
+  //tour
+  const [tour, setTour] = useState({
+    active: false
+  })
   //Parameters
   const[cropBox, setCropBox] = useState({
     modalOpen: false,
@@ -89,6 +93,7 @@ const AppContext = ({ children }) => {
         spheres, setSpheres,
         cylinders, setCylinders,
         cones, setCones,
+        tour,setTour,
         typesView, setTypesView,
         cloudFile, setCloudFile,
         cloudFolderName, setCloudFolderName,
