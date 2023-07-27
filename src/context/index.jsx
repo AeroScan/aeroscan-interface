@@ -74,10 +74,13 @@ const AppContext = ({ children }) => {
   const [sessionID, setSessionID] = useState("");
   const [typesView, setTypesView] = useState(false);
   const [globalLoading, setGlobalLoading] = useState(false);
+  const [aboutSoftware, setAboutSoftware] = useState({
+    modalOpen: false,
+  });
   const [generatePassword, setGeneratePassword] = useState({
     modalOpen: false,
   });
-
+  
   // States
   const [efficientRansacApplied, setEfficientRansacApplied] = useState(false);
 
@@ -105,6 +108,7 @@ const AppContext = ({ children }) => {
         noiseAdd, setNoiseAdd,
         cubeReescale, setCubeReescale,
         efficientRansac, setEfficientRansac,
+        aboutSoftware, setAboutSoftware,
         generatePassword, setGeneratePassword,
       }}
     >

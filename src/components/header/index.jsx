@@ -4,6 +4,7 @@ import { Container } from './style';
 import { render } from '@testing-library/react';
 import { RemoveToken, RetrieveToken } from '../../services/util';
 import OverlayLoading from '../overlay/overlay';
+import AboutSoftwareModal from '../aboutSoftware';
 import AlignmentModal from '../alignment';
 import CentralizationModal from '../centralization';
 import CropBoxModal from '../cropBox';
@@ -37,6 +38,7 @@ import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
+
 const Header = () => {
 
   const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
@@ -57,6 +59,7 @@ const Header = () => {
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { aboutSoftware, setAboutSoftware } = useContext(GlobalContext);
   const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
 
   const [activeTab, setActiveTab] = useState(0);
@@ -344,83 +347,88 @@ const Header = () => {
   const handleActions = (element) => {
     switch (element.label) {
         case "Logout":
-            RemoveToken();
-            break;
+          RemoveToken();
+          break;
         case "Load Cloud":
-            render(element.component);
-            inputFile.current.click();
-            break;
+          render(element.component);
+          inputFile.current.click();
+          break;
         case "Save Cloud":
-            render(element.component);
-            handleSaveCloud();
-            break;
+          render(element.component);
+          handleSaveCloud();
+          break;
         case "Save CAD":
-            handleGenerateCad();
-            break;
+          handleGenerateCad();
+          break;
         case "Interface Tour":
-            setActiveTab(0)
-            render(element.component)
-            break;
-        case "Tutorials":
-            handleRedirect()
-            break;
-        case "Alignment":
-            setAlignment({
-                modalOpen: true,
-            });
-            break;
-        case "Centralization":
-            setCentralization({
-                modalOpen: true,
-            });
-            break;
-        case "Crop Box Filter":
-            setCropBox({
-                modalOpen: true,
-            });
-            break;
-        case "Cube Reescale":
-            setCubeReescale({
+          setActiveTab(0);
+          render(element.component)
+          break;
+        case "About Software":
+          setAboutSoftware({
             modalOpen: true,
-            });
-            break;
+          });
+          break;
+        case "Tutorials":
+          handleRedirect()
+          break;
+        case "Alignment":
+          setAlignment({
+            modalOpen: true,
+          });
+          break;
+        case "Centralization":
+          setCentralization({
+            modalOpen: true,
+          });
+          break;
+        case "Crop Box Filter":
+          setCropBox({
+            modalOpen: true,
+          });
+          break;
+        case "Cube Reescale":
+          setCubeReescale({
+            modalOpen: true,
+          });
+          break;
         case "Efficient Ransac":
-            setEfficientRansac({
-                modalOpen: true,
-            });
-            break;
+          setEfficientRansac({
+            modalOpen: true,
+          });
+          break;
         case "Generate Password":
-            setGeneratePassword({
-                modalOpen: true,
-            });
-            break;
+          setGeneratePassword({
+            modalOpen: true,
+          });
+          break;
         case "Noise Add":
-            setNoiseAdd({
-                modalOpen: true,
-            });
-            break;
+          setNoiseAdd({
+            modalOpen: true,
+          });
+          break;
         case "Normal Estimation":
-            setNormalEstimation({
-                modalOpen: true,
-            });
-            break;
+          setNormalEstimation({
+            modalOpen: true,
+          });
+          break;
         case "Reescale":
-            setReescale({
-                modalOpen: true,
-            });
-            break;
+          setReescale({
+            modalOpen: true,
+          });
+          break;
         case "Statistical Removal":
-            setStatisticalRemoval({
-                modalOpen: true,
-            });
-            break;
+          setStatisticalRemoval({
+            modalOpen: true,
+          });
+          break;
         case "Voxel Grid Filter":
-            setVoxelGrid({
-                modalOpen: true,
-            });
-            break;
+          setVoxelGrid({
+            modalOpen: true,
+          });
+          break;
         default:
-            break;
+          break;
     }
   }
 
@@ -431,6 +439,7 @@ const Header = () => {
       {cropBox.modalOpen && <CropBoxModal />}
       {cubeReescale.modalOpen && <CubeReescaleModal />}
       {efficientRansac.modalOpen && <EfficientRansacModal />}
+      {aboutSoftware.modalOpen && <AboutSoftwareModal />}
       {generatePassword.modalOpen && <GeneratePasswordModal />}
       {noiseAdd.modalOpen && <NoiseAddModal />}
       {normalEstimation.modalOpen && <NormalEstimationModal />}
