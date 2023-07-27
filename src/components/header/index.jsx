@@ -46,6 +46,7 @@ const Header = () => {
   // const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
   const { sessionID } = useContext(GlobalContext);
   const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
+  const { setTour } = useContext(GlobalContext);
 
   // Modals handling
 
