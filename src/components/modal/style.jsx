@@ -30,6 +30,10 @@ export const Container = styled.div`
         width: 100%;
     }
 
+    p, span{
+        font-size: 1.6rem;
+    }
+
     li{
         background: #000;
     }
