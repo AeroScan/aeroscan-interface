@@ -29,12 +29,12 @@ const AboutSoftwareModal = () => {
                 <CloseOutlined className="closeIcon" onClick={closeModal} />
                 <h1>About Software</h1>
                 <p>
-                    Este software foi desenvolvido exclusivamente para utilização 
-                    no projeto AeroScan (convênio entre ITA e Petrobras), com todos 
-                    os direitos e garantias pertencentes apenas às instituições envolvidas 
-                    no contrato. Tal licença se aplica pois o projeto em questão contratou 
-                    a equipe de desenvolvimento para a fabricação de um sistema específico 
-                    com um escopo de funcionalidades pré-definidos.
+                    This software was developed exclusively for use in the AeroScan 
+                    project (agreement between ITA and Petrobras), with all rights 
+                    and warranties belonging only to the institutions involved in 
+                    the contract. Such a license applies because the project in 
+                    question has hired the development team to manufacture a 
+                    specific system with a predefined scope of functionality.
                 </p>
                 <span>version { softwareVersion }</span>
             </Container>
