@@ -33,7 +33,6 @@ import aboutLogo from '../../assets/img/help/about.svg';
 import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
-import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
@@ -65,7 +64,6 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const inputFile = useRef(null);
-  const downloadLink = useRef(null);
 
   const Success = (msg) => {
     message.open({
@@ -155,6 +153,12 @@ const Header = () => {
         });
         Error("Error saving cloud");
       } else {
+        const linkSource = `data:${response.headers['content-type']};base64,${btoa(response.data)}`;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = linkSource;
+        downloadLink.download = `cloud.${response.data.substring(3, 6).toLowerCase()}`;
+        downloadLink.target = 'self';
+        downloadLink.click();
         setApplicationStatus({
           status: 'success',
           message: 'Cloud saved',
@@ -205,8 +209,6 @@ const Header = () => {
     window.open("http://aeroscan.c3.furg.br/tutorials");
   }
 
-  const png = "http://localhost:3000/print.png"
-
   const tabs = [
     {
       name: 'Files',
@@ -223,10 +225,6 @@ const Header = () => {
         {
           logo: saveCloudLogo,
           label: 'Save Cloud',
-          component: <DownloadButton
-            downloadLink={downloadLink}
-            file={png}
-          />
         },
         /* {
             logo: saveResultsLogo,
