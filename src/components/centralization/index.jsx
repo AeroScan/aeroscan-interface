@@ -10,7 +10,7 @@ import tooltipsTexts from '../../utils/tooltips';
 
 const CentralizationModal = () => {
   const { handleSubmit } = useForm();
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { centralization, setCentralization } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
@@ -34,6 +34,7 @@ const CentralizationModal = () => {
           status: 'success',
           message: 'Centralization applied',
         });
+        setEfficientRansacApplied(false);
         setCloudFolderName(response);
       }
       setGlobalLoading(false);

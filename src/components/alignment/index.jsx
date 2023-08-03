@@ -10,7 +10,7 @@ import tooltipsTexts from '../../utils/tooltips';
 
 const AlignmentModal = () => {
   const { handleSubmit } = useForm();
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { alignment, setAlignment } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
@@ -34,6 +34,7 @@ const AlignmentModal = () => {
           status: 'success',
           message: 'Alignment applied',
         });
+        setEfficientRansacApplied(false);
         setCloudFolderName(response);
       }
       setGlobalLoading(false);

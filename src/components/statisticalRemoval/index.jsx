@@ -18,7 +18,7 @@ const StatisticalRemovalModal = () => {
   });
 
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(statisticalRemovalSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
@@ -49,6 +49,7 @@ const StatisticalRemovalModal = () => {
               status: 'success',
               message: 'Statistical removal applied',
             });
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);

@@ -18,7 +18,7 @@ const VoxelGridModal = () => {
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
@@ -46,6 +46,7 @@ const VoxelGridModal = () => {
               status: 'success',
               message: 'Voxel grid applied',
             });
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);

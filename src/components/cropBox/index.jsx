@@ -20,7 +20,7 @@ const CropBoxModal = () => {
     endingPoint_z: yup.number().typeError("These three parameter are required"),
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cropBoxSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { cropBox, setCropBox } = useContext(GlobalContext);
   const { cloudFolderName, sessionID } = useContext(GlobalContext);
@@ -58,6 +58,7 @@ const CropBoxModal = () => {
               status: 'success',
               message: "Crop box applied",
             });
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);

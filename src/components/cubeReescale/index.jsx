@@ -15,7 +15,7 @@ const CubeReescaleModal = () => {
     factor: yup.number().typeError('A number is required')
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cubeReescaleSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
@@ -45,6 +45,7 @@ const CubeReescaleModal = () => {
               status: 'success',
               message: 'Cube reescale applied',
             });
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);

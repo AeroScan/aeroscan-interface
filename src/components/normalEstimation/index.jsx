@@ -15,7 +15,7 @@ const NormalEstimationModal = () => {
     radius: yup.number().typeError('A number is required')
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
@@ -45,6 +45,7 @@ const NormalEstimationModal = () => {
               status: 'success',
               message: 'Normal estimation applied',
             });
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
