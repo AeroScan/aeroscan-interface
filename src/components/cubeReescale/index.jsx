@@ -19,6 +19,8 @@ const CubeReescaleModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -45,6 +47,18 @@ const CubeReescaleModal = () => {
               status: 'success',
               message: 'Cube reescale applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -65,6 +79,7 @@ const CubeReescaleModal = () => {
 
   const closeModal = () => {
     setCubeReescale({
+      ...cubeReescale,
       modalOpen: false,
     });
   };
@@ -89,8 +104,8 @@ const CubeReescaleModal = () => {
             <input
               type='text'
               id='factor'
-              placeholder='float'
-              {...register("factor", { value: `${cubeReescale.factor}` })}
+              placeholder={cubeReescale.factor}
+              {...register("factor")}
             />
             <Tooltip placement="left" title={tooltipsTexts.cube_rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />

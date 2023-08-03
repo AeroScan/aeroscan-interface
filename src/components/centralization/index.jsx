@@ -14,6 +14,8 @@ const CentralizationModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { centralization, setCentralization } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -34,6 +36,18 @@ const CentralizationModal = () => {
           status: 'success',
           message: 'Centralization applied',
         });
+        if (response.data && response.data.params_suggestion) {
+          const params = JSON.parse(response.data.params_suggestion);
+          setEfficientRansac({
+            ...efficientRansac,
+            clusterEpsilon: params.ransac_cepsilon,
+            epsilon: params.ransac_epsilon,
+          });
+          setVoxelGrid({
+            ...voxelGrid,
+            leafSize: params.voxel,
+          });
+        }
         setEfficientRansacApplied(false);
         setCloudFolderName(response);
       }

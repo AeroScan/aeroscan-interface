@@ -19,6 +19,8 @@ const ReescaleModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { reescale, setReescale } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = (data) => {
     closeModal();
@@ -45,6 +47,18 @@ const ReescaleModal = () => {
               status: 'success',
               message: 'Reescale applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -65,6 +79,7 @@ const ReescaleModal = () => {
 
   const closeModal = () => {
     setReescale({
+      ...reescale,
       modalOpen: false,
     });
   };
@@ -89,7 +104,7 @@ const ReescaleModal = () => {
             <input
               type='text'
               id='scale'
-              placeholder='float'
+              placeholder={reescale.scale}
               {...register("scale")}
             />
             <Tooltip placement="left" title={tooltipsTexts.rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>

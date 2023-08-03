@@ -3,7 +3,7 @@ import React, { useState, createContext } from "react";
 export const GlobalContext = createContext();
 
 const AppContext = ({ children }) => {
-  
+
   // Footer
   const [applicationStatus, setApplicationStatus] = useState({
     status: "success",
@@ -19,53 +19,53 @@ const AppContext = ({ children }) => {
     active: false
   })
   //Parameters
-  const[cropBox, setCropBox] = useState({
+  const [cropBox, setCropBox] = useState({
     modalOpen: false,
-    startinPoint_x: 0,
-    startinPoint_y: 0,
-    startinPoint_z: 0,
-    endingPoint_x: 0,
-    endingPoint_y: 0,
-    endingPoint_z: 0,
+    startingPoint_x: "X",
+    startingPoint_y: "Y",
+    startingPoint_z: "Z",
+    endingPoint_x: "X",
+    endingPoint_y: "Y",
+    endingPoint_z: "Z",
   });
-  const[voxelGrid, setVoxelGrid] = useState({
+  const [voxelGrid, setVoxelGrid] = useState({
     modalOpen: false,
-    leafSize: 0,
+    leafSize: "Leaf Size",
   });
-  const[statisticalRemoval, setStatisticalRemoval] = useState({
+  const [statisticalRemoval, setStatisticalRemoval] = useState({
     modalOpen: false,
-    mean: 0,
-    standardDeviation: 0,
+    mean: "Mean",
+    standardDeviation: "Standard Deviation",
   });
-  const[normalEstimation, setNormalEstimation] = useState({
+  const [normalEstimation, setNormalEstimation] = useState({
     modalOpen: false,
-    radius: 0,
+    radius: "Radius",
   });
-  const[reescale, setReescale] = useState({
+  const [reescale, setReescale] = useState({
     modalOpen: false,
-    scale: 0,
+    scale: "Scale",
   });
-  const[centralization, setCentralization] = useState({
-    modalOpen: false,
-  });
-  const[alignment, setAlignment] = useState({
+  const [centralization, setCentralization] = useState({
     modalOpen: false,
   });
-  const[noiseAdd, setNoiseAdd] = useState({
+  const [alignment, setAlignment] = useState({
     modalOpen: false,
-    limit: 0,
   });
-  const[cubeReescale, setCubeReescale] = useState({
+  const [noiseAdd, setNoiseAdd] = useState({
     modalOpen: false,
-    factor: 0,
+    limit: "Limit",
   });
-  const[efficientRansac, setEfficientRansac] = useState({
+  const [cubeReescale, setCubeReescale] = useState({
     modalOpen: false,
-    probability: 0,
-    minPoints: 0,
-    clusterEpsilon: 0,
-    epsilon: 0,
-    normalThreshold: 0,
+    factor: "Factor",
+  });
+  const [efficientRansac, setEfficientRansac] = useState({
+    modalOpen: false,
+    probability: "Probability",
+    minPoints: "Min Points",
+    clusterEpsilon: "Cluster Epsilon",
+    epsilon: "Epsilon",
+    normalThreshold: "Normal Threshold",
   });
 
   // General
@@ -84,7 +84,7 @@ const AppContext = ({ children }) => {
   const [generatePassword, setGeneratePassword] = useState({
     modalOpen: false,
   });
-  
+
   // States
   const [efficientRansacApplied, setEfficientRansacApplied] = useState(false);
 
@@ -96,7 +96,7 @@ const AppContext = ({ children }) => {
         spheres, setSpheres,
         cylinders, setCylinders,
         cones, setCones,
-        tour,setTour,
+        tour, setTour,
         typesView, setTypesView,
         cloudFile, setCloudFile,
         cloudFolderName, setCloudFolderName,

@@ -19,6 +19,8 @@ const NoiseAddModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -45,6 +47,18 @@ const NoiseAddModal = () => {
               status: 'success',
               message: 'Noise add applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -65,6 +79,7 @@ const NoiseAddModal = () => {
 
   const closeModal = () => {
     setNoiseAdd({
+      ...noiseAdd,
       modalOpen: false,
     });
   };
@@ -89,7 +104,7 @@ const NoiseAddModal = () => {
             <input
               type='text'
               id='limit'
-              placeholder='float'
+              placeholder={noiseAdd.limit}
               {...register("limit")}
             />
             <Tooltip placement="left" title={tooltipsTexts.noise_add.parameters.limit.text} overlayStyle={{ fontSize: '3rem' }}>

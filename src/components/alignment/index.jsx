@@ -14,6 +14,8 @@ const AlignmentModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { alignment, setAlignment } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async () => {
     closeModal();
@@ -34,6 +36,18 @@ const AlignmentModal = () => {
           status: 'success',
           message: 'Alignment applied',
         });
+        if (response.data && response.data.params_suggestion) {
+          const params = JSON.parse(response.data.params_suggestion);
+          setEfficientRansac({
+            ...efficientRansac,
+            clusterEpsilon: params.ransac_cepsilon,
+            epsilon: params.ransac_epsilon,
+          });
+          setVoxelGrid({
+            ...voxelGrid,
+            leafSize: params.voxel,
+          });
+        }
         setEfficientRansacApplied(false);
         setCloudFolderName(response);
       }

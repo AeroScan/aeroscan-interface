@@ -26,7 +26,6 @@ import reescaleLogo from '../../assets/img/pre-processing/reescale.svg';
 import centralizationLogo from '../../assets/img/pre-processing/centralization.svg';
 import alignmentLogo from '../../assets/img/pre-processing/alignment.svg';
 import noiseAddLogo from '../../assets/img/pre-processing/noise-add.png';
-// import cubeReescaleLogo from '../../assets/img/pre-processing/cube-reescale.svg';
 import ransacLogo from '../../assets/img/processing/efficient-ransac.svg';
 import rAllocationLogo from '../../assets/img/configuration/resource-allocation.svg';
 import tourLogo from '../../assets/img/help/tour.svg';
@@ -40,16 +39,12 @@ import { message } from 'antd';
 
 
 const Header = () => {
-
   const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
   const { setApplicationStatus } = useContext(GlobalContext);
-  // const { setCones, setSpheres, setCylinders, setPlanes } = useContext(GlobalContext);
   const { sessionID } = useContext(GlobalContext);
   const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
-  const { setTour } = useContext(GlobalContext);
 
   // Modals handling
-
   const { cropBox, setCropBox } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
   const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
@@ -74,26 +69,26 @@ const Header = () => {
 
   const Success = (msg) => {
     message.open({
-        type: 'success',
-        content: msg,
-        className: 'success-message',
-        style: {
-          fontSize: '4rem',
-          marginTop: '20vh',
-        },
+      type: 'success',
+      content: msg,
+      className: 'success-message',
+      style: {
+        fontSize: '4rem',
+        marginTop: '20vh',
+      },
     });
   };
 
   const Error = (msg) => {
-      message.open({
-          type: 'error',
-          content: msg,
-          className: 'error-message',
-          style: {
-            fontSize: '4rem',
-            marginTop: '20vh',
-          },
-      });
+    message.open({
+      type: 'error',
+      content: msg,
+      className: 'error-message',
+      style: {
+        fontSize: '4rem',
+        marginTop: '20vh',
+      },
+    });
   };
 
   const handleLoadCloud = async (dataForm) => {
@@ -117,12 +112,22 @@ const Header = () => {
           status: 'success',
           message: "Cloud loaded",
         });
+        const params = JSON.parse(response.data.params_suggestion);
+        setEfficientRansac({
+          ...efficientRansac,
+          clusterEpsilon: params.ransac_cepsilon,
+          epsilon: params.ransac_epsilon,
+        });
+        setVoxelGrid({
+          ...voxelGrid,
+          leafSize: params.voxel,
+        });
         setCloudFolderName(response.data.uuid);
         setSessionID(response.data.session);
         Success("Cloud uploaded");
       }
       setGlobalLoading(false);
-      
+
     } catch (error) {
       setApplicationStatus({
         status: 'error',
@@ -196,131 +201,131 @@ const Header = () => {
     }
   }
 
-    const handleRedirect = () => {
-        window.open("http://aeroscan.c3.furg.br/tutorials");
-    }
+  const handleRedirect = () => {
+    window.open("http://aeroscan.c3.furg.br/tutorials");
+  }
 
-    const png = "http://localhost:3000/print.png"
+  const png = "http://localhost:3000/print.png"
 
-    const tabs = [
+  const tabs = [
+    {
+      name: 'Files',
+      step: 'second-step',
+      procedures: [
         {
-            name: 'Files',
-            step: 'second-step',
-            procedures: [
-                {
-                    logo: loudCloudLogo,
-                    label: 'Load Cloud', 
-                    component: <UploadButton
-                        inputFile={inputFile}
-                        handleLoadCloud={handleLoadCloud}
-                    />
-                },
-                {
-                    logo: saveCloudLogo,
-                    label: 'Save Cloud',
-                    component: <DownloadButton
-                        downloadLink={downloadLink}
-                        file={png}
-                    />
-                },
-                /* {
-                    logo: saveResultsLogo,
-                    label: 'Save CAD'
-                } */
-            ]
+          logo: loudCloudLogo,
+          label: 'Load Cloud',
+          component: <UploadButton
+            inputFile={inputFile}
+            handleLoadCloud={handleLoadCloud}
+          />
         },
         {
-            name: 'Pre-Processing',
-            step: 'fourth-step',
-            procedures: [
-                {
-                    logo: cropBoxLogo,
-                    label: 'Crop Box Filter'
-                },
-                {
-                    logo: voxelGridLogo,
-                    label: 'Voxel Grid Filter'
-                },
-                {
-                    logo: sRemovalLogo,
-                    label: 'Statistical Removal'
-                    
-                },
-                {
-                    logo: nEstimationLogo,
-                    label: 'Normal Estimation'
-                },
-                {
-                    logo: reescaleLogo,
-                    label: 'Reescale'
-                },
-                {
-                    logo: centralizationLogo,
-                    label: 'Centralization'
-                },
-                {
-                    logo: alignmentLogo,
-                    label: 'Alignment'
-                },
-                {
-                    logo: noiseAddLogo,
-                    label: 'Noise Add'
-                },
-                // {
-                //     logo: cubeReescaleLogo,
-                //     label: 'Cube Reescale',
-                // },
-            ],
+          logo: saveCloudLogo,
+          label: 'Save Cloud',
+          component: <DownloadButton
+            downloadLink={downloadLink}
+            file={png}
+          />
+        },
+        /* {
+            logo: saveResultsLogo,
+            label: 'Save CAD'
+        } */
+      ]
+    },
+    {
+      name: 'Pre-Processing',
+      step: 'fourth-step',
+      procedures: [
+        {
+          logo: cropBoxLogo,
+          label: 'Crop Box Filter'
         },
         {
-            name: 'Processing',
-            step: 'fifth-step',
-            procedures: [
-                {
-                    logo: ransacLogo,
-                    label: 'Efficient Ransac',
-                }
-            ]    
+          logo: voxelGridLogo,
+          label: 'Voxel Grid Filter'
         },
         {
-            name: 'Help',
-            step: 'sixth-step',
-            procedures: [
-            {
-                logo: tourLogo,
-                label: 'Interface Tour',
-                component: <InterfaceTour/>    
-            },
-            {
-                logo: aboutLogo,
-                label: 'About Software'
-            },
-            {
-                logo: tutorialsLogo,
-                label: 'Tutorials'
-            }
-            ]
+          logo: sRemovalLogo,
+          label: 'Statistical Removal'
+
         },
         {
-            name: 'Admin',
-            procedures: [
-                {
-                    logo: rAllocationLogo,
-                    label: 'Generate Password',
-                }
-            ]
+          logo: nEstimationLogo,
+          label: 'Normal Estimation'
         },
         {
-            name: 'Account',
-            step: 'seventh-step',
-            procedures: [
-            {
-                logo: rAllocationLogo,
-                label: 'Logout', 
-            }
-            ]
+          logo: reescaleLogo,
+          label: 'Reescale'
+        },
+        {
+          logo: centralizationLogo,
+          label: 'Centralization'
+        },
+        {
+          logo: alignmentLogo,
+          label: 'Alignment'
+        },
+        {
+          logo: noiseAddLogo,
+          label: 'Noise Add'
+        },
+        // {
+        //     logo: cubeReescaleLogo,
+        //     label: 'Cube Reescale',
+        // },
+      ],
+    },
+    {
+      name: 'Processing',
+      step: 'fifth-step',
+      procedures: [
+        {
+          logo: ransacLogo,
+          label: 'Efficient Ransac',
         }
-    ];
+      ]
+    },
+    {
+      name: 'Help',
+      step: 'sixth-step',
+      procedures: [
+        {
+          logo: tourLogo,
+          label: 'Interface Tour',
+          component: <InterfaceTour />
+        },
+        {
+          logo: aboutLogo,
+          label: 'About Software'
+        },
+        {
+          logo: tutorialsLogo,
+          label: 'Tutorials'
+        }
+      ]
+    },
+    {
+      name: 'Admin',
+      procedures: [
+        {
+          logo: rAllocationLogo,
+          label: 'Generate Password',
+        }
+      ]
+    },
+    {
+      name: 'Account',
+      step: 'seventh-step',
+      procedures: [
+        {
+          logo: rAllocationLogo,
+          label: 'Logout',
+        }
+      ]
+    }
+  ];
 
   useEffect(() => {
     if (!tokenVerified) {
@@ -347,89 +352,100 @@ const Header = () => {
 
   const handleActions = (element) => {
     switch (element.label) {
-        case "Logout":
-          RemoveToken();
-          break;
-        case "Load Cloud":
-          render(element.component);
-          inputFile.current.click();
-          break;
-        case "Save Cloud":
-          render(element.component);
-          handleSaveCloud();
-          break;
-        case "Save CAD":
-          handleGenerateCad();
-          break;
-        case "Interface Tour":
-          setActiveTab(0);
-          render(element.component)
-          break;
-        case "About Software":
-          setAboutSoftware({
-            modalOpen: true,
-          });
-          break;
-        case "Tutorials":
-          handleRedirect()
-          break;
-        case "Alignment":
-          setAlignment({
-            modalOpen: true,
-          });
-          break;
-        case "Centralization":
-          setCentralization({
-            modalOpen: true,
-          });
-          break;
-        case "Crop Box Filter":
-          setCropBox({
-            modalOpen: true,
-          });
-          break;
-        case "Cube Reescale":
-          setCubeReescale({
-            modalOpen: true,
-          });
-          break;
-        case "Efficient Ransac":
-          setEfficientRansac({
-            modalOpen: true,
-          });
-          break;
-        case "Generate Password":
-          setGeneratePassword({
-            modalOpen: true,
-          });
-          break;
-        case "Noise Add":
-          setNoiseAdd({
-            modalOpen: true,
-          });
-          break;
-        case "Normal Estimation":
-          setNormalEstimation({
-            modalOpen: true,
-          });
-          break;
-        case "Reescale":
-          setReescale({
-            modalOpen: true,
-          });
-          break;
-        case "Statistical Removal":
-          setStatisticalRemoval({
-            modalOpen: true,
-          });
-          break;
-        case "Voxel Grid Filter":
-          setVoxelGrid({
-            modalOpen: true,
-          });
-          break;
-        default:
-          break;
+      case "Logout":
+        RemoveToken();
+        break;
+      case "Load Cloud":
+        render(element.component);
+        inputFile.current.click();
+        break;
+      case "Save Cloud":
+        render(element.component);
+        handleSaveCloud();
+        break;
+      case "Save CAD":
+        handleGenerateCad();
+        break;
+      case "Interface Tour":
+        setActiveTab(0);
+        render(element.component)
+        break;
+      case "About Software":
+        setAboutSoftware({
+          modalOpen: true,
+        });
+        break;
+      case "Tutorials":
+        handleRedirect()
+        break;
+      case "Alignment":
+        setAlignment({
+          ...alignment,
+          modalOpen: true,
+        });
+        break;
+      case "Centralization":
+        setCentralization({
+          ...centralization,
+          modalOpen: true,
+        });
+        break;
+      case "Crop Box Filter":
+        setCropBox({
+          ...cropBox,
+          modalOpen: true,
+        });
+        break;
+      case "Cube Reescale":
+        setCubeReescale({
+          ...cubeReescale,
+          modalOpen: true,
+        });
+        break;
+      case "Efficient Ransac":
+        setEfficientRansac({
+          ...efficientRansac,
+          modalOpen: true,
+        });
+        break;
+      case "Generate Password":
+        setGeneratePassword({
+          ...generatePassword,
+          modalOpen: true,
+        });
+        break;
+      case "Noise Add":
+        setNoiseAdd({
+          ...noiseAdd,
+          modalOpen: true,
+        });
+        break;
+      case "Normal Estimation":
+        setNormalEstimation({
+          ...normalEstimation,
+          modalOpen: true,
+        });
+        break;
+      case "Reescale":
+        setReescale({
+          ...reescale,
+          modalOpen: true,
+        });
+        break;
+      case "Statistical Removal":
+        setStatisticalRemoval({
+          ...statisticalRemoval,
+          modalOpen: true,
+        });
+        break;
+      case "Voxel Grid Filter":
+        setVoxelGrid({
+          ...voxelGrid,
+          modalOpen: true,
+        });
+        break;
+      default:
+        break;
     }
   }
 

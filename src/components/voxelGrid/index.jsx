@@ -20,6 +20,7 @@ const VoxelGridModal = () => {
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
   const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -46,6 +47,18 @@ const VoxelGridModal = () => {
               status: 'success',
               message: 'Voxel grid applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -66,6 +79,7 @@ const VoxelGridModal = () => {
 
   const closeModal = () => {
     setVoxelGrid({
+      ...voxelGrid,
       modalOpen: false,
     });
   };
@@ -90,7 +104,7 @@ const VoxelGridModal = () => {
             <input
               type='text'
               id='leafSize'
-              placeholder='float'
+              placeholder={voxelGrid.leafSize}
               {...register("leafSize")}
             />
             <Tooltip placement="left" title={tooltipsTexts.voxel_grid.parameters.leaf_size.text} overlayStyle={{ fontSize: '3rem' }}>

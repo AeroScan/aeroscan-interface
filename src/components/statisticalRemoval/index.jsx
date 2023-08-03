@@ -22,6 +22,8 @@ const StatisticalRemovalModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -49,6 +51,18 @@ const StatisticalRemovalModal = () => {
               status: 'success',
               message: 'Statistical removal applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -66,6 +80,7 @@ const StatisticalRemovalModal = () => {
 
   const closeModal = () => {
     setStatisticalRemoval({
+      ...statisticalRemoval,
       modalOpen: false,
     });
   };
@@ -90,7 +105,7 @@ const StatisticalRemovalModal = () => {
             <input
               type='text'
               id='mean'
-              placeholder='float'
+              placeholder={statisticalRemoval.mean}
               {...register('mean')}
             />
             <Tooltip placement="left" title={tooltipsTexts.statistical_removal.parameters.mean.text} overlayStyle={{ fontSize: '3rem' }}>
@@ -103,7 +118,7 @@ const StatisticalRemovalModal = () => {
             <input
               type='text'
               id='standardDeviation'
-              placeholder='float'
+              placeholder={statisticalRemoval.standardDeviation}
               {...register('standardDeviation')}
             />
             <Tooltip placement="left" title={tooltipsTexts.statistical_removal.parameters.standard_deviation.text} overlayStyle={{ fontSize: '3rem' }}>

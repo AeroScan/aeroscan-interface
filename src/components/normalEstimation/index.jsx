@@ -19,6 +19,8 @@ const NormalEstimationModal = () => {
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -45,6 +47,18 @@ const NormalEstimationModal = () => {
               status: 'success',
               message: 'Normal estimation applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
@@ -65,6 +79,7 @@ const NormalEstimationModal = () => {
 
   const closeModal = () => {
     setNormalEstimation({
+      ...normalEstimation,
       modalOpen: false,
     });
   };
@@ -89,7 +104,7 @@ const NormalEstimationModal = () => {
             <input
               type='text'
               id='radius'
-              placeholder='float'
+              placeholder={normalEstimation.radius}
               {...register("radius")}
             />
             <Tooltip placement="left" title={tooltipsTexts.normal_estimation.parameters.radius.text} overlayStyle={{ fontSize: '3rem' }}>
