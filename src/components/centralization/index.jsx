@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyCentralization } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const CentralizationModal = () => {
   const { handleSubmit } = useForm();
@@ -65,10 +66,8 @@ const CentralizationModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Centralization</h1>
+        <h2>{tooltipsTexts.centralization.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-          <div className='formContainer'>
-            <p>Are you sure you want to set centralization?</p>
-          </div>
         </form>
         <div className="buttons-container">
           <Button htmlType="submit" form="modalForm">

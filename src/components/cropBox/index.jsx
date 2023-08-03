@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from "../../context";
 import { ApplyCropBox } from "../../services/api";
 import { Container } from '../modal/style';
+import tooltipsTexts from "../../utils/tooltips";
 
 const CropBoxModal = () => {
   const cropBoxSchema = yup.object().shape({
@@ -93,6 +94,7 @@ const CropBoxModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Crop Box Filter</h1>
+        <h2>{tooltipsTexts.crop_box.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className="formContainer">
             <label htmlFor="startinPoint">Starting Point:</label>
@@ -115,8 +117,8 @@ const CropBoxModal = () => {
               {...register("startinPoint_z")}
             />
             <Tooltip
-              placement="right"
-              title={"These fields set the minimum coordinates."}
+              placement="left"
+              title={tooltipsTexts.crop_box.parameters.starting_point.text}
               overlayStyle={{ fontSize: "3rem" }}
             >
               <QuestionCircleFilled />
@@ -150,8 +152,8 @@ const CropBoxModal = () => {
               {...register("endingPoint_z")}
             />
             <Tooltip
-              placement="right"
-              title={"These fields set the maximum coordinates."}
+              placement="left"
+              title={tooltipsTexts.crop_box.parameters.ending_point.text}
               overlayStyle={{ fontSize: "3rem" }}
             >
               <QuestionCircleFilled />

@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyReescale } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const ReescaleModal = () => {
   const reescaleSchema = yup.object().shape({
@@ -80,6 +81,7 @@ const ReescaleModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Reescale</h1>
+        <h2>{tooltipsTexts.rescale.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='scale'>Scale:</label>
@@ -89,7 +91,7 @@ const ReescaleModal = () => {
               placeholder='float'
               {...register("scale")}
             />
-            <Tooltip placement="right" title={'This field update the scale of all cloud points.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

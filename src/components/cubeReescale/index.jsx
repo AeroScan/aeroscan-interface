@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyCubeReescale } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const CubeReescaleModal = () => {
   const cubeReescaleSchema = yup.object().shape({
@@ -80,6 +81,7 @@ const CubeReescaleModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Cube Reescale</h1>
+        <h2>{tooltipsTexts.cube_rescale.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='factor'>Factor:</label>
@@ -89,7 +91,7 @@ const CubeReescaleModal = () => {
               placeholder='float'
               {...register("factor", { value: `${cubeReescale.factor}` })}
             />
-            <Tooltip placement="right" title={'The select set the factor for rescaling the cloud. .'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.cube_rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

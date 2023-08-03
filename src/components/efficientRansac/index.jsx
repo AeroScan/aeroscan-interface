@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyEfficientRansac } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const EfficientRansacModal = () => {
 
@@ -91,6 +92,7 @@ const EfficientRansacModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Efficient Ransac</h1>
+        <h2>{tooltipsTexts.efficient_ransac.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='probability'>Probability:</label>
@@ -100,7 +102,7 @@ const EfficientRansacModal = () => {
               placeholder='float'
               {...register('probability')}
             />
-            <Tooltip placement="right" title={'This field set the method stop condition, probability of losing the largest primitive at each iteration.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.efficient_ransac.parameters.probability.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
@@ -113,7 +115,7 @@ const EfficientRansacModal = () => {
               placeholder='float'
               {...register('minPoints')}
             />
-            <Tooltip placement="right" title={'This field set the minimum number of points for a sample to be considered a possible individual primitive.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.efficient_ransac.parameters.min_points.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
@@ -126,7 +128,7 @@ const EfficientRansacModal = () => {
               placeholder='float'
               {...register('clusterEpsilon')}
             />
-            <Tooltip placement="right" title={'This field set the distance used for two neighboring points to be considered adjacent or not.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.efficient_ransac.parameters.cluster_epsilon.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
@@ -139,7 +141,7 @@ const EfficientRansacModal = () => {
               placeholder='float'
               {...register('epsilon')}
             />
-            <Tooltip placement="right" title={'This field set the minimum distance between a primitive and a point for it to be considered belonging to it.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.efficient_ransac.parameters.epsilon.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
@@ -152,7 +154,7 @@ const EfficientRansacModal = () => {
               placeholder='float'
               {...register('normalThreshold')}
             />
-            <Tooltip placement="right" title={'This field limits how much the normal of a point can angularly differ from the normal of the primitive at the projection position of that point.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.efficient_ransac.parameters.normal_threshold.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyAlignment } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const AlignmentModal = () => {
   const { handleSubmit } = useForm();
@@ -65,10 +66,8 @@ const AlignmentModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Alignment</h1>
+        <h2>{tooltipsTexts.alignment.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-          <div className='formContainer'>
-            <p>Are you sure you want to set alignment?</p>
-          </div>
         </form>
         <div className="buttons-container">
           <Button htmlType="submit" form="modalForm">

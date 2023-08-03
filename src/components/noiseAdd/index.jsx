@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyNoiseAdd } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const NoiseAddModal = () => {
   const noiseAddSchema = yup.object().shape({
@@ -80,6 +81,7 @@ const NoiseAddModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Noise Add</h1>
+        <h2>{tooltipsTexts.noise_add.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='limit'>Limit:</label>
@@ -89,7 +91,7 @@ const NoiseAddModal = () => {
               placeholder='float'
               {...register("limit")}
             />
-            <Tooltip placement="right" title={'The select set the maximum value of noise to add.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.noise_add.parameters.limit.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

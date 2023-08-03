@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyVoxelGrid } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const VoxelGridModal = () => {
 
@@ -81,6 +82,7 @@ const VoxelGridModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Voxel Grid Filter</h1>
+        <h2>{tooltipsTexts.voxel_grid.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='leafSize'>Leaf Size:</label>
@@ -90,7 +92,7 @@ const VoxelGridModal = () => {
               placeholder='float'
               {...register("leafSize")}
             />
-            <Tooltip placement="right" title={'This field set the minimum distance between neighboring points in the cloud equally.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.voxel_grid.parameters.leaf_size.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
