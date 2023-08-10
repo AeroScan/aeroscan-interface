@@ -8,16 +8,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyReescale } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const ReescaleModal = () => {
   const reescaleSchema = yup.object().shape({
     scale: yup.number().typeError('A number is required')
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(reescaleSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { reescale, setReescale } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = (data) => {
     closeModal();
@@ -44,6 +47,19 @@ const ReescaleModal = () => {
               status: 'success',
               message: 'Reescale applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
@@ -63,6 +79,7 @@ const ReescaleModal = () => {
 
   const closeModal = () => {
     setReescale({
+      ...reescale,
       modalOpen: false,
     });
   };
@@ -80,16 +97,17 @@ const ReescaleModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Reescale</h1>
+        <h2>{tooltipsTexts.rescale.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='scale'>Scale:</label>
             <input
               type='text'
               id='scale'
-              placeholder='float'
+              placeholder={reescale.scale}
               {...register("scale")}
             />
-            <Tooltip placement="right" title={'This field update the scale of all cloud points.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

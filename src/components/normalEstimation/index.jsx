@@ -8,16 +8,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyNormalEstimation } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const NormalEstimationModal = () => {
   const normalEstimationSchema = yup.object().shape({
     radius: yup.number().typeError('A number is required')
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(normalEstimationSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -44,6 +47,19 @@ const NormalEstimationModal = () => {
               status: 'success',
               message: 'Normal estimation applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
@@ -63,6 +79,7 @@ const NormalEstimationModal = () => {
 
   const closeModal = () => {
     setNormalEstimation({
+      ...normalEstimation,
       modalOpen: false,
     });
   };
@@ -80,16 +97,17 @@ const NormalEstimationModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Normal Estimation</h1>
+        <h2>{tooltipsTexts.normal_estimation.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='radius'>Radius:</label>
             <input
               type='text'
               id='radius'
-              placeholder='float'
+              placeholder={normalEstimation.radius}
               {...register("radius")}
             />
-            <Tooltip placement="right" title={'This field set the radius.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.normal_estimation.parameters.radius.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

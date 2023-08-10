@@ -14,7 +14,7 @@ export const LoadCloud = async (dataForm) => {
 };
 
 export const SaveCloud = async ({ session }) => {
-  const response = await api.get(`/saveCloud/${session}`);
+  const response = await api.get(`/download/${session}`);
   return response;
 };
 

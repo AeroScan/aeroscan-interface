@@ -6,13 +6,16 @@ import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyAlignment } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const AlignmentModal = () => {
   const { handleSubmit } = useForm();
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { alignment, setAlignment } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async () => {
     closeModal();
@@ -33,6 +36,19 @@ const AlignmentModal = () => {
           status: 'success',
           message: 'Alignment applied',
         });
+        if (response.data && response.data.params_suggestion) {
+          const params = JSON.parse(response.data.params_suggestion);
+          setEfficientRansac({
+            ...efficientRansac,
+            clusterEpsilon: params.ransac_cepsilon,
+            epsilon: params.ransac_epsilon,
+          });
+          setVoxelGrid({
+            ...voxelGrid,
+            leafSize: params.voxel,
+          });
+        }
+        setEfficientRansacApplied(false);
         setCloudFolderName(response);
       }
       setGlobalLoading(false);
@@ -65,10 +81,8 @@ const AlignmentModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Alignment</h1>
+        <h2>{tooltipsTexts.alignment.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
-          <div className='formContainer'>
-            <p>Are you sure you want to set alignment?</p>
-          </div>
         </form>
         <div className="buttons-container">
           <Button htmlType="submit" form="modalForm">

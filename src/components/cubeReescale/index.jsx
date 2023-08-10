@@ -8,16 +8,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyCubeReescale } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const CubeReescaleModal = () => {
   const cubeReescaleSchema = yup.object().shape({
     factor: yup.number().typeError('A number is required')
   });
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(cubeReescaleSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -44,6 +47,19 @@ const CubeReescaleModal = () => {
               status: 'success',
               message: 'Cube reescale applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
@@ -63,6 +79,7 @@ const CubeReescaleModal = () => {
 
   const closeModal = () => {
     setCubeReescale({
+      ...cubeReescale,
       modalOpen: false,
     });
   };
@@ -80,16 +97,17 @@ const CubeReescaleModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Cube Reescale</h1>
+        <h2>{tooltipsTexts.cube_rescale.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='factor'>Factor:</label>
             <input
               type='text'
               id='factor'
-              placeholder='float'
-              {...register("factor", { value: `${cubeReescale.factor}` })}
+              placeholder={cubeReescale.factor}
+              {...register("factor")}
             />
-            <Tooltip placement="right" title={'The select set the factor for rescaling the cloud. .'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.cube_rescale.parameters.factor.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

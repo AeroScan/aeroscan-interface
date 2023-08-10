@@ -111,7 +111,7 @@ const Viewer = () => {
 
   useEffect(() => {
     if (cloudFolderName && Potree && viewerConfigured && viewer) {
-      Potree.loadPointCloud(`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_FILES_PORT}/clouds/${sessionID}/${cloudFolderName}/output/metadata.json`).then(e => {
+      Potree.loadPointCloud(`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_FILES_PORT}/clouds/${sessionID}/${cloudFolderName}/output${efficientRansacApplied ? '_types' : ''}/metadata.json`).then(e => {
         viewer.scene.scenePointCloud.remove(viewer.scene.pointclouds[0]);
         viewer.scene.pointclouds.pop();
         viewer.scene.addPointCloud(e.pointcloud);
@@ -125,7 +125,7 @@ const Viewer = () => {
         viewer.fitToScreen();
       }, error => console.err(`ERROR: ${error}`));
     }
-  }, [sessionID, cloudFolderName, Potree, viewerConfigured, viewer]);
+  }, [sessionID, cloudFolderName, Potree, viewerConfigured, viewer, efficientRansacApplied]);
 
   return (
     <Wrapper id="potree-root">

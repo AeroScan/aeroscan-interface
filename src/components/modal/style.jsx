@@ -30,8 +30,14 @@ export const Container = styled.div`
         width: 100%;
     }
 
+    h2{
+        width: 100%;
+        font-size: 1.25rem;
+        text-align: justify;
+    }
+
     p, span{
-        font-size: 1.6rem;
+        font-size: 1.25rem;
     }
 
     li{
@@ -39,26 +45,25 @@ export const Container = styled.div`
     }
 
     form{
-
         width: 100%;
 
         div.formContainer{
-            align-items: center;
-            display: flex;
-            margin: 30px auto 5px auto;
-            text-align: center;
             width: 75%;
+            display: flex;
+            margin-top: 30px;
+            align-items: center;
+            text-align: center;
 
             p{
                 font-size: 1.6rem;
-                text-alignment: center;
+                text-align: center;
                 width: 100%;
             }
     
             label{
-                font-size: 1.35rem;
+                font-size: 1.25rem;
                 text-align: right;
-                width: 50%;
+                width: 75%;
             }
             
             input{
@@ -117,10 +122,10 @@ export const Container = styled.div`
     }
 
     div.buttons-container{
-        display: flex;
-        justify-content: space-around;
-        margin: 20px auto 0;
         width: 40%;
+        display: flex;
+        margin: 30px auto 0px auto;
+        justify-content: space-around;
 
         button{
             background: #626567;
@@ -128,10 +133,8 @@ export const Container = styled.div`
             border-radius: 2rem;
             box-sizing: border-box;
             color: #FFF;
-            font-size: 2rem;
             font-weight: 600;
-            height: 40px;
-            padding: 0 20px;
+            padding: 0px 20px;
             
             &:hover{
                 background: #7B7D7D

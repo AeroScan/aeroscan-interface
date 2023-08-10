@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyVoxelGrid } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const VoxelGridModal = () => {
 
@@ -17,8 +18,9 @@ const VoxelGridModal = () => {
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(voxelGridSchema) });
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -45,6 +47,19 @@ const VoxelGridModal = () => {
               status: 'success',
               message: 'Voxel grid applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
@@ -64,6 +79,7 @@ const VoxelGridModal = () => {
 
   const closeModal = () => {
     setVoxelGrid({
+      ...voxelGrid,
       modalOpen: false,
     });
   };
@@ -81,16 +97,17 @@ const VoxelGridModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Voxel Grid Filter</h1>
+        <h2>{tooltipsTexts.voxel_grid.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='leafSize'>Leaf Size:</label>
             <input
               type='text'
               id='leafSize'
-              placeholder='float'
+              placeholder={voxelGrid.leafSize}
               {...register("leafSize")}
             />
-            <Tooltip placement="right" title={'This field set the minimum distance between neighboring points in the cloud equally.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.voxel_grid.parameters.leaf_size.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>

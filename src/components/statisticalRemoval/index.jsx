@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyStatisticalOutlierRemoval } from '../../services/api';
 import { Container } from '../modal/style';
+import tooltipsTexts from '../../utils/tooltips';
 
 const StatisticalRemovalModal = () => {
 
@@ -17,10 +18,12 @@ const StatisticalRemovalModal = () => {
   });
 
   const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(statisticalRemovalSchema) });
-  const { setApplicationStatus } = useContext(GlobalContext);
+  const { setApplicationStatus, setEfficientRansacApplied } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { statisticalRemoval, setStatisticalRemoval } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
   const onSubmit = async (data) => {
     closeModal();
@@ -48,6 +51,19 @@ const StatisticalRemovalModal = () => {
               status: 'success',
               message: 'Statistical removal applied',
             });
+            if (response.data && response.data.params_suggestion) {
+              const params = JSON.parse(response.data.params_suggestion);
+              setEfficientRansac({
+                ...efficientRansac,
+                clusterEpsilon: params.ransac_cepsilon,
+                epsilon: params.ransac_epsilon,
+              });
+              setVoxelGrid({
+                ...voxelGrid,
+                leafSize: params.voxel,
+              });
+            }
+            setEfficientRansacApplied(false);
             setCloudFolderName(response);
           }
           setGlobalLoading(false);
@@ -64,6 +80,7 @@ const StatisticalRemovalModal = () => {
 
   const closeModal = () => {
     setStatisticalRemoval({
+      ...statisticalRemoval,
       modalOpen: false,
     });
   };
@@ -81,16 +98,17 @@ const StatisticalRemovalModal = () => {
       <Container>
         <CloseOutlined className="closeIcon" onClick={closeModal} />
         <h1>Statistical Removal</h1>
+        <h2>{tooltipsTexts.statistical_removal.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
             <label htmlFor='mean'>Mean:</label>
             <input
               type='text'
               id='mean'
-              placeholder='float'
+              placeholder={statisticalRemoval.mean}
               {...register('mean')}
             />
-            <Tooltip placement="right" title={'This field set the average.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.statistical_removal.parameters.mean.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
@@ -100,10 +118,10 @@ const StatisticalRemovalModal = () => {
             <input
               type='text'
               id='standardDeviation'
-              placeholder='float'
+              placeholder={statisticalRemoval.standardDeviation}
               {...register('standardDeviation')}
             />
-            <Tooltip placement="right" title={'This field set the standard deviation.'} overlayStyle={{ fontSize: '3rem' }}>
+            <Tooltip placement="left" title={tooltipsTexts.statistical_removal.parameters.standard_deviation.text} overlayStyle={{ fontSize: '3rem' }}>
               <QuestionCircleFilled />
             </Tooltip>
           </div>
