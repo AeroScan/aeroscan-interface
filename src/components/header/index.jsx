@@ -36,7 +36,6 @@ import UploadButton from '../uploadButton';
 import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
 import { message } from 'antd';
 
-
 const Header = () => {
   const { globalLoading, setGlobalLoading } = useContext(GlobalContext);
   const { setApplicationStatus } = useContext(GlobalContext);

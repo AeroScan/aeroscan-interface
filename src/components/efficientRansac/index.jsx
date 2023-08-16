@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import Draggable from 'react-draggable'; 
+import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
 import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
-import { Modal, Button, Tooltip } from 'antd';
+import { Button, Tooltip } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from '../../context';
 import { ApplyEfficientRansac } from '../../services/api';
-import { Container } from '../modal/style';
-import tooltipsTexts from '../../utils/tooltips';
+import { ModalHeader, AntModal } from '../modal/style';
 
 const EfficientRansacModal = () => {
   const efficientRansacSchema = yup.object().shape({
@@ -25,6 +26,29 @@ const EfficientRansacModal = () => {
   const { setEfficientRansacApplied } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+
+  const draggleRef = useRef(null);
+  const [disabled, setDisabled] = useState(true);
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+  });
+    
+  const onStart = (_event, uiData) => {
+    const { clientWidth, clientHeight } = window.document.documentElement;
+    const targetRect = draggleRef.current?.getBoundingClientRect();
+    if (!targetRect) {
+      return;
+    }
+    setBounds({
+      left: -targetRect.left + uiData.x,
+      right: clientWidth - (targetRect.right - uiData.x),
+      top: -targetRect.top + uiData.y,
+      bottom: clientHeight - (targetRect.bottom - uiData.y),
+    });
+  };
 
   const onSubmit = async (data) => {
     closeModal();
@@ -93,18 +117,36 @@ const EfficientRansacModal = () => {
   };
 
   return (
-    <Modal
+    <AntModal
+      title={
+        <ModalHeader
+        onMouseOver={() => disabled && setDisabled(false)}
+        onMouseOut={() => setDisabled(true)}
+        >
+          <CloseOutlined className="closeIcon" onClick={closeModal} />
+          <h1>Efficient Ransac</h1>
+        </ModalHeader>
+      }
       open={efficientRansac.modalOpen}
+      onCancel={closeModal}
       footer={null}
       width={"40%"}
       closable={false}
       maskClosable={true}
       centered
       destroyOnClose
+      modalRender={(modal) => (
+        <Draggable
+          disabled={disabled}
+          bounds={bounds}
+          nodeRef={draggleRef}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
+          <div ref={draggleRef}>{modal}</div>
+        </Draggable>
+      )}
     >
-      <Container>
-        <CloseOutlined className="closeIcon" onClick={closeModal} />
-        <h1>Efficient Ransac</h1>
+      <div>
         <h2>{tooltipsTexts.efficient_ransac.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
           <div className='formContainer'>
@@ -181,8 +223,8 @@ const EfficientRansacModal = () => {
             Cancel
           </Button>
         </div>
-      </Container>
-    </Modal>
+      </div>
+    </AntModal>
 
   );
 }

@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
+import Draggable from 'react-draggable'; 
+import tooltipsTexts from '../../utils/tooltips';
 import { useForm } from "react-hook-form";
-import { Modal, Button } from 'antd';
+import { Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import { GlobalContext } from '../../context';
 import { ApplyAlignment } from '../../services/api';
-import { Container } from '../modal/style';
-import tooltipsTexts from '../../utils/tooltips';
+import { ModalHeader, AntModal } from '../modal/style';
 
 const AlignmentModal = () => {
   const { handleSubmit } = useForm();
@@ -16,6 +17,29 @@ const AlignmentModal = () => {
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+
+  const draggleRef = useRef(null);
+  const [disabled, setDisabled] = useState(true);
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    bottom: 0,
+    right: 0,
+  });
+    
+  const onStart = (_event, uiData) => {
+    const { clientWidth, clientHeight } = window.document.documentElement;
+    const targetRect = draggleRef.current?.getBoundingClientRect();
+    if (!targetRect) {
+      return;
+    }
+    setBounds({
+      left: -targetRect.left + uiData.x,
+      right: clientWidth - (targetRect.right - uiData.x),
+      top: -targetRect.top + uiData.y,
+      bottom: clientHeight - (targetRect.bottom - uiData.y),
+    });
+  };
 
   const onSubmit = async () => {
     closeModal();
@@ -69,18 +93,36 @@ const AlignmentModal = () => {
   }
 
   return (
-    <Modal
+    <AntModal
+      title={
+        <ModalHeader
+        onMouseOver={() => disabled && setDisabled(false)}
+        onMouseOut={() => setDisabled(true)}
+        >
+          <CloseOutlined className="closeIcon" onClick={closeModal} />
+          <h1>Alignment</h1>
+        </ModalHeader>
+      }
       open={alignment.modalOpen}
+      onCancel={closeModal}
       footer={null}
       width={"40%"}
       closable={false}
       maskClosable={true}
       centered
       destroyOnClose
+      modalRender={(modal) => (
+        <Draggable
+          disabled={disabled}
+          bounds={bounds}
+          nodeRef={draggleRef}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
+          <div ref={draggleRef}>{modal}</div>
+        </Draggable>
+      )}
     >
-      <Container>
-        <CloseOutlined className="closeIcon" onClick={closeModal} />
-        <h1>Alignment</h1>
+      <div>
         <h2>{tooltipsTexts.alignment.text}</h2>
         <form onSubmit={handleSubmit(onSubmit)} id="modalForm">
         </form>
@@ -92,8 +134,8 @@ const AlignmentModal = () => {
             Cancel
           </Button>
         </div>
-      </Container>
-    </Modal>
+      </div>
+    </AntModal>
   );
 }
 
