@@ -18,13 +18,13 @@ export const SaveCloud = async ({ session }) => {
   return response;
 };
 
-export const SaveRansacResults = async ({ uuid }) => {
-  const response = await api.get(`/getRansacResults/${uuid}`);
+export const SaveRansacResults = async ({ sessionId }) => {
+  const response = await api.get(`/getRansacResults/${sessionId}`);
   if (response.data.error) {
     console.err(response.data.message);
     return false;
   }
-  return !response.data.error;
+  return response;
 };
 
 export const ApplyCropBox = async ({

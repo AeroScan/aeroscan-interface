@@ -156,7 +156,7 @@ const Header = () => {
         const linkSource = `data:${response.headers['content-type']};base64,${btoa(response.data)}`;
         const downloadLink = document.createElement('a');
         downloadLink.href = linkSource;
-        downloadLink.download = `cloud.${response.data.substring(3, 6).toLowerCase()}`;
+        downloadLink.download = `cloud.pcd`;
         downloadLink.target = 'self';
         downloadLink.click();
         setApplicationStatus({
@@ -179,17 +179,23 @@ const Header = () => {
   const handleSaveRansacResults = async () => {
     setApplicationStatus({
       status: 'busy',
-      message: 'Generating cad',
+      message: 'Savin ransac results',
     });
     setGlobalLoading(true);
     try {
-      const result = await SaveRansacResults();
+      const result = await SaveRansacResults({ sessionId: sessionID });
       if (!result) {
         setApplicationStatus({
           status: 'error',
           message: 'Failed to save ransac results',
         });
       } else {
+        const linkSource = `data:${result.headers['content-type']};base64,${btoa(result.data)}`;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = linkSource;
+        downloadLink.download = `result.yaml`;
+        downloadLink.target = 'self';
+        downloadLink.click();
         setApplicationStatus({
           status: 'busy',
           message: 'Ransac results saved',
