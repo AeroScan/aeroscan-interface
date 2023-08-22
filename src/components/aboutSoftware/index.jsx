@@ -3,7 +3,7 @@ import Draggable from 'react-draggable';
 import { GlobalContext } from '../../context';
 import { CloseOutlined } from '@ant-design/icons';
 import { ModalHeader, AntModal } from '../modal/style';
-import { softwareVersion } from '../../services/contants';
+import { softwareVersion } from '../../utils/contants';
 
 const AboutSoftwareModal = () => {
 
