@@ -119,6 +119,10 @@ const Header = () => {
           ...voxelGrid,
           leafSize: params.voxel,
         });
+        setNormalEstimation({
+          ...normalEstimation,
+          radius: params.normal,
+        });
         setCloudFolderName(response.data.uuid);
         setSessionID(response.data.session);
         Success("Cloud uploaded");

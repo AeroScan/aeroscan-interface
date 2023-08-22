@@ -26,6 +26,7 @@ const EfficientRansacModal = () => {
   const { setEfficientRansacApplied } = useContext(GlobalContext);
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
 
   const draggleRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
@@ -89,6 +90,10 @@ const EfficientRansacModal = () => {
               setVoxelGrid({
                 ...voxelGrid,
                 leafSize: params.voxel,
+              });
+              setNormalEstimation({
+                ...normalEstimation,
+                radius: params.normal,
               });
             }
             setEfficientRansacApplied(true);

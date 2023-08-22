@@ -10,6 +10,7 @@ export const LoadCloud = async (dataForm) => {
       "Content-Type": "multipart/form-data",
     },
   });
+  console.log(JSON.parse(response.data.params_suggestion));
   return response;
 };
 
