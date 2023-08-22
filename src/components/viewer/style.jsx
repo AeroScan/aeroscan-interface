@@ -19,3 +19,17 @@ export const Axes = styled.div`
     width: 10%;
     z-index: 10;
 `
+
+export const ViewSwitchContainer = styled.div`
+    right: 0;
+    top: 25px;
+    width: 10%;
+    z-index: 10;
+    position: absolute;
+
+    h1 {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+`
