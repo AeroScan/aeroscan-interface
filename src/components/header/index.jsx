@@ -53,7 +53,7 @@ const Header = () => {
   const { alignment, setAlignment } = useContext(GlobalContext);
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
-  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac, efficientRansacApplied } = useContext(GlobalContext);
   const { aboutSoftware, setAboutSoftware } = useContext(GlobalContext);
   const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
 
@@ -181,9 +181,14 @@ const Header = () => {
   }
 
   const handleSaveRansacResults = async () => {
+    if (!efficientRansacApplied) {
+      console.log("You have to apply the efficient ransac first");
+      Error("You have to apply the efficient ransac first");
+      return;
+    }
     setApplicationStatus({
       status: 'busy',
-      message: 'Savin ransac results',
+      message: 'Saving ransac results',
     });
     setGlobalLoading(true);
     try {
@@ -238,7 +243,7 @@ const Header = () => {
         },
         {
           logo: saveResultsLogo,
-          label: 'Save Ransac Results'
+          label: 'Save Results'
         }
       ]
     },
@@ -371,7 +376,7 @@ const Header = () => {
         render(element.component);
         handleSaveCloud();
         break;
-      case "Save Ransac Results":
+      case "Save Results":
         handleSaveRansacResults();
         break;
       case "Interface Tour":
