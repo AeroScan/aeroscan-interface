@@ -34,6 +34,7 @@ import aboutLogo from '../../assets/img/help/about.svg';
 import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
+import DownloadButton from '../downloadButton';
 import { LoadCloud, SaveCloud, SaveRansacResults } from '../../services/api';
 import { message } from 'antd';
 
@@ -54,6 +55,7 @@ const Header = () => {
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { efficientRansacApplied } = useContext(GlobalContext);
   const { aboutSoftware, setAboutSoftware } = useContext(GlobalContext);
   const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
 
@@ -62,8 +64,10 @@ const Header = () => {
   const [tabsToShow, setTabsToShow] = useState([]);
   const [tokenVerified, setTokenVerified] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [downloadFile, setDownloadFile] = useState("");
 
   const inputFile = useRef(null);
+  const downloadLink = useRef(null);
 
   const Success = (msg) => {
     message.open({
@@ -154,6 +158,7 @@ const Header = () => {
         Error("Error saving cloud");
       } else {
         const linkSource = `data:${response.headers['content-type']};base64,${btoa(response.data)}`;
+        // setDownloadFile(linkSource)
         const downloadLink = document.createElement('a');
         downloadLink.href = linkSource;
         downloadLink.download = `cloud.pcd`;
@@ -231,6 +236,10 @@ const Header = () => {
         {
           logo: saveCloudLogo,
           label: 'Save Cloud',
+          component: <DownloadButton
+            downloadLink={downloadLink}
+            file={downloadFile}
+          />
         },
         {
           logo: saveResultsLogo,
@@ -364,8 +373,10 @@ const Header = () => {
         inputFile.current.click();
         break;
       case "Save Cloud":
-        render(element.component);
         handleSaveCloud();
+        console.log(downloadFile)
+        render(element.component);
+        downloadLink.current.click();
         break;
       case "Save Ransac Results":
         handleSaveRansacResults();
@@ -476,8 +487,18 @@ const Header = () => {
       <ul>
         {tabContent.map((element, index) => (
           <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
-            <img src={element.logo} alt={element.label} />
-            <p>{element.label}</p>
+            {element.label != "Save Ransac Results" ?
+                <>
+                  <img src={element.logo} alt={element.label} />
+                  <p>{element.label}</p>
+                </>
+              
+              : efficientRansacApplied &&
+                <>
+                  <img src={element.logo} alt={element.label} />
+                  <p>{element.label}</p>
+                </>
+            }
           </li>
         ))}
       </ul>
