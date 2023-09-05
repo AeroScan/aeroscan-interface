@@ -12,22 +12,22 @@ const Footer = () => {
 
   const legendItems = [
     {
-      value: planes,
+      value: planes.amount,
       label: 'Planes',
       color: '#FF0000'
     },
     {
-      value: spheres,
+      value: spheres.amount,
       label: 'Spheres',
       color: '#008000'
     },
     {
-      value: cylinders,
+      value: cylinders.amount,
       label: 'Cylinders',
       color: '#0000FF'
     },
     {
-      value: cones,
+      value: cones.amount,
       label: 'Cones',
       color: '#DDDD00'
     }

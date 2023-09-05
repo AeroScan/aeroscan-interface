@@ -74,7 +74,7 @@ export const AntModal = styled(Modal)`
                     label{
                         font-size: 1.25rem;
                         text-align: right;
-                        width: 75%;
+                        min-width: 150px;
                     }
                     
                     input{
@@ -125,6 +125,10 @@ export const AntModal = styled(Modal)`
                         margin-left: 10px;
                     } 
                 } 
+
+                .ant-row{
+                    margin: 0;
+                }
 
                 span.error{
                     color: #C0392B;

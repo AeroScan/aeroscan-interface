@@ -23,6 +23,11 @@ const Viewer = () => {
 
   const potreeAxes = useRef(null);
 
+  const { planes } = useContext(GlobalContext);
+  const { spheres } = useContext(GlobalContext);
+  const { cylinders } = useContext(GlobalContext);
+  const { cones } = useContext(GlobalContext);
+
   useEffect(() => {
     if (Potree && !pageLoaded) {
       const viewerElem = potree_render_area.current
@@ -49,41 +54,31 @@ const Viewer = () => {
 
   useEffect(() => {
     if (efficientRansacApplied && viewer) {
-      if (view === 'types') {
-        viewer.setClassifications([
-          {
-            visible: true,
-            name: 'unlabeled',
-            color: [0, 0, 0, 1]
-          },
-          {
-            visible: true,
-            name: 'plane',
-            color: [1, 0, 0, 1],
-          },
-          {
-            visible: true,
-            name: 'cylinder',
-            color: [0, 0, 1, 1],
-          }, {
-            visible: true,
-            name: 'cone',
-            color: [1, 1, 0, 1],
-          }, {
-            visible: true,
-            name: 'sphere',
-            color: [0, 0.5, 0, 1],
-          }
-        ]);
-      } else if (view === 'instances') {
-        viewer.setClassifications([
-          {
-            visible: true,
-            name: 'unlabeled',
-            color: [0, 0, 0, 1]
-          },
-        ]);
-      }
+      viewer.setClassifications([
+        {
+          visible: true,
+          name: 'unlabeled',
+          color: [0, 0, 0, 1]
+        },
+        {
+          visible: planes.visible,
+          name: 'plane',
+          color: [1, 0, 0, 1],
+        },
+        {
+          visible: cylinders.visible,
+          name: 'cylinder',
+          color: [0, 0, 1, 1],
+        }, {
+          visible: cones.visible,
+          name: 'cone',
+          color: [1, 1, 0, 1],
+        }, {
+          visible: spheres.visible,
+          name: 'sphere',
+          color: [0, 0.5, 0, 1],
+        }
+      ]);
     }
   }, [efficientRansacApplied, viewer, view]);
 
