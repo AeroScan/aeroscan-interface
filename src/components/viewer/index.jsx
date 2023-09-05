@@ -19,6 +19,11 @@ const Viewer = () => {
 
   const potreeAxes = useRef(null);
 
+  const { planes } = useContext(GlobalContext);
+  const { spheres } = useContext(GlobalContext);
+  const { cylinders } = useContext(GlobalContext);
+  const { cones } = useContext(GlobalContext);
+
   useEffect(() => {
     if (Potree && !pageLoaded) {
       const viewerElem = potree_render_area.current
@@ -40,20 +45,20 @@ const Viewer = () => {
           color: [0, 0, 0, 1]
         },
         {
-          visible: true,
+          visible: planes.visible,
           name: 'plane',
           color: [1, 0, 0, 1],
         },
         {
-          visible: true,
+          visible: cylinders.visible,
           name: 'cylinder',
           color: [0, 0, 1, 1],
         }, {
-          visible: true,
+          visible: cones.visible,
           name: 'cone',
           color: [1, 1, 0, 1],
         }, {
-          visible: true,
+          visible: spheres.visible,
           name: 'sphere',
           color: [0, 0.5, 0, 1],
         }

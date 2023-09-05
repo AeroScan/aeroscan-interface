@@ -9,10 +9,22 @@ const AppContext = ({ children }) => {
     status: "success",
     message: "Started",
   });
-  const [planes, setPlanes] = useState(0);
-  const [spheres, setSpheres] = useState(0);
-  const [cylinders, setCylinders] = useState(0);
-  const [cones, setCones] = useState(0);
+  const [planes, setPlanes] = useState({
+    visible: false,
+    amount: 0,
+  });
+  const [spheres, setSpheres] = useState({
+    visible: false,
+    amount: 0,
+  });
+  const [cylinders, setCylinders] = useState({
+    visible: false,
+    amount: 0,
+  });
+  const [cones, setCones] = useState({
+    visible: false,
+    amount: 0,
+  });
 
   //tour
   const [tour, setTour] = useState({

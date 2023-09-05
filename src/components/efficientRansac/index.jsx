@@ -3,7 +3,7 @@ import Draggable from 'react-draggable';
 import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
 import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Checkbox, Col, Row } from 'antd';
 import 'antd/dist/antd.css';
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -12,6 +12,7 @@ import { ApplyEfficientRansac } from '../../services/api';
 import { ModalHeader, AntModal } from '../modal/style';
 
 const EfficientRansacModal = () => {
+
   const efficientRansacSchema = yup.object().shape({
     probability: yup.number().typeError('A number is required'),
     minPoints: yup.number().typeError('A number is required'),
@@ -27,6 +28,7 @@ const EfficientRansacModal = () => {
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
+  const [primitive, setPrimitive] = useState([]);
   const draggleRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
@@ -68,6 +70,7 @@ const EfficientRansacModal = () => {
             epsilon: data.clusterEpsilon,
             cluster_epsilon: data.epsilon,
             normal_threshold: data.normalThreshold,
+            primitive: primitive,
           });
           if (!response) {
             setApplicationStatus({
@@ -214,6 +217,28 @@ const EfficientRansacModal = () => {
             </Tooltip>
           </div>
           <span className='error'>{errors.normalThreshold?.message}</span>
+          <Checkbox.Group
+          defaultValue={"plane, cylinder, cone, sphere"}
+            style={{
+              width: '75%',
+            }}
+            onChange={(values) => setPrimitive(values)}
+          >
+            <Row defaultChecked={true}>
+              <Col span={4}>
+                <Checkbox value="plane">Plane</Checkbox>
+              </Col>
+              <Col span={4}>
+                <Checkbox value="cylinder">Cylinder</Checkbox>
+              </Col>
+              <Col span={4}>
+                <Checkbox value="cone">Cone</Checkbox>
+              </Col>
+              <Col span={4}>
+                <Checkbox value="sphere">Sphere</Checkbox>
+              </Col>
+            </Row>
+          </Checkbox.Group>
         </form>
         <div className="buttons-container">
           <Button htmlType="submit" form="modalForm">
