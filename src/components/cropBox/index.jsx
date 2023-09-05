@@ -27,6 +27,7 @@ const CropBoxModal = () => {
   const { cloudFolderName, sessionID } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
 
   const draggleRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
@@ -92,6 +93,10 @@ const CropBoxModal = () => {
               setVoxelGrid({
                 ...voxelGrid,
                 leafSize: params.voxel,
+              });
+              setNormalEstimation({
+                ...normalEstimation,
+                radius: params.normal,
               });
             }
             setEfficientRansacApplied(false);

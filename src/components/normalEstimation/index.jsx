@@ -82,6 +82,10 @@ const NormalEstimationModal = () => {
                 ...voxelGrid,
                 leafSize: params.voxel,
               });
+              setNormalEstimation({
+                ...normalEstimation,
+                radius: params.normal,
+              });
             }
             setEfficientRansacApplied(false);
             setCloudFolderName(response);

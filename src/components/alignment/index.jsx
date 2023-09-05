@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
+import Draggable from 'react-draggable';
 import tooltipsTexts from '../../utils/tooltips';
 import { useForm } from "react-hook-form";
 import { Button } from 'antd';
@@ -17,6 +17,7 @@ const AlignmentModal = () => {
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
+  const { normalEstimation, setNormalEstimation } = useContext(GlobalContext);
 
   const draggleRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
@@ -26,7 +27,7 @@ const AlignmentModal = () => {
     bottom: 0,
     right: 0,
   });
-    
+
   const onStart = (_event, uiData) => {
     const { clientWidth, clientHeight } = window.document.documentElement;
     const targetRect = draggleRef.current?.getBoundingClientRect();
@@ -71,6 +72,10 @@ const AlignmentModal = () => {
             ...voxelGrid,
             leafSize: params.voxel,
           });
+          setNormalEstimation({
+            ...normalEstimation,
+            radius: params.normal,
+          });
         }
         setEfficientRansacApplied(false);
         setCloudFolderName(response);
@@ -96,8 +101,8 @@ const AlignmentModal = () => {
     <AntModal
       title={
         <ModalHeader
-        onMouseOver={() => disabled && setDisabled(false)}
-        onMouseOut={() => setDisabled(true)}
+          onMouseOver={() => disabled && setDisabled(false)}
+          onMouseOut={() => setDisabled(true)}
         >
           <CloseOutlined className="closeIcon" onClick={closeModal} />
           <h1>Alignment</h1>
