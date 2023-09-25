@@ -28,7 +28,7 @@ const EfficientRansacModal = () => {
   const { sessionID, cloudFolderName } = useContext(GlobalContext);
   const { voxelGrid, setVoxelGrid } = useContext(GlobalContext);
 
-  const [primitive, setPrimitive] = useState([]);
+  const [primitives, setPrimitives] = useState(["sphere", "cone", "cylinder", "plane"]);
   const draggleRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
   const [bounds, setBounds] = useState({
@@ -70,7 +70,7 @@ const EfficientRansacModal = () => {
             epsilon: data.clusterEpsilon,
             cluster_epsilon: data.epsilon,
             normal_threshold: data.normalThreshold,
-            primitive: primitive,
+            primitives: primitives,
           });
           if (!response) {
             setApplicationStatus({
@@ -218,11 +218,11 @@ const EfficientRansacModal = () => {
           </div>
           <span className='error'>{errors.normalThreshold?.message}</span>
           <Checkbox.Group
-          defaultValue={"plane, cylinder, cone, sphere"}
+            defaultValue={"plane, cylinder, cone, sphere"}
             style={{
               width: '75%',
             }}
-            onChange={(values) => setPrimitive(values)}
+            onChange={(values) => setPrimitives(values)}
           >
             <Row defaultChecked={true}>
               <Col span={4}>
