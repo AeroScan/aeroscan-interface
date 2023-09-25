@@ -18,6 +18,7 @@ import VoxelGridModal from '../voxelGrid';
 import NoiseAddModal from '../noiseAdd';
 import loudCloudLogo from '../../assets/img/archives/load-cloud.svg';
 import saveCloudLogo from '../../assets/img/archives/save-cloud.svg';
+import saveResultsLogo from '../../assets/img/archives/save-results.svg';
 import cropBoxLogo from '../../assets/img/pre-processing/crop-box.svg';
 import voxelGridLogo from '../../assets/img/pre-processing/voxel-grid.svg';
 import sRemovalLogo from '../../assets/img/pre-processing/statistical-removal.svg';
@@ -33,7 +34,7 @@ import aboutLogo from '../../assets/img/help/about.svg';
 import tutorialsLogo from '../../assets/img/help/tutorials.svg';
 import InterfaceTour from '../tour';
 import UploadButton from '../uploadButton';
-import { LoadCloud, SaveCloud, GenerateCad } from '../../services/api';
+import { LoadCloud, SaveCloud, SaveRansacResults } from '../../services/api';
 import { message } from 'antd';
 
 const Header = () => {
@@ -52,7 +53,7 @@ const Header = () => {
   const { alignment, setAlignment } = useContext(GlobalContext);
   const { cubeReescale, setCubeReescale } = useContext(GlobalContext);
   const { noiseAdd, setNoiseAdd } = useContext(GlobalContext);
-  const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
+  const { efficientRansac, setEfficientRansac, efficientRansacApplied } = useContext(GlobalContext);
   const { aboutSoftware, setAboutSoftware } = useContext(GlobalContext);
   const { generatePassword, setGeneratePassword } = useContext(GlobalContext);
 
@@ -119,6 +120,10 @@ const Header = () => {
           ...voxelGrid,
           leafSize: params.voxel,
         });
+        setNormalEstimation({
+          ...normalEstimation,
+          radius: params.normal,
+        });
         setCloudFolderName(response.data.uuid);
         setSessionID(response.data.session);
         Success("Cloud uploaded");
@@ -155,7 +160,7 @@ const Header = () => {
         const linkSource = `data:${response.headers['content-type']};base64,${btoa(response.data)}`;
         const downloadLink = document.createElement('a');
         downloadLink.href = linkSource;
-        downloadLink.download = `cloud.${response.data.substring(3, 6).toLowerCase()}`;
+        downloadLink.download = `cloud.pcd`;
         downloadLink.target = 'self';
         downloadLink.click();
         setApplicationStatus({
@@ -175,30 +180,41 @@ const Header = () => {
     }
   }
 
-  const handleGenerateCad = async () => {
+  const handleSaveRansacResults = async () => {
+    if (!efficientRansacApplied) {
+      console.log("You have to apply the efficient ransac first");
+      Error("You have to apply the efficient ransac first");
+      return;
+    }
     setApplicationStatus({
       status: 'busy',
-      message: 'Generating cad',
+      message: 'Saving ransac results',
     });
     setGlobalLoading(true);
     try {
-      const result = await GenerateCad();
+      const result = await SaveRansacResults({ sessionId: sessionID });
       if (!result) {
         setApplicationStatus({
           status: 'error',
-          message: 'Failed to generate cad',
+          message: 'Failed to save ransac results',
         });
       } else {
+        const linkSource = `data:${result.headers['content-type']};base64,${btoa(result.data)}`;
+        const downloadLink = document.createElement('a');
+        downloadLink.href = linkSource;
+        downloadLink.download = `result.yaml`;
+        downloadLink.target = 'self';
+        downloadLink.click();
         setApplicationStatus({
           status: 'busy',
-          message: 'Cad saved',
+          message: 'Ransac results saved',
         });
       }
       setGlobalLoading(false);
     } catch (error) {
       setApplicationStatus({
         status: 'error',
-        message: 'Failed to save cad',
+        message: 'Failed to save ransac results',
       });
       setGlobalLoading(false);
     }
@@ -225,10 +241,10 @@ const Header = () => {
           logo: saveCloudLogo,
           label: 'Save Cloud',
         },
-        /* {
-            logo: saveResultsLogo,
-            label: 'Save CAD'
-        } */
+        {
+          logo: saveResultsLogo,
+          label: 'Save Results'
+        }
       ]
     },
     {
@@ -360,8 +376,8 @@ const Header = () => {
         render(element.component);
         handleSaveCloud();
         break;
-      case "Save CAD":
-        handleGenerateCad();
+      case "Save Results":
+        handleSaveRansacResults();
         break;
       case "Interface Tour":
         setActiveTab(0);

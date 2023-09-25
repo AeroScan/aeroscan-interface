@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { GlobalContext } from '../../context';
-import { Axes, Wrapper } from './style';
+import { Axes, ViewSwitchContainer, Wrapper } from './style';
 import $ from 'jquery';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Radio } from 'antd';
+
+const RadioGroup = Radio.Group;
 
 const Viewer = () => {
   const { Potree } = window;
@@ -11,6 +14,7 @@ const Viewer = () => {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [viewer, setViewer] = useState(null);
   const [viewerConfigured, setViewerConfigured] = useState(false);
+  const [view, setView] = useState('types');
 
   const potree_render_area = useRef(null);
   const { cloudFolderName, sessionID } = useContext(GlobalContext);
@@ -32,9 +36,21 @@ const Viewer = () => {
     }
   }, [Potree, pageLoaded]);
 
-  if(tour){
+  if (tour) {
     $("#menu_tools").next().show();
   }
+
+  const onChange = e => {
+    setView(e.target.value);
+  };
+
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+    color: 'white',
+    marginLeft: '10px',
+  };
 
   useEffect(() => {
     if (efficientRansacApplied && viewer) {
@@ -64,7 +80,7 @@ const Viewer = () => {
         }
       ]);
     }
-  }, [efficientRansacApplied, viewer]);
+  }, [efficientRansacApplied, viewer, view]);
 
   useEffect(() => {
     if (viewer && !viewerConfigured) {
@@ -76,7 +92,7 @@ const Viewer = () => {
       viewer.loadGUI(() => {
         viewer.setLanguage('en');
         $("#menu_tools").next().show();
-        $(".button-icon:nth-child(3)").first().attr("data-tut","twelfth-step")
+        $(".button-icon:nth-child(3)").first().attr("data-tut", "twelfth-step")
         viewer.toggleSidebar();
         viewer.setClassifications([
           {
@@ -116,7 +132,7 @@ const Viewer = () => {
 
   useEffect(() => {
     if (cloudFolderName && Potree && viewerConfigured && viewer) {
-      Potree.loadPointCloud(`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_FILES_PORT}/clouds/${sessionID}/${cloudFolderName}/output${efficientRansacApplied ? '_types' : ''}/metadata.json`).then(e => {
+      Potree.loadPointCloud(`${process.env.REACT_APP_SERVER_URL}:${process.env.REACT_APP_FILES_PORT}/clouds/${sessionID}/${cloudFolderName}/output${efficientRansacApplied ? `_${view}` : ''}/metadata.json`).then(e => {
         viewer.scene.scenePointCloud.remove(viewer.scene.pointclouds[0]);
         viewer.scene.pointclouds.pop();
         viewer.scene.addPointCloud(e.pointcloud);
@@ -130,11 +146,20 @@ const Viewer = () => {
         viewer.fitToScreen();
       }, error => console.err(`ERROR: ${error}`));
     }
-  }, [sessionID, cloudFolderName, Potree, viewerConfigured, viewer, efficientRansacApplied]);
+  }, [sessionID, cloudFolderName, Potree, viewerConfigured, viewer, efficientRansacApplied, view]);
 
   return (
     <Wrapper id="potree-root">
       <Axes ref={potreeAxes} />
+      {efficientRansacApplied ? (
+        <ViewSwitchContainer>
+          <h1>View type:</h1>
+          <RadioGroup onChange={onChange} value={view}>
+            <Radio style={radioStyle} value='types'>Types</Radio>
+            <Radio style={radioStyle} value='instances'>Instances</Radio>
+          </RadioGroup>
+        </ViewSwitchContainer>
+      ) : null}
       <div ref={potree_render_area} id="potree_render_area" data-tut="eighth-step" />
       <div id="potree_sidebar_container" data-tut="ninth-step" />
     </Wrapper>

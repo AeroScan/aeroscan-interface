@@ -1,9 +1,9 @@
 const tooltipsTexts = {
   alignment: {
-    text: "The Alignment filter can be applied to align the input point cloud to a reference point cloud. The reference point cloud must be loaded in the point cloud visualization. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "The Alignment algorithm facilitates the precise alignment of the point cloud, ensuring it is aligned to the center of the coordinate system and orientation. After applying it, you can utilize the Point Measurement tool within the point cloud visualization to check this functionality.",
   },
   centralization: {
-    text: "The Centralization filter can be applied to centralize the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Centralization is the process of repositioning the point cloud within a centered coordinate system. After applying it, you can utilize the Point Measurement tool within the point cloud visualization to check this functionality.",
   },
   crop_box: {
     text: "The Crop Box filter can be applied to crop just the region of interest in the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
@@ -17,73 +17,73 @@ const tooltipsTexts = {
     },
   },
   cube_rescale: {
-    text: "The Cube Rescale filter can be applied to rescale the input point cloud to a cube with a given size. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Cube Rescaling enables you to scale the point cloud to fit within a specified cubic region. Adjust the rescaling parameters manually or leverage the Point Measurement tool to determine the ideal values.",
     parameters: {
       factor: {
-        text: "The factor parameter defines the size of the cube to be rescaled. The value represents the size of the cube in meters. To tune this parameter, go to the point cloud visualization, select two points in the point cloud and write the distance between them here.",
+        text: "The factor parameter controls point cloud scaling relative to the specified cube size. Increase it (>1) for upscaling, decrease (0-1) for downscaling, or keep at 1 for original scale. Careful adjustment ensures accurate data representation.",
       },
     },
   },
   efficient_ransac: {
-    text: "The Efficient RANSAC filter can be applied to segment the input point cloud in two parts: inliers and outliers. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Efficient RANSAC is an optimized version of the Random Sample Consensus algorithm, used for robust model fitting in the presence of outliers. Customize the algorithm parameters manually for accurate results.",
     parameters: {
       probability: {
-        text: "The probability parameter defines the probability of a point to be considered an inlier. The value represents the probability in percentage. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the probability of this point to be considered an inlier here.",
+        text: "Probability controls the desired probability of finding a valid model. Lower values increase computation time but improve the likelihood of accurate results.",
       },
       min_points: {
-        text: "The min_points parameter defines the minimum number of points to be considered in the segmentation. To tune this parameter, go to the point cloud visualization, select a region of interest and write the number of points in this region here.",
+        text: "Min Points specifies the minimum number of data points required to define a model. It influences the model's robustness and should be set according to data characteristics.",
       },
       cluster_epsilon: {
-        text: "The cluster_epsilon parameter defines the maximum distance between two points to be considered in the same cluster. The value represents the distance in meters. To tune this parameter, go to the point cloud visualization, select two points in the point cloud and write the distance between them here.",
+        text: "Cluster Epsilon defines the maximum distance between points in the same cluster. Adjust it to group points closely related to the detected model.",
       },
       epsilon: {
-        text: "The epsilon parameter defines the maximum distance between a point and a plane to be considered an inlier. The value represents the distance in meters. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the distance between this point and the plane to be considered an inlier here.",
+        text: "Epsilon determines the tolerance for point-to-model distance. Smaller values provide a tighter fit, while larger values allow for more flexibility.",
       },
       normal_threshold: {
-        text: "The normal_threshold parameter defines the maximum angle between a point and a plane to be considered an inlier. The value represents the angle in degrees. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the angle between this point and the plane to be considered an inlier here.",
+        text: "Normal Threshold sets the threshold for accepting points based on their normal alignment with the model. Higher values require closer alignment, potentially filtering out noisy data.",
       },
     },
   },
   noise_add: {
-    text: "The Noise Add filter can be applied to add noise to the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "The Noise Add algorithm introduces random perturbations to the point cloud data, simulating noisy conditions or supporting testing purposes. Configure noise parameters manually to achieve the desired level of noise.",
     parameters: {
       limit: {
-        text: "The limit parameter defines the maximum distance between a point and the original point to be considered a noise. The value represents the distance in meters. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the distance between this point and the original point to be considered a noise here.",
+        text: "The Limit parameter sets the upper bound for adding noise to the point cloud. It controls the maximum magnitude of perturbations introduced, ensuring noise remains within manageable limits for accurate data simulation.",
       },
     },
   },
   normal_estimation: {
-    text: "The Normal Estimation filter can be applied to estimate the normals of the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Normal Estimation calculates surface normals for each point in the cloud, essential for surface analysis and feature detection. Adjust the estimation parameters manually for precise normal vectors.",
     parameters: {
       radius: {
-        text: "The radius parameter defines the radius of the sphere to be considered in the normal estimation. The value represents the radius in meters. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the radius of the sphere to be considered in the normal estimation here.",
+        text: "The Radius parameter defines the search radius for neighboring points when estimating normals. A larger radius considers points farther from the target point, potentially resulting in smoother but less localized normals. A smaller radius limits the influence to nearby points, yielding more detailed, localized normal vectors. Adjust this parameter to suit the level of detail needed for your analysis.",
       },
     },
   },
   rescale: {
-    text: "The Rescale filter can be applied to rescale the input point cloud to a given size. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Rescaling allows you to adjust the scale of the point cloud to specific units or dimensions. Manually configure the rescaling parameters for accurate scaling results.",
     parameters: {
       factor: {
-        text: "The factor parameter defines the size of the point cloud to be rescaled. The value represents the size of the point cloud in meters. To tune this parameter, go to the point cloud visualization, select two points in the point cloud and write the distance between them here.",
+        text: "The Factor parameter determines the scaling factor applied to the entire point cloud. Use values greater than 1 for upscaling, values between 0 and 1 for downscaling, and set it to 1 to maintain the original scale. Carefully adjust this factor to control the overall size of the point cloud as needed for your analysis.",
       },
     },
   },
   statistical_removal: {
-    text: "The Statistical Removal filter can be applied to remove the outliers of the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "Statistical Removal is employed to filter out outlier points within the point cloud based on statistical criteria. Fine-tune the removal parameters manually to effectively remove unwanted data points.",
     parameters: {
       mean: {
-        text: "The mean parameter defines the mean distance between a point and its neighbors to be considered an inlier. The value represents the distance in meters. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the mean distance between this point and its neighbors to be considered an inlier here.",
+        text: "The Mean parameter defines the expected mean value for the data distribution. Data points with values significantly deviating from this mean are considered outliers and may be removed during statistical filtering.",
       },
       standard_deviation: {
-        text: "The standard_deviation parameter defines the standard deviation of the distance between a point and its neighbors to be considered an inlier. The value represents the distance in meters. To tune this parameter, go to the point cloud visualization, select a point in the point cloud and write the standard deviation of the distance between this point and its neighbors to be considered an inlier here.",
+        text: "The Standard Deviation parameter specifies the acceptable range around the mean. Data points beyond this range are considered outliers and are subject to removal. A smaller standard deviation tightens the filter, while a larger one allows for a broader range of accepted values.",
       },
     },
   },
   voxel_grid: {
-    text: "The Voxel Grid filter can be applied to downsample the input point cloud. The parameters must be hand-writed, but the values to be used can be choosed with help of the tool called Point measurement in the point cloud visualization.",
+    text: "The Voxel Grid algorithm discretizes the point cloud into a 3D cubic structure for improved indexing and analysis. Manually specify the grid parameters to control voxel size and precision.",
     parameters: {
       leaf_size: {
-        text: "The leaf_size parameter defines the size of the voxel grid to be used in the downsampling. The value represents the size of the voxel grid in meters. To tune this parameter, go to the point cloud visualization, select two points in the point cloud and write the distance between them here.",
+        text: "The Leaf Size parameter determines the size of the voxels (3D cubes) used for discretizing the point cloud. A smaller leaf size results in smaller voxels, providing a more detailed representation but requiring more memory and computation. Conversely, a larger leaf size yields larger voxels, reducing memory and computation requirements but potentially losing fine-grained detail. Adjust this parameter to strike a balance between detail and efficiency for your analysis.",
       },
     },
   },
