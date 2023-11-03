@@ -1,9 +1,9 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
-import { GlobalContext } from '../../context';
-import { CloseOutlined } from '@ant-design/icons';
-import { ModalHeader, AntModal } from '../modal/style';
-import { softwareVersion } from '../../utils/contants';
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable"; 
+import { GlobalContext } from "../../context";
+import { CloseOutlined } from "@ant-design/icons";
+import { ModalHeader, AntModal } from "../modal/style";
+import { softwareVersion } from "../../utils/contants";
 
 const AboutSoftwareModal = () => {
 

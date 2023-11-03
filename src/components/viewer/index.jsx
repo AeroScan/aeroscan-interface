@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { GlobalContext } from '../../context';
-import { Axes, ViewSwitchContainer, Wrapper } from './style';
-import $ from 'jquery';
-import * as THREE from 'three';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { GlobalContext } from "../../context";
+import { Axes, ViewSwitchContainer, Wrapper } from "./style";
+import $ from "jquery";
+import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Radio } from 'antd';
+import { Radio } from "antd";
 
 const RadioGroup = Radio.Group;
 

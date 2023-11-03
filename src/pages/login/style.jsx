@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { StyledLink } from '../../components/UI/globalStyled';
+import styled from "styled-components";
+import { StyledLink } from "../../components/UI/globalStyled";
 
 export const Container = styled.div`
     align-items: center;

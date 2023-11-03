@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import Tour from 'reactour'
-import { StepButton } from './style';
+import Tour from "reactour"
+import { StepButton } from "./style";
 
 const tourConfig = [
   {
