@@ -1,15 +1,15 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable"; 
 import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
-import 'antd/dist/antd.css';
-import * as yup from 'yup';
+import { QuestionCircleFilled, CloseOutlined } from "@ant-design/icons";
+import { Button, Tooltip } from "antd";
+import "antd/dist/antd.css";
+import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GlobalContext } from '../../context';
-import { ApplyCubeReescale } from '../../services/api';
-import { ModalHeader, AntModal } from '../modal/style';
+import { GlobalContext } from "../../context";
+import { ApplyCubeReescale } from "../../services/api";
+import { ModalHeader, AntModal } from "../modal/style";
 
 const CubeReescaleModal = () => {
   const cubeReescaleSchema = yup.object().shape({

@@ -1,6 +1,6 @@
-import React from 'react';
-import ReactLoading from 'react-loading';
-import { Container } from './style';
+import React from "react";
+import ReactLoading from "react-loading";
+import { Container } from "./style";
 
 const Loading = ({ height, width }) => (
   <Container>

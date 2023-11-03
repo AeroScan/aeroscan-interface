@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import logo from '../../assets/img/logo.png';
-import md5 from 'md5';
-import { Container } from './style';
+import React, { useState } from "react";
+import logo from "../../assets/img/logo.png";
+import md5 from "md5";
+import { Container } from "./style";
 import { useForm } from "react-hook-form";
-import { SaveToken } from '../../services/util';
-import { Button } from 'antd';
-import 'antd/dist/antd.css';
-import * as yup from 'yup';
-import { softwareVersion } from '../../utils/contants';
+import { SaveToken } from "../../services/util";
+import { Button } from "antd";
+import "antd/dist/antd.css";
+import * as yup from "yup";
+import { softwareVersion } from "../../utils/contants";
 
 const Login = () => {
 

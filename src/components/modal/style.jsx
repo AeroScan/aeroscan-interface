@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import select from '../../assets/img/select.svg';
-import { Modal } from 'antd';
+import styled from "styled-components";
+import select from "../../assets/img/select.svg";
+import { Modal } from "antd";
 
 export const ModalHeader = styled.div`
     cursor: move;

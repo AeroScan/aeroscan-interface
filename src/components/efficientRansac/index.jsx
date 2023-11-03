@@ -1,26 +1,17 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable"; 
 import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
-import { Button, Tooltip, Checkbox, Col, Row } from 'antd';
-import 'antd/dist/antd.css';
-import * as yup from 'yup';
-import { yupResolver } from "@hookform/resolvers/yup";
-import { GlobalContext } from '../../context';
-import { ApplyEfficientRansac } from '../../services/api';
-import { ModalHeader, AntModal } from '../modal/style';
+import { QuestionCircleFilled, CloseOutlined } from "@ant-design/icons";
+import { Button, Tooltip, Checkbox, Col, Row } from "antd";
+import "antd/dist/antd.css";
+import { GlobalContext } from "../../context";
+import { ApplyEfficientRansac } from "../../services/api";
+import { ModalHeader, AntModal } from "../modal/style";
 
 const EfficientRansacModal = () => {
 
-  const efficientRansacSchema = yup.object().shape({
-    probability: yup.number().typeError('A number is required'),
-    minPoints: yup.number().typeError('A number is required'),
-    clusterEpsilon: yup.number().typeError('A number is required'),
-    epsilon: yup.number().typeError('A number is required'),
-    normalThreshold: yup.number().typeError('A number is required')
-  });
-  const { handleSubmit, register, formState: { errors } } = useForm({ resolver: yupResolver(efficientRansacSchema) });
+  const { handleSubmit, register, formState: { errors } } = useForm();
   const { setApplicationStatus } = useContext(GlobalContext);
   const { setGlobalLoading, setCloudFolderName } = useContext(GlobalContext);
   const { efficientRansac, setEfficientRansac } = useContext(GlobalContext);
@@ -60,61 +51,56 @@ const EfficientRansacModal = () => {
       message: 'Applying efficient ransac',
     });
     setGlobalLoading(true);
-    efficientRansacSchema.validate(data)
-      .then(async () => {
-        try {
-          const response = await ApplyEfficientRansac({
-            session: sessionID,
-            uuid: cloudFolderName,
-            probability: data.probability,
-            min_points: data.minPoints,
-            epsilon: data.clusterEpsilon,
-            cluster_epsilon: data.epsilon,
-            normal_threshold: data.normalThreshold,
-            primitives: primitives,
-          });
-          if (!response) {
-            setApplicationStatus({
-              status: 'error',
-              message: 'Failed to apply efficient ransac',
-            });
-          } else {
-            setApplicationStatus({
-              status: 'success',
-              message: 'Efficient ransac applied',
-            });
-            if (response.data && response.data.params_suggestion) {
-              const params = JSON.parse(response.data.params_suggestion);
-              setEfficientRansac({
-                ...efficientRansac,
-                clusterEpsilon: params.ransac_cepsilon,
-                epsilon: params.ransac_epsilon,
-              });
-              setVoxelGrid({
-                ...voxelGrid,
-                leafSize: params.voxel,
-              });
-              setNormalEstimation({
-                ...normalEstimation,
-                radius: params.normal,
-              });
-            }
-            setEfficientRansacApplied(true);
-            setCloudFolderName(response);
-          }
-          setGlobalLoading(false);
-        } catch (error) {
-          console.error(error);
-          setApplicationStatus({
-            status: 'error',
-            message: 'Failed to apply efficient ransac',
-          });
-          setGlobalLoading(false);
-        }
-      })
-      .catch(err => {
-        console.log(err);
+    
+    try {
+      const response = await ApplyEfficientRansac({
+        session: sessionID,
+        uuid: cloudFolderName,
+        probability: data.probability,
+        min_points: data.minPoints,
+        epsilon: data.clusterEpsilon,
+        cluster_epsilon: data.epsilon,
+        normal_threshold: data.normalThreshold,
+        primitives: primitives,
       });
+      if (!response) {
+        setApplicationStatus({
+          status: 'error',
+          message: 'Failed to apply efficient ransac',
+        });
+      } else {
+        setApplicationStatus({
+          status: 'success',
+          message: 'Efficient ransac applied',
+        });
+        if (response.data && response.data.params_suggestion) {
+          const params = JSON.parse(response.data.params_suggestion);
+          setEfficientRansac({
+            ...efficientRansac,
+            clusterEpsilon: params.ransac_cepsilon,
+            epsilon: params.ransac_epsilon,
+          });
+          setVoxelGrid({
+            ...voxelGrid,
+            leafSize: params.voxel,
+          });
+          setNormalEstimation({
+            ...normalEstimation,
+            radius: params.normal,
+          });
+        }
+        setEfficientRansacApplied(true);
+        setCloudFolderName(response);
+      }
+      setGlobalLoading(false);
+    } catch (error) {
+      console.error(error);
+      setApplicationStatus({
+        status: 'error',
+        message: 'Failed to apply efficient ransac',
+      });
+      setGlobalLoading(false);
+    }
   }
 
   const closeModal = () => {

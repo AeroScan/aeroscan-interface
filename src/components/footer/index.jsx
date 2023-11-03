@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../context';
-import { Container } from './style';
+import React, { useContext } from "react";
+import { GlobalContext } from "../../context";
+import { Container } from "./style";
 
 const Footer = () => {
   const { applicationStatus } = useContext(GlobalContext);

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import Draggable from 'react-draggable'; 
+import Draggable from "react-draggable"; 
 import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
 import { QuestionCircleFilled, CloseOutlined } from "@ant-design/icons";
@@ -9,7 +9,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GlobalContext } from "../../context";
 import { ApplyCropBox } from "../../services/api";
-import { ModalHeader, AntModal } from '../modal/style';
+import { ModalHeader, AntModal } from "../modal/style";
 
 const CropBoxModal = () => {
   const cropBoxSchema = yup.object().shape({

@@ -1,13 +1,13 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
-import tooltipsTexts from '../../utils/tooltips';
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable"; 
+import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
-import { CloseOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
-import 'antd/dist/antd.css';
-import { GlobalContext } from '../../context';
-import { ApplyCentralization } from '../../services/api';
-import { ModalHeader, AntModal } from '../modal/style';
+import { CloseOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import "antd/dist/antd.css";
+import { GlobalContext } from "../../context";
+import { ApplyCentralization } from "../../services/api";
+import { ModalHeader, AntModal } from "../modal/style";
 
 const CentralizationModal = () => {
   const { handleSubmit } = useForm();

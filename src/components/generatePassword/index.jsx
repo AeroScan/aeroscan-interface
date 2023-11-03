@@ -1,14 +1,14 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable'; 
-import md5 from 'md5';
-import * as yup from 'yup';
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable"; 
+import md5 from "md5";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { QuestionCircleFilled, CloseOutlined } from '@ant-design/icons';
-import { Button, Tooltip } from 'antd';
-import 'antd/dist/antd.css';
+import { QuestionCircleFilled, CloseOutlined } from "@ant-design/icons";
+import { Button, Tooltip } from "antd";
+import "antd/dist/antd.css";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { GlobalContext } from '../../context';
-import { ModalHeader, AntModal } from '../modal/style';
+import { GlobalContext } from "../../context";
+import { ModalHeader, AntModal } from "../modal/style";
 
 const GeneratePasswordModal = () => {
 

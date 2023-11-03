@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import ReactLoading from 'react-loading';
-import { OverlayContainer } from './style';
-import { GlobalContext } from '../../context';
+import React, { useContext } from "react";
+import ReactLoading from "react-loading";
+import { OverlayContainer } from "./style";
+import { GlobalContext } from "../../context";
 
 const OverlayLoading = () => {
   const { applicationStatus } = useContext(GlobalContext);

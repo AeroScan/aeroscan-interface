@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { BrowserRouter as Router, Route , Routes, Navigate} from "react-router-dom";
-import Login from '../pages/login';
-import MainContent from '../pages/main';
-import { RetrieveToken } from '../services/util';
+import Login from "../pages/login";
+import MainContent from "../pages/main";
+import { RetrieveToken } from "../services/util";
 
 const PrivateRoute = ({ children }) => {  
     return RetrieveToken() ? children : <Navigate to="login"/>

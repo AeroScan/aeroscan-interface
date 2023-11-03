@@ -1,13 +1,13 @@
-import React, { useState, useRef, useContext } from 'react';
-import Draggable from 'react-draggable';
-import tooltipsTexts from '../../utils/tooltips';
+import React, { useState, useRef, useContext } from "react";
+import Draggable from "react-draggable";
+import tooltipsTexts from "../../utils/tooltips";
 import { useForm } from "react-hook-form";
-import { Button } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
-import 'antd/dist/antd.css';
-import { GlobalContext } from '../../context';
-import { ApplyAlignment } from '../../services/api';
-import { ModalHeader, AntModal } from '../modal/style';
+import { Button } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+import "antd/dist/antd.css";
+import { GlobalContext } from "../../context";
+import { ApplyAlignment } from "../../services/api";
+import { ModalHeader, AntModal } from "../modal/style";
 
 const AlignmentModal = () => {
   const { handleSubmit } = useForm();
