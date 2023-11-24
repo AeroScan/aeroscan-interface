@@ -9,6 +9,10 @@ const AppContext = ({ children }) => {
     status: "success",
     message: "Started",
   });
+  const [unlabeled, setUnlabeled] = useState({
+    visible: false,
+    amount: 0,
+  });
   const [planes, setPlanes] = useState({
     visible: false,
     amount: 0,
@@ -104,6 +108,7 @@ const AppContext = ({ children }) => {
     <GlobalContext.Provider
       value={{
         applicationStatus, setApplicationStatus,
+        unlabeled, setUnlabeled,
         planes, setPlanes,
         spheres, setSpheres,
         cylinders, setCylinders,

@@ -23,6 +23,7 @@ const Viewer = () => {
 
   const potreeAxes = useRef(null);
 
+  const { unlabeled } = useContext(GlobalContext);
   const { planes } = useContext(GlobalContext);
   const { spheres } = useContext(GlobalContext);
   const { cylinders } = useContext(GlobalContext);
@@ -56,7 +57,7 @@ const Viewer = () => {
     if (efficientRansacApplied && viewer) {
       viewer.setClassifications([
         {
-          visible: true,
+          visible: unlabeled.visible,
           name: 'unlabeled',
           color: [0, 0, 0, 1]
         },
