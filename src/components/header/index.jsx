@@ -3,6 +3,7 @@ import { GlobalContext } from "../../context";
 import { Container } from "./style";
 import { render } from "@testing-library/react";
 import { RemoveToken, RetrieveToken } from "../../services/util";
+import { useNavigate, useLocation } from "react-router-dom";
 import OverlayLoading from "../overlay/overlay";
 import AboutSoftwareModal from "../aboutSoftware";
 import AlignmentModal from "../alignment";
@@ -32,6 +33,7 @@ import rAllocationLogo from "../../assets/img/configuration/resource-allocation.
 import tourLogo from "../../assets/img/help/tour.svg";
 import aboutLogo from "../../assets/img/help/about.svg";
 import tutorialsLogo from "../../assets/img/help/tutorials.svg";
+import backIcon from "../../assets/img/meshViewer/back.png";
 import InterfaceTour from "../tour";
 import UploadButton from "../uploadButton";
 import { LoadCloud, SaveCloud, SaveRansacResults } from "../../services/api";
@@ -42,6 +44,9 @@ const Header = () => {
   const { setApplicationStatus } = useContext(GlobalContext);
   const { sessionID } = useContext(GlobalContext);
   const { setCloudFolderName, setSessionID } = useContext(GlobalContext);
+
+  const navigate = useNavigate();
+  let location = useLocation();
 
   // Modals handling
   const { cropBox, setCropBox } = useContext(GlobalContext);
@@ -224,6 +229,10 @@ const Header = () => {
     window.open("http://aeroscan.c3.furg.br/tutorials");
   }
 
+  const handleBackPage = () => {
+    navigate("/");
+  }
+
   const tabs = [
     {
       name: 'Files',
@@ -244,6 +253,10 @@ const Header = () => {
         {
           logo: saveResultsLogo,
           label: 'Save Results'
+        },
+        {
+          logo: loudCloudLogo,
+          label: 'View Mesh'
         }
       ]
     },
@@ -379,6 +392,9 @@ const Header = () => {
       case "Save Results":
         handleSaveRansacResults();
         break;
+      case "View Mesh":
+        navigate("/mesh-viewer");
+        break;
       case "Interface Tour":
         setActiveTab(0);
         render(element.component)
@@ -477,19 +493,35 @@ const Header = () => {
       {statisticalRemoval.modalOpen && <StatisticalRemovalModal />}
       {voxelGrid.modalOpen && <VoxelGridModal />}
       {globalLoading && <OverlayLoading />}
-      {tabsToShow.map((element, index) => (
-        <button key={index} className={activeTab === index ? "active" : ""} onClick={() => setActiveTab(index)} data-tut={element.step}>
-          {element.name}
-        </button>
-      ))}
-      <ul>
-        {tabContent.map((element, index) => (
-          <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
-            <img src={element.logo} alt={element.label} />
-            <p>{element.label}</p>
+      {location.pathname != "/mesh-viewer"?
+        <>
+          {tabsToShow.map((element, index) => (
+              <button 
+                key={index} 
+                className={activeTab === index ? "active" : ""} 
+                onClick={() => setActiveTab(index)} 
+                data-tut={element.step}
+              >
+                {element.name}
+              </button>
+            ))}
+          <ul>
+            {tabContent.map((element, index) => (
+              <li key={index} onClick={() => handleActions(element)} data-tut="third-step">
+                <img src={element.logo} alt={element.label} />
+                <p>{element.label}</p>
+              </li>
+            ))}
+          </ul>
+        </>
+      :    
+        <ul>
+          <li onClick={() => handleBackPage()}>
+            <img src={backIcon} alt={'back'} />
+            <p>Back</p>
           </li>
-        ))}
-      </ul>
+        </ul>
+      }
     </Container>
   );
 }
