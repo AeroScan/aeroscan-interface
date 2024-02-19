@@ -55,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "dat.gui": "^0.7.9",
     "env-cmd": "^10.1.0"
   }
 }
