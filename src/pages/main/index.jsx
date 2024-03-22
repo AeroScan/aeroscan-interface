@@ -1,12 +1,12 @@
 import React from "react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
-import Viewer from "../../components/viewer";
+import Viewer from "../../components/ocViewer";
 import AppContext from "../../context";
 import { Container } from "./style";
 
 const MainContent = () => {
-    return(
+    return (
         <Container>
             <AppContext>
                 <Header />

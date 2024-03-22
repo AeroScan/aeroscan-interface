@@ -12,6 +12,7 @@
     "axios": "^0.26.0",
     "jquery": "^3.6.0",
     "md5": "^2.3.0",
+    "opencascade.js": "^2.0.0-beta.b5ff984",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.5",

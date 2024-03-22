@@ -81,6 +81,7 @@ const Viewer = () => {
         }
       ]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [efficientRansacApplied, viewer, view]);
 
   useEffect(() => {

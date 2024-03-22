@@ -10,23 +10,23 @@ const AppContext = ({ children }) => {
     message: "Started",
   });
   const [unlabeled, setUnlabeled] = useState({
-    visible: false,
+    visible: true,
     amount: 0,
   });
   const [planes, setPlanes] = useState({
-    visible: false,
+    visible: true,
     amount: 0,
   });
   const [spheres, setSpheres] = useState({
-    visible: false,
+    visible: true,
     amount: 0,
   });
   const [cylinders, setCylinders] = useState({
-    visible: false,
+    visible: true,
     amount: 0,
   });
   const [cones, setCones] = useState({
-    visible: false,
+    visible: true,
     amount: 0,
   });
 

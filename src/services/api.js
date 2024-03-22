@@ -184,6 +184,7 @@ export const ApplyEfficientRansac = async ({
   epsilon,
   cluster_epsilon,
   normal_threshold,
+  primitives,
 }) => {
   const response = await api.post("/effRansac", {
     uuid: uuid,
@@ -195,6 +196,7 @@ export const ApplyEfficientRansac = async ({
       cluster_epsilon: cluster_epsilon,
       normal_threshold: normal_threshold,
     },
+    primitives: primitives,
   });
   if (response.data.error) {
     console.err(response.data.message);
@@ -204,4 +206,3 @@ export const ApplyEfficientRansac = async ({
 };
 
 export default api;
-
