@@ -104,6 +104,9 @@ const AppContext = ({ children }) => {
   // States
   const [efficientRansacApplied, setEfficientRansacApplied] = useState(false);
 
+  // Opencascade viewer controller
+  const [openCascadeController, setOpenCascadeController] = useState(null);
+
   return (
     <GlobalContext.Provider
       value={{
